@@ -1,6 +1,6 @@
-// eslint-disable-next-line import/no-extraneous-dependencies
 import clsx from 'clsx';
-import type { FC, InputHTMLAttributes } from 'react';
+import { type FC, type InputHTMLAttributes, useRef } from 'react';
+import { GrClose } from 'react-icons/gr';
 
 interface SimpleInputProps extends InputHTMLAttributes<HTMLInputElement> {
   titleCenter?: boolean;
@@ -22,6 +22,13 @@ export const SimpleInput: FC<SimpleInputProps> = ({
   disabled,
   ...rest
 }) => {
+  const inputRef = useRef<HTMLInputElement>(null);
+  const _handleRemoveText = () => {
+    onChangeText('');
+    if (inputRef.current) {
+      inputRef.current.focus();
+    }
+  };
   return (
     <div>
       <h2
@@ -32,19 +39,30 @@ export const SimpleInput: FC<SimpleInputProps> = ({
       >
         {title}
       </h2>
-      <input
-        value={value}
-        disabled={disabled}
-        type={typeNumber ? 'number' : 'text'}
-        onChange={(e) => {
-          onChangeText(e.target.value);
-        }}
-        className={clsx(
-          'h-12 w-full rounded-xl border-2 border-gray-300 px-2 shadow-md outline-none transition-all focus:shadow-lg disabled:cursor-not-allowed disabled:bg-gray-100',
-          error ? 'border-red-500' : 'focus:border-blue-600',
-        )}
-        {...rest}
-      />
+      <div className="relative">
+        <input
+          ref={inputRef}
+          value={value}
+          disabled={disabled}
+          type={typeNumber ? 'number' : 'text'}
+          onChange={(e) => {
+            onChangeText(e.target.value);
+          }}
+          className={clsx(
+            'h-12 w-full rounded-xl border-2 border-gray-400 px-2 pr-8 shadow-md outline-none transition-all focus:shadow-lg disabled:cursor-not-allowed disabled:bg-gray-100',
+            error ? 'border-red-500' : 'focus:border-blue-600',
+          )}
+          {...rest}
+        />
+        {value ? (
+          <div className="absolute right-0 top-0 flex h-full items-center justify-center pr-3">
+            <GrClose
+              className="cursor-pointer text-gray-900 drop-shadow-md"
+              onClick={_handleRemoveText}
+            />
+          </div>
+        ) : null}
+      </div>
       {error ? (
         <span className="mt-3 block rounded-xl bg-red-500 px-2 text-sm text-white shadow-md drop-shadow-md before:absolute before:-top-2 before:left-4 before:h-0 before:w-0 before:border-x-8 before:border-b-8 before:border-x-transparent before:border-b-red-500 before:content-['']">
           {error}
