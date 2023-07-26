@@ -34,7 +34,7 @@ const Button = ({
     <button
       disabled={disabled}
       onClick={onClick}
-      className="h-full w-full rounded-full border-2 border-gray-300 bg-blue-600 text-sm font-medium text-white shadow-md transition-all hover:shadow-xl disabled:cursor-not-allowed disabled:bg-slate-400 disabled:hover:shadow-md"
+      className="h-full w-full rounded-full border-2 border-gray-300 bg-blue-600 text-sm font-medium text-white shadow-md drop-shadow-md transition-all hover:shadow-xl disabled:cursor-not-allowed disabled:bg-slate-400 disabled:hover:shadow-md"
     >
       {title}
     </button>
