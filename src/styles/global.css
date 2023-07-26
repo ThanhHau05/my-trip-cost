@@ -19,3 +19,8 @@ a:hover {
 .content ul {
   @apply my-6;
 }
+
+h2, span, p {
+  --tw-text-opacity: 1;
+  color: rgb(26 32 44 / var(--tw-text-opacity));
+}
