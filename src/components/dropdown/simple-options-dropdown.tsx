@@ -10,11 +10,13 @@ export const SimpleDropDown = ({
   onClick,
   title,
   image,
+  disabled,
 }: {
   option: SelectOptionsRenderDropDown[];
   onClick: (value: string, image?: string) => void;
   title: string;
   image?: string;
+  disabled?: boolean;
 }) => {
   const [iconpointdown, setIconPointDown] = useState(false);
 
@@ -34,8 +36,9 @@ export const SimpleDropDown = ({
   return (
     <div ref={dropdownRef} className="relative">
       <button
+        disabled={disabled}
         onClick={_handleShowDropDown}
-        className="relative h-14 w-full cursor-pointer rounded-xl border-2 border-gray-400 shadow-md drop-shadow-md transition-all hover:shadow-lg"
+        className="relative h-14 w-full cursor-pointer rounded-xl border-2 border-gray-400 shadow-md drop-shadow-md transition-all hover:shadow-lg disabled:cursor-not-allowed disabled:hover:shadow-md"
       >
         <div className="flex items-center justify-center">
           {image ? (
