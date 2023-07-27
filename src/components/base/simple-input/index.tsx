@@ -2,6 +2,8 @@ import clsx from 'clsx';
 import { type FC, type InputHTMLAttributes, useRef } from 'react';
 import { GrClose } from 'react-icons/gr';
 
+// heroicons v2
+
 interface SimpleInputProps extends InputHTMLAttributes<HTMLInputElement> {
   titleCenter?: boolean;
   title: string;

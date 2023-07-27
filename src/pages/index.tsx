@@ -1,4 +1,4 @@
-const Index = () => {
+const HomePage = () => {
   return (
     <div className="relative h-screen w-full bg-slate-300">
       <div className="absolute top-0 z-10 flex h-full w-full justify-center">
@@ -8,4 +8,4 @@ const Index = () => {
   );
 };
 
-export default Index;
+export default HomePage;
