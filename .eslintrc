@@ -69,7 +69,9 @@
         "@typescript-eslint/no-use-before-define": "off",
         "import/no-extraneous-dependencies": "off",
         "no-underscore-dangle": "off",
-        "@typescript-eslint/naming-convention": "off"
+        "@typescript-eslint/naming-convention": "off",
+        "jsx-a11y/click-events-have-key-events": "off",
+        "jsx-a11y/no-noninteractive-element-interactions": "off"
       }
     },
     // Configuration for testing
