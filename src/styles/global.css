@@ -24,3 +24,12 @@ h2, span, p {
   --tw-text-opacity: 1;
   color: rgb(26 32 44 / var(--tw-text-opacity));
 }
+
+.dropdown::-webkit-scrollbar {
+    width: 6px;
+}
+
+.dropdown::-webkit-scrollbar-thumb {
+  background: #CFD8DC;
+  border-radius: 9999px;
+}
