@@ -21,7 +21,7 @@ export const SimpleButton = ({
   );
 };
 
-const Button = ({
+export const Button = ({
   title,
   onClick,
   disabled,

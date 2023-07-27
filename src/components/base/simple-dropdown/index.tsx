@@ -5,7 +5,7 @@ import { BiChevronDown } from 'react-icons/bi';
 import type { SelectOptionsRenderDropDown } from '@/constants/select-options';
 import { useClickOutSide } from '@/hooks/useClickOutSide';
 
-export const SimpleDropDown = ({
+export const SimpleDropdown = ({
   option,
   onClick,
   title,
