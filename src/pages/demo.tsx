@@ -1,6 +1,6 @@
 import { useState } from 'react';
 
-import { SimpleButton, SimpleDropdown, SimpleInput } from '@/components/base';
+import { Button, Dropdown, Input } from '@/components/base';
 
 const DemoPage = () => {
   const [dropdowndemo, setDropdownDemo] = useState({ value: '', image: '' });
@@ -44,10 +44,10 @@ const DemoPage = () => {
           <h2 className="font-medium">Components</h2>
           <div className="grid gap-2">
             <div className="h-10 w-40">
-              <SimpleButton title="Button" />
+              <Button title="Button" />
             </div>
             <div className=" w-48">
-              <SimpleDropdown
+              <Dropdown
                 option={myArray}
                 title={dropdowndemo.value}
                 image={dropdowndemo.image}
@@ -57,7 +57,7 @@ const DemoPage = () => {
               />
             </div>
             <div className="w-48">
-              <SimpleInput
+              <Input
                 title="Input"
                 value={inputdemo}
                 onChangeText={setInputDemo}

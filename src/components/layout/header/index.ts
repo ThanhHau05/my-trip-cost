@@ -1,2 +1,2 @@
+export * from './header';
 export * from './options-header';
-export * from './simple-header';

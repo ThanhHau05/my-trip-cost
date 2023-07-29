@@ -1,3 +1,3 @@
-export * from './simple-button';
-export * from './simple-dropdown';
-export * from './simple-input';
+export * from './button';
+export * from './dropdown';
+export * from './input';

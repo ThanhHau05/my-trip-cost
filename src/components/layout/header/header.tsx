@@ -1,6 +1,6 @@
 import { ImageUser, MenuBarsBox } from './options-header';
 
-export const SimpleHeader = ({
+export const Header = ({
   name,
   image,
   id,
