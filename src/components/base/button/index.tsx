@@ -1,7 +1,7 @@
 import Link from 'next/link';
 import React from 'react';
 
-export const SimpleButton = ({
+export const Button = ({
   title,
   onClick,
   disabled,
@@ -14,14 +14,14 @@ export const SimpleButton = ({
 }) => {
   return to ? (
     <Link href={to}>
-      <Button title={title} onClick={onClick} disabled={disabled} />
+      <ContainerButton title={title} onClick={onClick} disabled={disabled} />
     </Link>
   ) : (
-    <Button title={title} onClick={onClick} disabled={disabled} />
+    <ContainerButton title={title} onClick={onClick} disabled={disabled} />
   );
 };
 
-export const Button = ({
+export const ContainerButton = ({
   title,
   onClick,
   disabled,

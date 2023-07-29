@@ -4,7 +4,7 @@ import { GrClose } from 'react-icons/gr';
 
 // heroicons v2
 
-interface SimpleInputProps extends InputHTMLAttributes<HTMLInputElement> {
+interface InputProps extends InputHTMLAttributes<HTMLInputElement> {
   titleCenter?: boolean;
   title: string;
   value: string;
@@ -14,7 +14,7 @@ interface SimpleInputProps extends InputHTMLAttributes<HTMLInputElement> {
   disabled?: boolean;
 }
 
-export const SimpleInput: FC<SimpleInputProps> = ({
+export const Input: FC<InputProps> = ({
   titleCenter,
   title,
   value,
