@@ -24,7 +24,7 @@ export const ImageUser = ({
     <div ref={showInfoUserRef} className="relative">
       <img
         onClick={() => setShowInfoUser(!showinfouser)}
-        className="h-14 cursor-pointer rounded-full border-2 shadow-md outline-none transition-all hover:shadow-lg"
+        className="h-14 cursor-pointer rounded-full shadow-md outline-none transition-all hover:shadow-lg"
         src={image}
         alt=""
       />
