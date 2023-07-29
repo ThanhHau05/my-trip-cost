@@ -38,7 +38,10 @@ export const SimpleDropdown = ({
       <button
         disabled={disabled}
         onClick={_handleShowDropDown}
-        className="relative h-14 w-full cursor-pointer rounded-xl border-2 border-gray-400 shadow-md drop-shadow-md transition-all hover:shadow-lg disabled:cursor-not-allowed disabled:hover:shadow-md"
+        className={clsx(
+          'relative h-14 w-full cursor-pointer rounded-xl border-2 border-gray-400 bg-white shadow-md drop-shadow-md transition-all hover:shadow-lg disabled:cursor-not-allowed disabled:hover:shadow-md',
+          iconpointdown ? 'border-blue-600' : null,
+        )}
       >
         <div className="flex items-center justify-center">
           {image ? (
