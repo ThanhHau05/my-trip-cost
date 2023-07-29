@@ -12,6 +12,7 @@ interface InputProps extends InputHTMLAttributes<HTMLInputElement> {
   onChangeText: (value: string) => void;
   typeNumber?: boolean;
   disabled?: boolean;
+  noSpaces?: boolean;
 }
 
 export const Input: FC<InputProps> = ({
@@ -22,6 +23,7 @@ export const Input: FC<InputProps> = ({
   onChangeText,
   typeNumber,
   disabled,
+  noSpaces,
   ...rest
 }) => {
   const inputRef = useRef<HTMLInputElement>(null);
@@ -29,6 +31,13 @@ export const Input: FC<InputProps> = ({
     onChangeText('');
     if (inputRef.current) {
       inputRef.current.focus();
+    }
+  };
+  const _handleChangeText = (e: string) => {
+    if (!noSpaces) {
+      onChangeText(e);
+    } else if (e !== ' ') {
+      onChangeText(e.replace(/\s/g, ''));
     }
   };
   return (
@@ -48,11 +57,11 @@ export const Input: FC<InputProps> = ({
           disabled={disabled}
           type={typeNumber ? 'number' : 'text'}
           onChange={(e) => {
-            onChangeText(e.target.value);
+            _handleChangeText(e.target.value);
           }}
           className={clsx(
-            'h-12 w-full rounded-xl border-2 border-gray-400 px-2 pr-8 shadow-md outline-none transition-all focus:shadow-lg disabled:cursor-not-allowed disabled:bg-gray-100',
-            error ? 'border-red-500' : 'focus:border-blue-600',
+            'h-12 w-full rounded-xl px-2 pr-8 shadow-md outline-none focus:shadow-lg disabled:cursor-not-allowed disabled:bg-gray-100',
+            error ? 'border border-red-500' : 'focus:border-blue-600',
           )}
           {...rest}
         />
@@ -66,7 +75,7 @@ export const Input: FC<InputProps> = ({
         ) : null}
       </div>
       {error ? (
-        <span className="mt-3 block rounded-xl bg-red-500 px-2 text-sm text-white shadow-md drop-shadow-md before:absolute before:-top-2 before:left-4 before:h-0 before:w-0 before:border-x-8 before:border-b-8 before:border-x-transparent before:border-b-red-500 before:content-['']">
+        <span className="mt-3 inline-block rounded-xl bg-red-500 px-2 text-sm text-white shadow-md drop-shadow-md before:absolute before:-top-2 before:left-4 before:h-0 before:w-0 before:border-x-8 before:border-b-8 before:border-x-transparent before:border-b-red-500 before:content-['']">
           {error}
         </span>
       ) : null}
