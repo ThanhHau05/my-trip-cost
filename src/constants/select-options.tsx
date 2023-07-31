@@ -3,7 +3,7 @@ export interface SelectOptionsRenderDropDown {
   image?: string;
 }
 
-export interface Member {
+export interface InformationUser {
   name: string;
   image: {
     url?: string;
