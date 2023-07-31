@@ -1,16 +1,14 @@
 import { useContext } from 'react';
 
 import { Button, Input } from '@/components/base';
-import { ImagesHome } from '@/components/images';
+import { ImagesWelcomePage } from '@/components/images';
 import { Wrapper } from '@/components/layout';
-import { WelcomeContext, WelcomeProvider } from '@/context/welcome-context';
+import { AddPersonalInformation } from '@/components/pages';
+import { WelcomeContext } from '@/context/welcome-context';
 
 const Welcome = () => {
-  return (
-    <WelcomeProvider>
-      <ContainerWelcome />
-    </WelcomeProvider>
-  );
+  const { ischeckonsubmit } = useContext(WelcomeContext);
+  return ischeckonsubmit ? <AddPersonalInformation /> : <ContainerWelcome />;
 };
 
 const ContainerWelcome = () => {
@@ -18,7 +16,7 @@ const ContainerWelcome = () => {
   return (
     <Wrapper>
       <div className="relative h-full">
-        <img className="pt-3" src={ImagesHome.Background4.src} alt="" />
+        <img className="pt-3" src={ImagesWelcomePage.Background.src} alt="" />
         <div className="absolute bottom-0 z-10 flex h-[357px] w-full flex-col justify-between rounded-t-[40px] bg-gradient-to-b from-teal-500 to-teal-400 px-5 pt-5 shadow-xl drop-shadow-md">
           <div>
             <h2 className="text-2xl font-bold text-white drop-shadow-md">
