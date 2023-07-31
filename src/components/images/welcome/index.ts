@@ -1,11 +1,7 @@
-import Background2 from './5831236.png';
-import Background from './background.png';
-import Background3 from './background3.jpg';
-import Background4 from './background4.jpg';
+import Background from './background.jpg';
+import Background2 from './background2.jpg';
 
-export const ImagesHome = {
+export const ImagesWelcomePage = {
   Background,
   Background2,
-  Background3,
-  Background4,
 };
