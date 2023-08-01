@@ -1,19 +1,38 @@
 import { useSelector } from 'react-redux';
 
-import { Wrapper } from '@/components/layout';
+import { Header, WrapperHeader } from '@/components/layout';
+import { SliderPage } from '@/components/pages';
+import { HomeProvider } from '@/context/home-context';
 import { selector } from '@/redux';
 
 import { Welcome } from './welcome';
 
 export const Home = () => {
   const { currentUserInformation } = useSelector(selector.user);
-  return currentUserInformation.name ? <ContainerHome /> : <Welcome />;
+  return currentUserInformation.name ? (
+    <HomeProvider>
+      <ContainerHome />
+    </HomeProvider>
+  ) : (
+    <Welcome />
+  );
 };
 
 const ContainerHome = () => {
+  const { currentUserInformation } = useSelector(selector.user);
+
   return (
-    <Wrapper>
-      <h2>HIIII</h2>
-    </Wrapper>
+    <WrapperHeader
+      header={
+        <Header
+          id={currentUserInformation.ID}
+          image={currentUserInformation.image}
+          name={currentUserInformation.name}
+          email={currentUserInformation.gmail}
+        />
+      }
+    >
+      <SliderPage />
+    </WrapperHeader>
   );
 };
