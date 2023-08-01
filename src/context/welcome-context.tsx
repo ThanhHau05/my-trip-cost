@@ -1,5 +1,9 @@
 import type { Dispatch, ReactNode, RefObject, SetStateAction } from 'react';
 import { createContext, useEffect, useRef, useState } from 'react';
+import { useDispatch } from 'react-redux';
+
+import { DataFirebase } from '@/firebase/hook/DataFirebase';
+import { UserActions } from '@/redux';
 
 interface WelcomeProps {
   name: {
@@ -15,8 +19,16 @@ interface WelcomeProps {
   onSubmit: () => void;
   ischeckonsubmit: boolean;
   setIsCheckOnSubmit: Dispatch<SetStateAction<boolean>>;
-  email: string;
-  setEmail: Dispatch<SetStateAction<string>>;
+  email: {
+    value: string;
+    error: string;
+  };
+  setEmail: Dispatch<
+    SetStateAction<{
+      value: string;
+      error: string;
+    }>
+  >;
   image: {
     url: string;
     color: string;
@@ -32,35 +44,72 @@ interface WelcomeProps {
   uploadavtRef: RefObject<HTMLInputElement>;
   handleOpenFileChangeAvt: (e: React.ChangeEvent<HTMLInputElement>) => void;
   onSubmitStartNow: () => void;
+  loadingstartnow: boolean;
+  setLoadingStartNow: Dispatch<SetStateAction<boolean>>;
 }
 
 export const WelcomeContext = createContext({} as WelcomeProps);
 
 export const WelcomeProvider = ({ children }: { children: ReactNode }) => {
+  const dispatch = useDispatch();
+
   const [name, setName] = useState({ value: '', error: '' });
-  const [email, setEmail] = useState('');
+  const [email, setEmail] = useState({ value: '', error: '' });
   const [image, setImage] = useState({
     url: '',
     color: '',
     text: '',
   });
   const [ischeckonsubmit, setIsCheckOnSubmit] = useState(false);
+  const [loadingstartnow, setLoadingStartNow] = useState(false);
   const uploadavtRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
     const color = getRandomColor();
-    setImage({ url: '', color, text: name.value.charAt(0) });
+    setImage({ url: '', color, text: name.value.charAt(0).toUpperCase() });
   }, [ischeckonsubmit]);
 
-  const onSubmitStartNow = () => {
-    //
+  const isCheckSubmitStartNow = () => {
+    let isError = false;
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (email.value && !emailRegex.test(email.value)) {
+      isError = true;
+      setEmail({ ...email, error: 'Please enter the corrent email format' });
+    }
+    return !isError;
   };
 
-  const onSubmit = () => {
+  const onSubmitStartNow = () => {
+    if (isCheckSubmitStartNow()) {
+      setTimeout(async () => {
+        const id = await DataFirebase.useRandomID();
+        dispatch(
+          UserActions.setCurrentUserInformation({
+            ID: id,
+            image: {
+              url: image.url,
+              color: image.color,
+              text: image.text,
+            },
+            name: name.value,
+            gmail: email.value,
+          }),
+        );
+        setLoadingStartNow(false);
+      }, 3000);
+      setLoadingStartNow(true);
+    }
+  };
+
+  const onSubmit = async () => {
     if (!name.value) {
       setName({ value: '', error: 'Please enter your name' });
-    } else {
+    } else if (name.value && name.value.length < 7) {
+      setName({ ...name, error: 'Name is too short' });
+    } else if (await DataFirebase.useCheckName(name.value)) {
       setIsCheckOnSubmit(true);
+    } else {
+      setName({ ...name, error: 'This name is already in use' });
     }
   };
 
@@ -100,6 +149,8 @@ export const WelcomeProvider = ({ children }: { children: ReactNode }) => {
     uploadavtRef,
     handleOpenFileChangeAvt,
     onSubmitStartNow,
+    loadingstartnow,
+    setLoadingStartNow,
   };
   return (
     <WelcomeContext.Provider value={value}>{children}</WelcomeContext.Provider>

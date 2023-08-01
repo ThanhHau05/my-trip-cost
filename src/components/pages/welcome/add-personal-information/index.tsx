@@ -37,12 +37,18 @@ const _Options = () => {
   return (
     <>
       <div className="mt-9">
-        <h2 className="block text-2xl font-medium">
+        <h2 className="block text-center text-2xl font-medium">
           Your name: <span className="font-bold">{name.value}</span>
         </h2>
       </div>
       <div className="mt-14 w-full px-5">
-        <Input title="Email (optional)" onChangeText={setEmail} value={email} />
+        <Input
+          title="Email (optional)"
+          otherType="email"
+          onChangeText={(e) => setEmail({ value: e, error: '' })}
+          value={email.value}
+          error={email.error}
+        />
       </div>
       <div className="mt-14 flex h-full w-full flex-col justify-end px-5">
         <div className="h-12 w-full">

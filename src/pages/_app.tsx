@@ -1,10 +1,12 @@
 import '../styles/global.css';
 
 import type { AppProps } from 'next/app';
+import { useContext } from 'react';
 import { Provider } from 'react-redux';
 import { PersistGate } from 'redux-persist/integration/react';
 
-import { WelcomeProvider } from '@/context/welcome-context';
+import { Loading } from '@/components/base/loading';
+import { WelcomeContext, WelcomeProvider } from '@/context/welcome-context';
 import Redux from '@/redux';
 
 const { store, persistor } = Redux();
@@ -20,7 +22,13 @@ const MyApp = ({ Component, pageProps }: AppProps) => (
 );
 
 const ContainerMyApp = ({ Component, pageProps }: any) => {
-  return <Component {...pageProps} />;
+  const { loadingstartnow } = useContext(WelcomeContext);
+  return (
+    <div>
+      {loadingstartnow ? <Loading /> : null}
+      <Component {...pageProps} />
+    </div>
+  );
 };
 
 export default MyApp;
