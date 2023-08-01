@@ -10,7 +10,7 @@ interface InputProps extends InputHTMLAttributes<HTMLInputElement> {
   value: string;
   error?: string;
   onChangeText: (value: string) => void;
-  typeNumber?: boolean;
+  otherType?: string;
   disabled?: boolean;
   noSpaces?: boolean;
 }
@@ -21,7 +21,7 @@ export const Input: FC<InputProps> = ({
   value,
   error,
   onChangeText,
-  typeNumber,
+  otherType,
   disabled,
   noSpaces,
   ...rest
@@ -55,7 +55,7 @@ export const Input: FC<InputProps> = ({
           ref={inputRef}
           value={value}
           disabled={disabled}
-          type={typeNumber ? 'number' : 'text'}
+          type={otherType || 'text'}
           onChange={(e) => {
             _handleChangeText(e.target.value);
           }}
