@@ -1,5 +1,6 @@
 import clsx from 'clsx';
 import { useState } from 'react';
+import Avatar from 'react-avatar';
 import { BsCheckCircleFill } from 'react-icons/bs';
 import { MdOutlineContentCopy } from 'react-icons/md';
 
@@ -10,7 +11,11 @@ export const ImageUser = ({
   email,
   id,
 }: {
-  image: string;
+  image: {
+    url?: string;
+    color?: string;
+    text?: string;
+  };
   email?: string;
   id: number;
 }) => {
@@ -22,12 +27,17 @@ export const ImageUser = ({
 
   return (
     <div ref={showInfoUserRef} className="relative">
-      <img
-        onClick={() => setShowInfoUser(!showinfouser)}
-        className="h-14 cursor-pointer rounded-full shadow-md outline-none transition-all hover:shadow-lg"
-        src={image}
-        alt=""
-      />
+      <div className="rounded-full">
+        <Avatar
+          onClick={() => setShowInfoUser(!showinfouser)}
+          round
+          size="50"
+          src={image.url}
+          className="cursor-pointer select-none shadow-md"
+          value={image.text}
+          color={image.color}
+        />
+      </div>
       {showinfouser ? <HandleInfoUserOnAvatar email={email} id={id} /> : null}
     </div>
   );
@@ -60,12 +70,12 @@ const HandleInfoUserOnAvatar = ({
     });
   };
   return (
-    <div className="absolute right-0 z-10 mt-2 rounded-xl border-2 bg-white px-3 py-1 shadow-md">
+    <div className="absolute right-0 z-10 mt-2 select-none rounded-xl border-2 bg-white px-3 py-1 shadow-md">
       <span className="flex whitespace-nowrap text-sm font-normal">
         Email:
         {email ? (
           <span className="ml-1 flex items-center font-medium">
-            nguyenhau@gmail.com
+            {email}
             <div className="flex pl-2">
               {checkcopygmail ? (
                 <BsCheckCircleFill className="inline text-gray-600 drop-shadow-md" />
@@ -108,17 +118,17 @@ export const MenuBarsBox = () => {
   };
   return (
     <button
-      className="flex w-12 cursor-pointer flex-col gap-2 outline-none"
+      className="w-12 cursor-pointer flex-col gap-2 outline-none"
       onClick={_handleOnClick}
     >
       <div
-        className={clsx('transition-all', onclick ? '-translate-x-1' : null)}
+        className={clsx(
+          'mb-[9px] transition-all',
+          onclick ? '-translate-x-1' : null,
+        )}
       >
         <div
-          className={clsx(
-            'transition-all',
-            onclick ? 'translate-y-[11px]' : null,
-          )}
+          className={clsx('transition-all', onclick ? 'translate-y-3' : null)}
         >
           <div
             className={clsx(
@@ -135,13 +145,13 @@ export const MenuBarsBox = () => {
         )}
       />
       <div
-        className={clsx('transition-all', onclick ? '-translate-x-1' : null)}
+        className={clsx(
+          'mt-[9px] transition-all',
+          onclick ? '-translate-x-1' : null,
+        )}
       >
         <div
-          className={clsx(
-            'transition-all',
-            onclick ? 'translate-y-[-11px]' : null,
-          )}
+          className={clsx('transition-all', onclick ? '-translate-y-3' : null)}
         >
           <div
             className={clsx(

@@ -4,25 +4,31 @@ export const Header = ({
   name,
   image,
   id,
+  email,
 }: {
   name: string;
-  image: string;
+  image: {
+    url?: string;
+    color?: string;
+    text?: string;
+  };
   id: number;
+  email?: string;
 }) => {
   return (
     <div className="flex items-center justify-between px-3 pt-2">
       <div className="flex items-center justify-center">
         <MenuBarsBox />
         <div className="pl-3">
-          <h2 className="text-2xl font-bold leading-5 drop-shadow-md">
+          <h2 className="text-2xl font-bold leading-5 text-white drop-shadow-md">
             Hello {name}
           </h2>
-          <span className="break-words text-sm">
+          <span className="break-words text-sm text-white">
             Wish you have a pleasant trip!
           </span>
         </div>
       </div>
-      <ImageUser image={image} id={id} />
+      <ImageUser image={image} id={id} email={email} />
     </div>
   );
 };

@@ -75,4 +75,7 @@ border-radius: 78% 22% 52% 48% / 44% 74% 26% 56%
   0%, 80%, 100% { box-shadow: 0 2.5em 0 -1.3em }
   40% { box-shadow: 0 2.5em 0 0 }
 }
-    
+
+.slick-slider, .slick-list, .slick-track, .slick-slide > div {
+  height: 100%;
+}
