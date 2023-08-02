@@ -1,18 +1,51 @@
-import { useContext } from 'react';
+import type { Dispatch, SetStateAction } from 'react';
+import { useContext, useState } from 'react';
 
 import { Button, Input } from '@/components/base';
 import { ImagesWelcomePage } from '@/components/images';
 import { Wrapper } from '@/components/layout';
 import { AddPersonalInformation } from '@/components/pages';
-import { WelcomeContext } from '@/context/welcome-context';
+import { MainContext } from '@/context/main-context';
 
 export const Welcome = () => {
-  const { ischeckonsubmit } = useContext(WelcomeContext);
-  return ischeckonsubmit ? <AddPersonalInformation /> : <ContainerWelcome />;
+  const [isCheckContinue, setIsCheckContinue] = useState(false);
+  const [name, setName] = useState({ value: '', error: '' });
+  const [id, setId] = useState(0);
+
+  return isCheckContinue && id ? (
+    <AddPersonalInformation
+      isCheckContinue={isCheckContinue}
+      name={name.value}
+      id={id}
+    />
+  ) : (
+    <ContainerWelcome
+      setName={setName}
+      name={name}
+      setCheckSubmit={setIsCheckContinue}
+      setId={setId}
+    />
+  );
 };
 
-const ContainerWelcome = () => {
-  const { setName, name, onSubmit } = useContext(WelcomeContext);
+const ContainerWelcome = ({
+  setName,
+  name,
+  setCheckSubmit,
+  setId,
+}: {
+  setName: Dispatch<
+    SetStateAction<{
+      value: string;
+      error: string;
+    }>
+  >;
+  name: { value: string; error: string };
+  setCheckSubmit: (value: boolean) => void;
+  setId: Dispatch<SetStateAction<number>>;
+}) => {
+  const { onSubmitContinue } = useContext(MainContext);
+
   return (
     <Wrapper>
       <div className="relative h-full">
@@ -39,7 +72,13 @@ const ContainerWelcome = () => {
           </div>
           <div className="flex w-full justify-center pb-8">
             <div className="h-12 w-full">
-              <Button onClick={onSubmit} title="Continue" bgWhite />
+              <Button
+                onClick={() =>
+                  onSubmitContinue(name, setName, setId, setCheckSubmit)
+                }
+                title="Continue"
+                bgWhite
+              />
             </div>
           </div>
         </div>

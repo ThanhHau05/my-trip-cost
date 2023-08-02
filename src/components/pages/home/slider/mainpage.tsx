@@ -3,12 +3,10 @@ import { IoNotifications } from 'react-icons/io5';
 
 import { Button } from '@/components/base';
 import { ImagesHome } from '@/components/images/home';
-import { HomeContext } from '@/context/home-context';
 import { MainContext } from '@/context/main-context';
 
 export const MainPage = () => {
   const { sliderRef } = useContext(MainContext);
-  const { onSubmitCreateANewTrip } = useContext(HomeContext);
 
   return (
     <div className="h-full w-full rounded-t-[40px] bg-white">
@@ -28,7 +26,7 @@ export const MainPage = () => {
       <div className="mt-5">
         <img src={ImagesHome.BackgroundHome.src} alt="" />
         <div className="mt-16 h-12 px-5">
-          <Button onClick={onSubmitCreateANewTrip} title="Create a new trip" />
+          <Button title="Create a new trip" />
         </div>
       </div>
     </div>
