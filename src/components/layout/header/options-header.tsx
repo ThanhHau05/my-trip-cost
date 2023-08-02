@@ -1,9 +1,10 @@
 import clsx from 'clsx';
-import { useState } from 'react';
+import { useContext, useState } from 'react';
 import Avatar from 'react-avatar';
 import { BsCheckCircleFill } from 'react-icons/bs';
 import { MdOutlineContentCopy } from 'react-icons/md';
 
+import { MainContext } from '@/context/main-context';
 import { useClickOutSide } from '@/hooks/useClickOutSide';
 
 export const ImageUser = ({
@@ -112,9 +113,10 @@ const HandleInfoUserOnAvatar = ({
 };
 
 export const MenuBarsBox = () => {
-  const [onclick, setOnclick] = useState(false);
+  const { setShowVerticalMenu, showverticalmenu } = useContext(MainContext);
+
   const _handleOnClick = () => {
-    setOnclick(!onclick);
+    setShowVerticalMenu(!showverticalmenu);
   };
   return (
     <button
@@ -124,16 +126,19 @@ export const MenuBarsBox = () => {
       <div
         className={clsx(
           'mb-[9px] transition-all',
-          onclick ? '-translate-x-1' : null,
+          showverticalmenu ? '-translate-x-1' : null,
         )}
       >
         <div
-          className={clsx('transition-all', onclick ? 'translate-y-3' : null)}
+          className={clsx(
+            'transition-all',
+            showverticalmenu ? 'translate-y-3' : null,
+          )}
         >
           <div
             className={clsx(
               'ml-3 h-[3px] w-10 rounded-full bg-gray-900/90 transition-all',
-              onclick ? 'w-9 rotate-45' : null,
+              showverticalmenu ? 'w-9 rotate-45' : null,
             )}
           />
         </div>
@@ -141,22 +146,25 @@ export const MenuBarsBox = () => {
       <div
         className={clsx(
           'h-[3px] w-10 rounded-full bg-gray-900/90 transition-all duration-75',
-          onclick ? 'invisible translate-x-2' : null,
+          showverticalmenu ? 'invisible translate-x-2' : null,
         )}
       />
       <div
         className={clsx(
           'mt-[9px] transition-all',
-          onclick ? '-translate-x-1' : null,
+          showverticalmenu ? '-translate-x-1' : null,
         )}
       >
         <div
-          className={clsx('transition-all', onclick ? '-translate-y-3' : null)}
+          className={clsx(
+            'transition-all',
+            showverticalmenu ? '-translate-y-3' : null,
+          )}
         >
           <div
             className={clsx(
               'ml-3 h-[3px] w-10 rounded-full bg-gray-900/90 transition-all',
-              onclick ? 'w-9 -rotate-45' : null,
+              showverticalmenu ? 'w-9 -rotate-45' : null,
             )}
           />
         </div>

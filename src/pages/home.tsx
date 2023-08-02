@@ -1,8 +1,10 @@
+import { useContext } from 'react';
 import { useSelector } from 'react-redux';
 
 import { Header, WrapperHeader } from '@/components/layout';
-import { SliderPage } from '@/components/pages';
+import { SliderPage, VerticalMenu } from '@/components/pages';
 import { HomeProvider } from '@/context/home-context';
+import { MainContext } from '@/context/main-context';
 import { selector } from '@/redux';
 
 import { Welcome } from './welcome';
@@ -20,6 +22,7 @@ export const Home = () => {
 
 const ContainerHome = () => {
   const { currentUserInformation } = useSelector(selector.user);
+  const { showverticalmenu } = useContext(MainContext);
 
   return (
     <WrapperHeader
@@ -32,7 +35,10 @@ const ContainerHome = () => {
         />
       }
     >
-      <SliderPage />
+      <div className="h-full">
+        {showverticalmenu ? <VerticalMenu /> : null}
+        <SliderPage />
+      </div>
     </WrapperHeader>
   );
 };
