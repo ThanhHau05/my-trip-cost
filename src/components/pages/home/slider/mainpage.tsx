@@ -4,15 +4,20 @@ import { IoNotifications } from 'react-icons/io5';
 import { Button } from '@/components/base';
 import { ImagesHome } from '@/components/images/home';
 import { HomeContext } from '@/context/home-context';
+import { MainContext } from '@/context/main-context';
 
 export const MainPage = () => {
+  const { sliderRef } = useContext(MainContext);
   const { onSubmitCreateANewTrip } = useContext(HomeContext);
 
   return (
     <div className="h-full w-full rounded-t-[40px] bg-white">
       <div className="w-full pr-6 pt-4">
         <div className="flex w-full justify-end">
-          <div className="relative inline-block">
+          <div
+            className="relative inline-block"
+            onClick={() => sliderRef.current.slickGoTo(1)}
+          >
             {/* <span className="absolute -right-1 -top-1 z-10 rounded-full bg-red-500 px-1 text-xs">
               1
             </span> */}

@@ -31,7 +31,7 @@ export const AddPersonalInformation = () => {
 };
 
 const _Options = () => {
-  const { setEmail, email, name, onSubmitStartNow } =
+  const { setEmail, email, name, onSubmitStartNow, id } =
     useContext(WelcomeContext);
 
   return (
@@ -40,8 +40,11 @@ const _Options = () => {
         <h2 className="block text-center text-2xl font-medium">
           Your name: <span className="font-bold">{name.value}</span>
         </h2>
+        <h2 className="mt-2 block text-center text-2xl font-medium">
+          Your ID: <span className="font-bold">{id}</span>
+        </h2>
       </div>
-      <div className="mt-14 w-full px-5">
+      <div className="mt-12 w-full px-5">
         <Input
           title="Email (optional)"
           otherType="email"
@@ -49,6 +52,9 @@ const _Options = () => {
           value={email.value}
           error={email.error}
         />
+        <p className="mt-2 text-xs">
+          You can add to increase the search rate for your account quickly.
+        </p>
       </div>
       <div className="mt-14 flex h-full w-full flex-col justify-end px-5">
         <div className="h-12 w-full">

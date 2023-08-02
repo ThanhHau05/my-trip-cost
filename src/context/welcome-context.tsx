@@ -46,6 +46,8 @@ interface WelcomeProps {
   onSubmitStartNow: () => void;
   loadingstartnow: boolean;
   setLoadingStartNow: Dispatch<SetStateAction<boolean>>;
+  id: number;
+  setId: Dispatch<SetStateAction<number>>;
 }
 
 export const WelcomeContext = createContext({} as WelcomeProps);
@@ -54,6 +56,7 @@ export const WelcomeProvider = ({ children }: { children: ReactNode }) => {
   const dispatch = useDispatch();
 
   const [name, setName] = useState({ value: '', error: '' });
+  const [id, setId] = useState(0);
   const [email, setEmail] = useState({ value: '', error: '' });
   const [image, setImage] = useState({
     url: '',
@@ -82,7 +85,6 @@ export const WelcomeProvider = ({ children }: { children: ReactNode }) => {
   const onSubmitStartNow = () => {
     if (isCheckSubmitStartNow()) {
       setTimeout(async () => {
-        const id = await DataFirebase.useRandomID();
         dispatch(
           UserActions.setCurrentUserInformation({
             ID: id,
@@ -106,10 +108,9 @@ export const WelcomeProvider = ({ children }: { children: ReactNode }) => {
       setName({ value: '', error: 'Please enter your name' });
     } else if (name.value && name.value.length < 7) {
       setName({ ...name, error: 'Name is too short' });
-    } else if (await DataFirebase.useCheckName(name.value)) {
-      setIsCheckOnSubmit(true);
     } else {
-      setName({ ...name, error: 'This name is already in use' });
+      setId(await DataFirebase.useRandomID());
+      setIsCheckOnSubmit(true);
     }
   };
 
@@ -151,6 +152,8 @@ export const WelcomeProvider = ({ children }: { children: ReactNode }) => {
     onSubmitStartNow,
     loadingstartnow,
     setLoadingStartNow,
+    id,
+    setId,
   };
   return (
     <WelcomeContext.Provider value={value}>{children}</WelcomeContext.Provider>

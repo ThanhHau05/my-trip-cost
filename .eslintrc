@@ -76,7 +76,8 @@
         "tailwindcss/no-custom-classname": "off",
         "no-plusplus": "off",
         "react/jsx-pascal-case": "off",
-        "react-hooks/rules-of-hooks": "off"
+        "react-hooks/rules-of-hooks": "off",
+        "jsx-a11y/no-static-element-interactions": "off"
       }
     },
     // Configuration for testing

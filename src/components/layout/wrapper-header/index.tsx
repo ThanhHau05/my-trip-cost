@@ -17,7 +17,7 @@ export const WrapperHeader = ({
           {header}
           <div
             className={clsx(
-              'mt-2 h-[calc(100%-66px)] rounded-t-[40px]',
+              'h-[calc(100%-80px)] rounded-t-[40px]',
               bgWhite ? 'bg-white' : null,
             )}
           >
