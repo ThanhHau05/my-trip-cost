@@ -9,8 +9,8 @@ export const SliderPage = () => {
     speed: 600,
     slidesToShow: 1,
     slidesToScroll: 1,
-    nextArrow: <NextPrev />,
-    prevArrow: <NextPrev />,
+    nextArrow: <Next />,
+    prevArrow: <Prev />,
   };
 
   return (
@@ -21,6 +21,10 @@ export const SliderPage = () => {
   );
 };
 
-const NextPrev = () => {
+const Next = () => {
+  return <div style={{ display: 'none' }} />;
+};
+
+const Prev = () => {
   return <div style={{ display: 'none' }} />;
 };

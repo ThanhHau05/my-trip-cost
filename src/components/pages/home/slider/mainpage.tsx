@@ -10,7 +10,7 @@ export const MainPage = () => {
 
   return (
     <div className="h-full w-full rounded-t-[40px] bg-white">
-      <div className="w-full pr-5 pt-4">
+      <div className="w-full pr-6 pt-4">
         <div className="flex w-full justify-end">
           <div className="relative inline-block">
             {/* <span className="absolute -right-1 -top-1 z-10 rounded-full bg-red-500 px-1 text-xs">

@@ -8,6 +8,7 @@ import { Provider } from 'react-redux';
 import { PersistGate } from 'redux-persist/integration/react';
 
 import { Loading } from '@/components/base/loading';
+import { MainProvider } from '@/context/main-context';
 import { WelcomeContext, WelcomeProvider } from '@/context/welcome-context';
 import Redux from '@/redux';
 
@@ -26,9 +27,11 @@ const MyApp = ({ Component, pageProps }: AppProps) => (
 const ContainerMyApp = ({ Component, pageProps }: any) => {
   const { loadingstartnow } = useContext(WelcomeContext);
   return (
-    <div>
+    <div className="w-full">
       {loadingstartnow ? <Loading /> : null}
-      <Component {...pageProps} />
+      <MainProvider>
+        <Component {...pageProps} />
+      </MainProvider>
     </div>
   );
 };
