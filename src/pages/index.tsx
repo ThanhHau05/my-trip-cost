@@ -5,21 +5,14 @@ import { VerticalMenu } from '@/components/base';
 import { Header, WrapperHeader } from '@/components/layout';
 import { SliderPage } from '@/components/pages';
 import { VERTICAL_MENU } from '@/constants/select-options';
-import { HomeProvider } from '@/context/home-context';
 import { MainContext } from '@/context/main-context';
 import { selector } from '@/redux';
 
 import { Welcome } from './welcome';
 
-export const HomePage = () => {
+const HomePage = () => {
   const { currentUserInformation } = useSelector(selector.user);
-  return currentUserInformation.name ? (
-    <HomeProvider>
-      <ContainerHome />
-    </HomeProvider>
-  ) : (
-    <Welcome />
-  );
+  return currentUserInformation?.name ? <ContainerHome /> : <Welcome />;
 };
 
 const ContainerHome = () => {
@@ -30,10 +23,10 @@ const ContainerHome = () => {
     <WrapperHeader
       header={
         <Header
-          id={currentUserInformation.ID}
-          image={currentUserInformation.image}
-          name={currentUserInformation.name}
-          email={currentUserInformation.gmail}
+          id={currentUserInformation?.Id}
+          image={currentUserInformation?.image}
+          name={currentUserInformation?.name}
+          email={currentUserInformation?.gmail}
         />
       }
     >

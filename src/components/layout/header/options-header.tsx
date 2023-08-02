@@ -93,7 +93,7 @@ const HandleInfoUserOnAvatar = ({
         )}
       </span>
       <span className="flex text-sm font-normal">
-        ID:
+        Id:
         <span className="ml-1 flex items-center font-medium">
           {id}
           <div className="flex pl-2">

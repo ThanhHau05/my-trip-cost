@@ -8,8 +8,7 @@ import { Provider } from 'react-redux';
 import { PersistGate } from 'redux-persist/integration/react';
 
 import { Loading } from '@/components/base/loading';
-import { MainProvider } from '@/context/main-context';
-import { WelcomeContext, WelcomeProvider } from '@/context/welcome-context';
+import { MainContext, MainProvider } from '@/context/main-context';
 import Redux from '@/redux';
 
 const { store, persistor } = Redux();
@@ -17,21 +16,23 @@ const { store, persistor } = Redux();
 const MyApp = ({ Component, pageProps }: AppProps) => (
   <Provider store={store}>
     <PersistGate loading={null} persistor={persistor}>
-      <WelcomeProvider>
+      <MainProvider>
         <ContainerMyApp pageProps={pageProps} Component={Component} />
-      </WelcomeProvider>
+      </MainProvider>
     </PersistGate>
   </Provider>
 );
 
 const ContainerMyApp = ({ Component, pageProps }: any) => {
-  const { loadingstartnow } = useContext(WelcomeContext);
+  const { loadingstartnow } = useContext(MainContext);
+  console.log(
+    '🚀 ~ file: _app.tsx:28 ~ ContainerMyApp ~ loadingstartnow:',
+    loadingstartnow,
+  );
   return (
     <div className="w-full">
       {loadingstartnow ? <Loading /> : null}
-      <MainProvider>
-        <Component {...pageProps} />
-      </MainProvider>
+      <Component {...pageProps} />
     </div>
   );
 };

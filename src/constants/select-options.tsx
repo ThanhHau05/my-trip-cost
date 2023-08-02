@@ -7,15 +7,15 @@ export interface SelectOptionsRenderDropDown {
   image?: string;
 }
 
-export interface InformationUser {
+export interface UserInformation {
   name: string;
+  Id: number;
   image: {
     url?: string;
     color?: string;
     text?: string;
   };
   gmail?: string;
-  ID: number;
 }
 
 export interface SelectOptionsObject {

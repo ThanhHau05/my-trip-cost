@@ -3,7 +3,7 @@ import type { DefaultActionCreators, DefaultActionTypes } from 'reduxsauce';
 import { createActions, createReducer } from 'reduxsauce';
 import * as Immutable from 'seamless-immutable';
 
-import type { InformationUser } from '@/constants/select-options';
+import type { UserInformation } from '@/constants/select-options';
 
 /* ------------- Model interface Create Action ------------- */
 interface UserAction extends AnyAction {}
@@ -13,13 +13,13 @@ interface IActionTypes extends DefaultActionTypes {
 }
 
 interface IActionCreators extends DefaultActionCreators {
-  setCurrentUserInformation: (user: InformationUser) => AnyAction;
+  setCurrentUserInformation: (user: UserInformation) => AnyAction;
 }
 
 type IActions = UserAction | AnyAction;
 
 export interface UserState {
-  currentUserInformation: InformationUser;
+  currentUserInformation: UserInformation;
 }
 
 type ImmutableMyType = Immutable.ImmutableObject<UserState>;
@@ -33,12 +33,12 @@ export const UserTypes = Types;
 export default Creators;
 
 const INITIAL_STATE: ImmutableMyType = Immutable.from({
-  currentUserInformation: <InformationUser>{},
+  currentUserInformation: <UserInformation>{},
 });
 
 const setCurrentUserInformation = (
   state: ImmutableMyType,
-  { user }: { user: InformationUser },
+  { user }: { user: UserInformation },
 ) => state.merge({ currentUserInformation: user });
 
 export const reducer = createReducer<ImmutableMyType, IActions>(INITIAL_STATE, {
