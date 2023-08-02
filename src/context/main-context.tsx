@@ -1,24 +1,27 @@
-import type { Dispatch, ReactNode, SetStateAction } from 'react';
-import { createContext, useState } from 'react';
+import type {
+  Dispatch,
+  MutableRefObject,
+  ReactNode,
+  SetStateAction,
+} from 'react';
+import { createContext, useRef, useState } from 'react';
 
 interface MainProps {
   showverticalmenu: boolean;
   setShowVerticalMenu: Dispatch<SetStateAction<boolean>>;
-  movetonotification: number;
-  setMoveToNotification: Dispatch<SetStateAction<number>>;
+  sliderRef: MutableRefObject<any>;
 }
 
 export const MainContext = createContext({} as MainProps);
 
 export const MainProvider = ({ children }: { children: ReactNode }) => {
   const [showverticalmenu, setShowVerticalMenu] = useState(false);
-  const [movetonotification, setMoveToNotification] = useState(0);
+  const sliderRef = useRef<any>();
 
   const value = {
     showverticalmenu,
     setShowVerticalMenu,
-    movetonotification,
-    setMoveToNotification,
+    sliderRef,
   };
   return <MainContext.Provider value={value}>{children}</MainContext.Provider>;
 };
