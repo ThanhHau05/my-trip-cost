@@ -2,8 +2,8 @@ import { useContext } from 'react';
 import { IoNotifications } from 'react-icons/io5';
 
 import { Button } from '@/components/base';
-import { ImagesHome } from '@/components/images/home';
 import { MainContext } from '@/context/main-context';
+import { ImagesHome } from '@/public/images';
 
 export const MainPage = () => {
   const { sliderRef } = useContext(MainContext);

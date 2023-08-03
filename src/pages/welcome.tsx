@@ -2,10 +2,10 @@ import type { Dispatch, SetStateAction } from 'react';
 import { useContext, useState } from 'react';
 
 import { Button, Input } from '@/components/base';
-import { ImagesWelcomePage } from '@/components/images';
 import { Wrapper } from '@/components/layout';
 import { AddPersonalInformation } from '@/components/pages';
 import { MainContext } from '@/context/main-context';
+import { ImagesWelcomePage } from '@/public/images';
 
 export const Welcome = () => {
   const [isCheckContinue, setIsCheckContinue] = useState(false);

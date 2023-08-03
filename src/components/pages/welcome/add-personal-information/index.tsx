@@ -4,9 +4,9 @@ import ReactAvatar from 'react-avatar';
 import { AiFillCamera } from 'react-icons/ai';
 
 import { Button, Input } from '@/components/base';
-import { ImagesWelcomePage } from '@/components/images';
 import { Wrapper } from '@/components/layout';
 import { MainContext } from '@/context/main-context';
+import { ImagesWelcomePage } from '@/public/images';
 
 import { getRandomColor } from '../hook';
 
