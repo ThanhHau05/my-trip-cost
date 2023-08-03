@@ -28,8 +28,10 @@ export const DataFirebase = {
     color: string,
     text: string,
   ) => {
-    const docRef = doc(db, 'MyTrips', 'users');
+    const docRef = doc(db, 'MyTrips', id.toString());
+    const docArrayRef = doc(db, 'MyTrips', 'user list');
     const isCheck = await getDoc(docRef);
+    const isCheckAray = await getDoc(docArrayRef);
     const newvalue = {
       name,
       id,
@@ -44,13 +46,16 @@ export const DataFirebase = {
       await setDoc(
         docRef,
         {
-          userdata: [newvalue],
+          data: newvalue,
         },
         { merge: true },
       );
+    }
+    if (!isCheckAray.exists()) {
+      await setDoc(docArrayRef, { users: [newvalue] }, { merge: true });
     } else {
-      await updateDoc(docRef, {
-        userdata: myFirebase.firestore.FieldValue.arrayUnion(newvalue),
+      await updateDoc(docArrayRef, {
+        users: myFirebase.firestore.FieldValue.arrayUnion(newvalue),
       });
     }
   },
