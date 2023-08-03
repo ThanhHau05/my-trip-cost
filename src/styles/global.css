@@ -79,3 +79,12 @@ border-radius: 78% 22% 52% 48% / 44% 74% 26% 56%
 .slick-slider, .slick-list, .slick-track, .slick-slide > div {
   height: 100%;
 }
+
+.scroll_invitation::-webkit-scrollbar {
+  width: 4px;
+}
+ 
+.scroll_invitation::-webkit-scrollbar-thumb {
+  background: #9999; 
+  border-radius: 0.375rem
+}
