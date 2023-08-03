@@ -2,6 +2,14 @@
 import type { IconType } from 'react-icons/lib';
 import { LuHistory } from 'react-icons/lu';
 
+export interface SelectOptionsInvitation {
+  tripid: number;
+  tripname: string;
+  name: string;
+  time: string;
+  date: string;
+}
+
 export interface SelectOptionsRenderDropDown {
   title: string;
   image?: string;
