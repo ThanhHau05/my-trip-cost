@@ -90,7 +90,7 @@ const Options = ({
           Your name: <span className="font-bold">{name}</span>
         </h2>
         <h2 className="mt-2 block text-center text-2xl font-medium">
-          Your Id: <span className="font-bold">{id}</span>
+          Your id: <span className="font-bold">{id}</span>
         </h2>
       </div>
       <div className="mt-12 w-full px-5">

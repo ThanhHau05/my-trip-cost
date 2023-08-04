@@ -6,7 +6,7 @@ import { MainContext } from '@/context/main-context';
 import { ImagesHome } from '@/public/images';
 
 export const MainPage = () => {
-  const { sliderRef } = useContext(MainContext);
+  const { sliderRef, setShowCreateTheTrip } = useContext(MainContext);
 
   return (
     <div className="h-full w-full rounded-t-[40px] bg-white">
@@ -26,7 +26,10 @@ export const MainPage = () => {
       <div className="mt-5">
         <img src={ImagesHome.BackgroundHome.src} alt="" />
         <div className="mt-16 h-12 px-5">
-          <Button title="Create a new trip" />
+          <Button
+            title="Create a new trip"
+            onClick={() => setShowCreateTheTrip(true)}
+          />
         </div>
       </div>
     </div>

@@ -48,6 +48,8 @@ interface MainProps {
     setId: Dispatch<SetStateAction<number>>,
     setCheckSubmit: (value: boolean) => void,
   ) => Promise<void>;
+  showcreatethetrip: boolean;
+  setShowCreateTheTrip: Dispatch<SetStateAction<boolean>>;
 }
 
 export const MainContext = createContext({} as MainProps);
@@ -57,6 +59,7 @@ export const MainProvider = ({ children }: { children: ReactNode }) => {
 
   const [loadingstartnow, setLoadingStartNow] = useState(false);
   const [showverticalmenu, setShowVerticalMenu] = useState(false);
+  const [showcreatethetrip, setShowCreateTheTrip] = useState(false);
   const sliderRef = useRef<any>();
 
   const onSubmitStartNow = (
@@ -81,7 +84,7 @@ export const MainProvider = ({ children }: { children: ReactNode }) => {
       setTimeout(() => {
         dispatch(
           UserActions.setCurrentUserInformation({
-            Id: id,
+            id,
             image: {
               url,
               color,
@@ -141,6 +144,8 @@ export const MainProvider = ({ children }: { children: ReactNode }) => {
     setLoadingStartNow,
     onSubmitStartNow,
     onSubmitContinue,
+    showcreatethetrip,
+    setShowCreateTheTrip,
   };
   return <MainContext.Provider value={value}>{children}</MainContext.Provider>;
 };
