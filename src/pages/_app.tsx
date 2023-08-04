@@ -25,10 +25,6 @@ const MyApp = ({ Component, pageProps }: AppProps) => (
 
 const ContainerMyApp = ({ Component, pageProps }: any) => {
   const { loadingstartnow } = useContext(MainContext);
-  console.log(
-    '🚀 ~ file: _app.tsx:28 ~ ContainerMyApp ~ loadingstartnow:',
-    loadingstartnow,
-  );
   return (
     <div className="w-full">
       {loadingstartnow ? <Loading /> : null}

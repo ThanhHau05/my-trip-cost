@@ -3,7 +3,7 @@ import { useSelector } from 'react-redux';
 
 import { VerticalMenu } from '@/components/base';
 import { Header, WrapperHeader } from '@/components/layout';
-import { SliderPage } from '@/components/pages';
+import { CreateTheTrip, SliderPage } from '@/components/pages';
 import { VERTICAL_MENU } from '@/constants/select-options';
 import { MainContext } from '@/context/main-context';
 import { selector } from '@/redux';
@@ -17,13 +17,13 @@ const HomePage = () => {
 
 const ContainerHome = () => {
   const { currentUserInformation } = useSelector(selector.user);
-  const { showverticalmenu } = useContext(MainContext);
+  const { showverticalmenu, showcreatethetrip } = useContext(MainContext);
 
   return (
     <WrapperHeader
       header={
         <Header
-          id={currentUserInformation?.Id}
+          id={currentUserInformation?.id}
           image={currentUserInformation?.image}
           name={currentUserInformation?.name}
           email={currentUserInformation?.gmail}
@@ -36,6 +36,7 @@ const ContainerHome = () => {
             <RenderItemVerticalMenuHome />
           </VerticalMenu>
         ) : null}
+        {showcreatethetrip ? <CreateTheTrip /> : null}
         <SliderPage />
       </div>
     </WrapperHeader>

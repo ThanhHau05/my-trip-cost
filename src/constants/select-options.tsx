@@ -17,7 +17,7 @@ export interface SelectOptionsRenderDropDown {
 
 export interface UserInformation {
   name: string;
-  Id: number;
+  id: number;
   image: {
     url?: string;
     color?: string;
