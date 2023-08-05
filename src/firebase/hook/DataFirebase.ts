@@ -1,6 +1,9 @@
 import { doc, getDoc, setDoc, updateDoc } from 'firebase/firestore';
 
-import type { UserInformation } from '@/constants/select-options';
+import type {
+  SelectOptionsInvitation,
+  UserInformation,
+} from '@/constants/select-options';
 
 import { db, myFirebase } from '../firebase';
 
@@ -29,13 +32,15 @@ export const DataFirebase = {
     url: string,
     color: string,
     text: string,
+    uid: string,
+    invitation: SelectOptionsInvitation[],
   ) => {
-    const docRef = doc(db, 'MyTrips', id.toString());
+    const docRef = doc(db, 'UserInvitations', uid);
     const docArrayRef = doc(db, 'MyTrips', 'user list');
     const isCheck = await getDoc(docRef);
     const isCheckAray = await getDoc(docArrayRef);
     const newvalue = {
-      name,
+      displayName: name,
       id,
       image: {
         url,
@@ -43,12 +48,13 @@ export const DataFirebase = {
         text,
       },
       email,
+      uid,
     };
     if (!isCheck.exists()) {
       await setDoc(
         docRef,
         {
-          data: newvalue,
+          invitation,
         },
         { merge: true },
       );
@@ -69,5 +75,20 @@ export const DataFirebase = {
       return userlist;
     }
     return [];
+  },
+  useCheckEmail: async (email: string) => {
+    const docRef = doc(db, 'MyTrips', 'email');
+    const isCheck = await getDoc(docRef);
+    if (isCheck.exists()) {
+      const { emaillist } = isCheck.data();
+      if (emaillist.find((item: string) => item === email)) return true;
+
+      await updateDoc(docRef, {
+        emaillist: myFirebase.firestore.FieldValue.arrayUnion(email),
+      });
+      return false;
+    }
+    await setDoc(docRef, { emaillist: [email] }, { merge: true });
+    return false;
   },
 };

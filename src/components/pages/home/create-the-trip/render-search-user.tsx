@@ -29,8 +29,8 @@ export const RenderSearchUser = ({
         ? data.map((item) =>
             isCheckRender(
               item.id,
-              item.name,
-              item.gmail ? item.gmail : 'email',
+              item.displayName,
+              item.email ? item.email : 'email',
               searchvalue,
               userlistadded,
             ) ? (
@@ -43,12 +43,12 @@ export const RenderSearchUser = ({
                     ...e,
                     {
                       id: item.id,
-                      name: item.name,
-                      gmail: item.gmail,
-                      image: {
-                        color: item.image.color,
-                        text: item.image.text,
-                        url: item.image.url,
+                      displayName: item.displayName,
+                      email: item.email,
+                      photoURL: {
+                        color: item.photoURL.color,
+                        text: item.photoURL.text,
+                        url: item.photoURL.url,
                       },
                     },
                   ]);
@@ -56,12 +56,12 @@ export const RenderSearchUser = ({
               >
                 <Avatar
                   size="40"
-                  color={item.image.color}
+                  color={item.photoURL.color}
                   className="rounded-full shadow-md"
-                  value={item.image.text}
-                  src={item.image.url}
+                  value={item.photoURL.text}
+                  src={item.photoURL.url}
                 />
-                <h2 className="ml-3">{item.name}</h2>
+                <h2 className="ml-3">{item.displayName}</h2>
               </div>
             ) : null,
           )

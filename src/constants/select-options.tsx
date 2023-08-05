@@ -1,6 +1,14 @@
 // import { BiLogOut } from 'react-icons/bi';
+import { BiLogOut } from 'react-icons/bi';
 import type { IconType } from 'react-icons/lib';
 import { LuHistory } from 'react-icons/lu';
+
+// export interface UserInformationOfGoogle {
+//   displayName: string;
+//   email: string;
+//   photoURL: string;
+//   uid: string;
+// }
 
 export interface SelectOptionsInvitation {
   tripid: number;
@@ -16,14 +24,14 @@ export interface SelectOptionsRenderDropDown {
 }
 
 export interface UserInformation {
-  name: string;
+  displayName: string;
   id: number;
-  image: {
+  photoURL: {
     url?: string;
     color?: string;
     text?: string;
   };
-  gmail?: string;
+  email: string;
 }
 
 export interface SelectOptionsObject {
@@ -38,9 +46,9 @@ export const VERTICAL_MENU: SelectOptionsObject[] = [
     icon: LuHistory,
     value: 'invoice history',
   },
-  // {
-  //   title: 'Sign Out',
-  //   icon: BiLogOut,
-  //   value: 'sign out',
-  // },
+  {
+    title: 'Sign Out',
+    icon: BiLogOut,
+    value: 'sign out',
+  },
 ];

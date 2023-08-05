@@ -14,8 +14,8 @@ export const isCheckRender = (
 
   if (
     id !== currentUserInformation.id &&
-    name !== currentUserInformation.name &&
-    gmail !== currentUserInformation.gmail
+    name !== currentUserInformation.displayName &&
+    gmail !== currentUserInformation.email
   ) {
     const isCheck =
       id.toString().includes(value) ||
@@ -23,10 +23,10 @@ export const isCheckRender = (
       gmail.includes(value);
     if (data.length > 0) {
       if (
-        data.find((item) => item.name.includes(value)) ||
+        data.find((item) => item.displayName.includes(value)) ||
         data.find((item) => item.id.toString().includes(value)) ||
         data.find((item) =>
-          item.gmail ? item.gmail.includes(value) : undefined,
+          item.email ? item.email.includes(value) : undefined,
         )
       ) {
         if (isCheck) {
