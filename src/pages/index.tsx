@@ -12,7 +12,7 @@ import { Welcome } from './welcome';
 
 const HomePage = () => {
   const { currentUserInformation } = useSelector(selector.user);
-  return currentUserInformation?.name ? <ContainerHome /> : <Welcome />;
+  return currentUserInformation?.displayName ? <ContainerHome /> : <Welcome />;
 };
 
 const ContainerHome = () => {
@@ -24,9 +24,9 @@ const ContainerHome = () => {
       header={
         <Header
           id={currentUserInformation?.id}
-          image={currentUserInformation?.image}
-          name={currentUserInformation?.name}
-          email={currentUserInformation?.gmail}
+          image={currentUserInformation?.photoURL}
+          name={currentUserInformation?.displayName}
+          email={currentUserInformation?.email}
         />
       }
     >

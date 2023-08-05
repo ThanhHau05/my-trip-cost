@@ -10,7 +10,7 @@ import { DataFirebase } from '@/firebase';
 import { RemoveUserInUserListAdded } from './hook';
 import { RenderSearchUser } from './render-search-user';
 
-export const OptionsCreateTheTri = () => {
+export const OptionsCreateTheTrip = () => {
   const [tripname, setTripName] = useState({ value: '', error: '' });
   const [companions, setCompanions] = useState({ value: '', error: '' });
   const [userlist, setUserList] = useState<UserInformation[]>([]);
@@ -101,12 +101,12 @@ export const RenderUserListAdded = ({
           <div className="flex items-center justify-center">
             <Avatar
               size="40"
-              color={item.image.color}
+              color={item.photoURL.color}
               className="rounded-full shadow-md"
-              value={item.image.text}
-              src={item.image.url}
+              value={item.photoURL.text}
+              src={item.photoURL.url}
             />
-            <h2 className="ml-3">{item.name}</h2>
+            <h2 className="ml-3">{item.displayName}</h2>
           </div>
           <IoClose
             className="cursor-pointer text-xl text-gray-900"

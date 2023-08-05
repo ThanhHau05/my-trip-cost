@@ -3,13 +3,13 @@ import { IoClose } from 'react-icons/io5';
 
 import { MainContext } from '@/context/main-context';
 
-import { OptionsCreateTheTri } from './options';
+import { OptionsCreateTheTrip } from './options';
 
 export const CreateTheTrip = () => {
   const { setShowCreateTheTrip } = useContext(MainContext);
 
   return (
-    <div className="fixed z-10 h-full w-[400px] p-2">
+    <div className="fixed z-10 h-full w-400 p-2">
       <div className="h-full w-full rounded-t-[40px] border bg-slate-50 p-3 shadow-md">
         <div className="flex w-full justify-end">
           <IoClose
@@ -17,7 +17,7 @@ export const CreateTheTrip = () => {
             onClick={() => setShowCreateTheTrip(false)}
           />
         </div>
-        <OptionsCreateTheTri />
+        <OptionsCreateTheTrip />
       </div>
     </div>
   );

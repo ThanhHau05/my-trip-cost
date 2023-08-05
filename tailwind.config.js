@@ -15,6 +15,9 @@ module.exports = {
       '6xl': '4rem',
     },
     extend: {
+      spacing: {
+        400: '25rem',
+      },
       colors: {
         gray: {
           100: '#f7fafc',
