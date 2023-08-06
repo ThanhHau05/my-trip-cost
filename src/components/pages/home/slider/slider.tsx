@@ -19,10 +19,6 @@ export const SliderPage = () => {
   >([]);
 
   useEffect(() => {
-    console.log(invitationlist);
-  }, [invitationlist]);
-
-  useEffect(() => {
     const handleInvitation = (uid: string) => {
       if (uid) {
         const docRef = doc(db, 'UserInvitations', uid);
@@ -49,8 +45,8 @@ export const SliderPage = () => {
 
   return (
     <Slider ref={sliderRef} {...settings}>
-      <MainPage />
-      <NotificationPage />
+      <MainPage currentNumberOfNoti={invitationlist.length} />
+      <NotificationPage currentData={invitationlist} />
     </Slider>
   );
 };
