@@ -23,31 +23,55 @@ export const ContainerWelcome = ({
   useEffect(() => {
     const handle = async () => {
       if (user?.user) {
-        if (user.user.email)
-          await DataFirebase.useAddEmailCheck(user.user.email);
-        const id = await DataFirebase.useRandomID();
-        DataFirebase.useAddUserInformationIntoData(
-          useChangeNameStyle(user?.user.displayName || ''),
-          id,
-          user?.user.email || '',
-          user?.user.photoURL || '',
-          '',
-          '',
-          user?.user.uid,
-          [],
-        );
-        dispatch(
-          UserActions.setCurrentUserInformation({
-            displayName: useChangeNameStyle(user?.user.displayName || ''),
-            email: user?.user.email || '',
-            id,
-            photoURL: {
-              color: '',
-              text: '',
-              url: user?.user.photoURL || '',
-            },
-          }),
-        );
+        if (user.user.email) {
+          if (!(await DataFirebase.useCheckEmail(user.user.email))) {
+            await DataFirebase.useAddEmailCheck(user.user.email);
+            const id = await DataFirebase.useRandomID();
+            DataFirebase.useAddUserInformationIntoData(
+              useChangeNameStyle(user?.user.displayName || ''),
+              id,
+              user?.user.email || '',
+              user?.user.photoURL || '',
+              '',
+              '',
+              user?.user.uid,
+              [],
+            );
+            dispatch(
+              UserActions.setCurrentUserInformation({
+                displayName: useChangeNameStyle(user?.user.displayName || ''),
+                email: user?.user.email || '',
+                id,
+                photoURL: {
+                  color: '',
+                  text: '',
+                  url: user?.user.photoURL || '',
+                },
+                uid: '',
+              }),
+            );
+          } else {
+            const userlist = await DataFirebase.useGetUserList();
+            const value = userlist.find(
+              (item) => item.email === user.user.email,
+            );
+            if (value?.id) {
+              dispatch(
+                UserActions.setCurrentUserInformation({
+                  displayName: useChangeNameStyle(user?.user.displayName || ''),
+                  email: user?.user.email || '',
+                  id: value?.id,
+                  photoURL: {
+                    color: '',
+                    text: '',
+                    url: user?.user.photoURL || '',
+                  },
+                  uid: '',
+                }),
+              );
+            }
+          }
+        }
       }
     };
     handle();

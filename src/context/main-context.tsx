@@ -216,6 +216,7 @@ export const MainProvider = ({ children }: { children: ReactNode }) => {
           },
           displayName: nameValue,
           email,
+          uid: '',
         }),
       );
       setLoadingStartNow(false);

@@ -4,14 +4,12 @@ export const Invitation = ({
   tripid,
   tripname,
   name,
-  time,
-  date,
+  dateandtime,
 }: {
   tripid: number;
   tripname: string;
   name: string;
-  time: string;
-  date: string;
+  dateandtime: string;
 }) => {
   return (
     <div className="w-full rounded-3xl border bg-slate-50 px-3 py-2 shadow-md">
@@ -24,9 +22,7 @@ export const Invitation = ({
         <span className="text-lg font-medium">{name}</span>
       </h2>
       <div className="mt-2 flex items-center justify-between">
-        <span className="text-sm">
-          {time} - {date}
-        </span>
+        <span className="text-sm">{dateandtime}</span>
         <div className="flex h-9 gap-2">
           <div className=" h-full w-20">
             <Button title="Join" />

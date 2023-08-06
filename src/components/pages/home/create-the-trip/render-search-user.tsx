@@ -50,6 +50,7 @@ export const RenderSearchUser = ({
                         text: item.photoURL.text,
                         url: item.photoURL.url,
                       },
+                      uid: item.uid,
                     },
                   ]);
                 }}
