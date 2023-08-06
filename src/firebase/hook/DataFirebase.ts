@@ -96,4 +96,16 @@ export const DataFirebase = {
       await setDoc(docRef, { emaillist: [email] }, { merge: true });
     }
   },
+  useAcceptTheInvitation: async (
+    uid: string,
+    data: SelectOptionsInvitation,
+  ) => {
+    const docRef = doc(db, 'UserInvitations', uid);
+    const isCheck = await getDoc(docRef);
+    if (isCheck.exists()) {
+      updateDoc(docRef, {
+        invitation: myFirebase.firestore.FieldValue.arrayUnion(data),
+      });
+    }
+  },
 };

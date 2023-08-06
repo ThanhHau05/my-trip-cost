@@ -51,7 +51,10 @@ const RenderItemVerticalMenuHome = () => {
 
   const onSubmit = async (value: string) => {
     if (value === 'sign out') {
-      await signOut();
+      window.location.reload();
+      setTimeout(async () => {
+        await signOut();
+      }, 200);
       dispatch(
         UserActions.setCurrentUserInformation({
           displayName: '',
@@ -62,6 +65,7 @@ const RenderItemVerticalMenuHome = () => {
             text: undefined,
           },
           email: '',
+          uid: '',
         }),
       );
     }

@@ -27,11 +27,10 @@ export const RenderInvitation = ({
         {data.map((item) => (
           <Invitation
             key={item.tripid}
-            date={item.date}
             name={item.name}
-            time={item.time}
             tripid={item.tripid}
             tripname={item.tripname}
+            dateandtime={item.dateandtime}
           />
         ))}
       </div>

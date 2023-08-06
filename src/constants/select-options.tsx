@@ -14,8 +14,7 @@ export interface SelectOptionsInvitation {
   tripid: number;
   tripname: string;
   name: string;
-  time: string;
-  date: string;
+  dateandtime: string;
 }
 
 export interface SelectOptionsRenderDropDown {
@@ -32,6 +31,7 @@ export interface UserInformation {
     text?: string;
   };
   email: string;
+  uid: string;
 }
 
 export interface SelectOptionsObject {

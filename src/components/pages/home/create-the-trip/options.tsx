@@ -1,16 +1,27 @@
 import type { Dispatch, SetStateAction } from 'react';
 import { useEffect, useState } from 'react';
 import Avatar from 'react-avatar';
+import { useAuthState } from 'react-firebase-hooks/auth';
 import { IoClose } from 'react-icons/io5';
+import { useSelector } from 'react-redux';
 
 import { Button, Input } from '@/components/base';
-import type { UserInformation } from '@/constants/select-options';
-import { DataFirebase } from '@/firebase';
+import type {
+  SelectOptionsInvitation,
+  UserInformation,
+} from '@/constants/select-options';
+import { auth, DataFirebase } from '@/firebase';
+import { useGetTimeAndDate } from '@/hooks';
+import { selector } from '@/redux';
 
 import { RemoveUserInUserListAdded } from './hook';
 import { RenderSearchUser } from './render-search-user';
 
 export const OptionsCreateTheTrip = () => {
+  const [user] = useAuthState(auth);
+
+  const { currentUserInformation } = useSelector(selector.user);
+
   const [tripname, setTripName] = useState({ value: '', error: '' });
   const [companions, setCompanions] = useState({ value: '', error: '' });
   const [userlist, setUserList] = useState<UserInformation[]>([]);
@@ -27,17 +38,41 @@ export const OptionsCreateTheTrip = () => {
     });
   }, []);
 
-  const onSubmitCreateTrip = () => {
+  const isCheck = () => {
+    let isError = false;
     if (!tripname.value) {
+      isError = true;
       setTripName({ value: '', error: 'Please enter your trip name' });
     } else if (tripname.value && tripname.value.length <= 4) {
+      isError = true;
       setTripName({ ...tripname, error: 'Trip name too short' });
     }
     if (userlistadded.length === 0) {
+      isError = true;
       setCompanions({
         value: '',
         error: 'Please add at least on person in the trip',
       });
+    }
+    return !isError;
+  };
+
+  const onSubmitCreateTrip = async () => {
+    if (isCheck()) {
+      if (user) {
+        const promises = userlistadded.map(async (item) => {
+          const id = await DataFirebase.useRandomID();
+          const time = useGetTimeAndDate();
+          const data: SelectOptionsInvitation = {
+            name: user.displayName || currentUserInformation.displayName,
+            tripid: id,
+            tripname: tripname.value,
+            dateandtime: time,
+          };
+          DataFirebase.useAcceptTheInvitation(item.uid, data);
+        });
+        await Promise.all(promises);
+      }
     }
   };
   return (
