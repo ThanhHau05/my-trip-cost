@@ -42,7 +42,7 @@ export const DataFirebase = {
     const newvalue = {
       displayName: name,
       id,
-      image: {
+      photoURL: {
         url,
         color,
         text,
@@ -82,13 +82,18 @@ export const DataFirebase = {
     if (isCheck.exists()) {
       const { emaillist } = isCheck.data();
       if (emaillist.find((item: string) => item === email)) return true;
-
+    }
+    return false;
+  },
+  useAddEmailCheck: async (email: string) => {
+    const docRef = doc(db, 'MyTrips', 'email');
+    const isCheck = await getDoc(docRef);
+    if (isCheck.exists()) {
       await updateDoc(docRef, {
         emaillist: myFirebase.firestore.FieldValue.arrayUnion(email),
       });
-      return false;
+    } else {
+      await setDoc(docRef, { emaillist: [email] }, { merge: true });
     }
-    await setDoc(docRef, { emaillist: [email] }, { merge: true });
-    return false;
   },
 };
