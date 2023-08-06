@@ -1,3 +1,4 @@
+import clsx from 'clsx';
 import { useContext } from 'react';
 import { IoNotifications } from 'react-icons/io5';
 
@@ -5,7 +6,11 @@ import { Button } from '@/components/base';
 import { MainContext } from '@/context/main-context';
 import { ImagesHome } from '@/public/images';
 
-export const MainPage = () => {
+export const MainPage = ({
+  currentNumberOfNoti,
+}: {
+  currentNumberOfNoti: number;
+}) => {
   const { sliderRef, setShowCreateTheTrip } = useContext(MainContext);
 
   return (
@@ -16,9 +21,16 @@ export const MainPage = () => {
             className="relative inline-block"
             onClick={() => sliderRef.current.slickGoTo(1)}
           >
-            {/* <span className="absolute -right-1 -top-1 z-10 rounded-full bg-red-500 px-1 text-xs">
-              1
-            </span> */}
+            {currentNumberOfNoti ? (
+              <span
+                className={clsx(
+                  'absolute -top-1 z-10 rounded-full bg-red-500 px-1 text-[10px]',
+                  currentNumberOfNoti >= 10 ? '-right-1.5' : '-right-1',
+                )}
+              >
+                {currentNumberOfNoti >= 10 ? '9+' : currentNumberOfNoti}
+              </span>
+            ) : null}
             <IoNotifications className="ml-auto cursor-pointer text-2xl text-gray-900 drop-shadow-md transition-all hover:text-gray-950" />
           </div>
         </div>
