@@ -6,11 +6,11 @@ import type {
 } from 'react';
 import { createContext, useEffect, useRef, useState } from 'react';
 import { useCreateUserWithEmailAndPassword } from 'react-firebase-hooks/auth';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 
 import { isCheckEmailFormat } from '@/components/pages';
 import { auth, DataFirebase } from '@/firebase';
-import { UserActions } from '@/redux';
+import { selector, UserActions } from '@/redux';
 
 interface MainProps {
   showverticalmenu: boolean;
@@ -44,20 +44,6 @@ interface MainProps {
     color: string,
     text: string,
   ) => Promise<void>;
-  // onSubmitContinue: (
-  //   name: {
-  //     value: string;
-  //     error: string;
-  //   },
-  //   setName: Dispatch<
-  //     SetStateAction<{
-  //       value: string;
-  //       error: string;
-  //     }>
-  //   >,
-  //   setId: Dispatch<SetStateAction<number>>,
-  //   setCheckSubmit: (value: boolean) => void,
-  // ) => Promise<void>;
   showcreatethetrip: boolean;
   setShowCreateTheTrip: Dispatch<SetStateAction<boolean>>;
   name: {
@@ -70,6 +56,14 @@ interface MainProps {
       error: string;
     }>
   >;
+  AddUserInformationIntoRedux: (
+    id: number,
+    url: string,
+    color: string,
+    text: string,
+    name: string,
+    email: string,
+  ) => void;
 }
 
 export const MainContext = createContext({} as MainProps);
@@ -78,6 +72,7 @@ export const MainProvider = ({ children }: { children: ReactNode }) => {
   const [createUserWithEmailAndPassword, userEmailAndPassword] =
     useCreateUserWithEmailAndPassword(auth);
 
+  const { currentUserInformation } = useSelector(selector.user);
   const dispatch = useDispatch();
 
   const [loadingstartnow, setLoadingStartNow] = useState(false);
@@ -89,22 +84,22 @@ export const MainProvider = ({ children }: { children: ReactNode }) => {
   const sliderRef = useRef<any>();
 
   useEffect(() => {
-    if (userEmailAndPassword && id !== 0) {
-      const handle = async () => {
+    const handle = async () => {
+      if (userEmailAndPassword && id !== 0 && currentUserInformation) {
         DataFirebase.useAddUserInformationIntoData(
           name.value,
           id,
           userEmailAndPassword.user.email || '',
-          userEmailAndPassword.user.photoURL || '',
-          '',
-          '',
+          currentUserInformation.photoURL?.url || '',
+          currentUserInformation.photoURL?.color || '',
+          currentUserInformation.photoURL?.text || '',
           userEmailAndPassword.user.uid || '',
           [],
         );
-      };
-      handle();
-    }
-  }, [userEmailAndPassword, id]);
+      }
+    };
+    handle();
+  }, [userEmailAndPassword, id, currentUserInformation]);
 
   const isCheckSubmitStartNow = async (
     namevalue: string,
@@ -194,55 +189,39 @@ export const MainProvider = ({ children }: { children: ReactNode }) => {
         setPassword,
       )
     ) {
+      await DataFirebase.useAddEmailCheck(email);
       createUserWithEmailAndPassword(email, password);
       const newid = await DataFirebase.useRandomID();
+      AddUserInformationIntoRedux(newid, url, color, text, namevalue, email);
       setId(newid);
-      setTimeout(async () => {
-        dispatch(
-          UserActions.setCurrentUserInformation({
-            id,
-            photoURL: {
-              url,
-              color,
-              text,
-            },
-            displayName: namevalue,
-            email,
-          }),
-        );
-        setLoadingStartNow(false);
-      }, 2700);
-      setLoadingStartNow(true);
     }
   };
 
-  // const onSubmitContinue = async (
-  //   name: {
-  //     value: string;
-  //     error: string;
-  //   },
-  //   setName: Dispatch<
-  //     SetStateAction<{
-  //       value: string;
-  //       error: string;
-  //     }>
-  //   >,
-  //   setId: Dispatch<SetStateAction<number>>,
-  //   setCheckSubmit: (value: boolean) => void,
-  // ) => {
-  //   if (!name.value) {
-  //     setName({ value: '', error: 'Please enter your name' });
-  //   } else if (name.value && name.value.length < 7) {
-  //     setName({ ...name, error: 'Name is too short' });
-  //   } else {
-  //     setTimeout(() => {
-  //       setCheckSubmit(true);
-  //       setLoadingStartNow(false);
-  //     }, 1500);
-  //     setLoadingStartNow(true);
-  //     setId(await DataFirebase.useRandomID());
-  //   }
-  // };
+  const AddUserInformationIntoRedux = (
+    idValue: number,
+    url: string,
+    color: string,
+    text: string,
+    nameValue: string,
+    email: string,
+  ) => {
+    setTimeout(async () => {
+      dispatch(
+        UserActions.setCurrentUserInformation({
+          id: idValue,
+          photoURL: {
+            url,
+            color: url ? '' : color,
+            text: url ? '' : text,
+          },
+          displayName: nameValue,
+          email,
+        }),
+      );
+      setLoadingStartNow(false);
+    }, 2700);
+    setLoadingStartNow(true);
+  };
 
   const value = {
     showverticalmenu,
@@ -251,11 +230,11 @@ export const MainProvider = ({ children }: { children: ReactNode }) => {
     loadingstartnow,
     setLoadingStartNow,
     onSubmitStartNow,
-    // onSubmitContinue,
     showcreatethetrip,
     setShowCreateTheTrip,
     name,
     setName,
+    AddUserInformationIntoRedux,
   };
   return <MainContext.Provider value={value}>{children}</MainContext.Provider>;
 };

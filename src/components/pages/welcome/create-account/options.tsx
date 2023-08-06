@@ -46,9 +46,7 @@ export const Options = ({
         <div className="h-[118px]">
           <Input
             title="Email"
-            onChangeText={(e) =>
-              setEmail({ value: useChangeNameStyle(e), error: '' })
-            }
+            onChangeText={(e) => setEmail({ value: e, error: '' })}
             value={email.value}
             error={email.error}
           />
@@ -77,7 +75,7 @@ export const Options = ({
                 image.text,
               );
             }}
-            title="START NOW"
+            title="Sign Up"
           />
         </div>
       </div>
