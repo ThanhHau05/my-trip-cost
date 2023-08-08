@@ -47,7 +47,8 @@ export const ContainerWelcome = ({
                   text: '',
                   url: user?.user.photoURL || '',
                 },
-                uid: '',
+                uid: user?.user.uid,
+                status: false,
               }),
             );
           } else {
@@ -66,7 +67,8 @@ export const ContainerWelcome = ({
                     text: '',
                     url: user?.user.photoURL || '',
                   },
-                  uid: '',
+                  uid: user?.user.uid,
+                  status: false,
                 }),
               );
             }

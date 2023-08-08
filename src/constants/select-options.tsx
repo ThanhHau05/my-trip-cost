@@ -3,18 +3,21 @@ import { BiLogOut } from 'react-icons/bi';
 import type { IconType } from 'react-icons/lib';
 import { LuHistory } from 'react-icons/lu';
 
-// export interface UserInformationOfGoogle {
-//   displayName: string;
-//   email: string;
-//   photoURL: string;
-//   uid: string;
-// }
+export interface SelectOptionsTrip {
+  tripname: string;
+  id: number;
+  userlist: UserInformation[];
+  tripmaster?: string;
+  status?: boolean;
+}
 
 export interface SelectOptionsInvitation {
   tripid: number;
   tripname: string;
   name: string;
   dateandtime: string;
+  status: boolean;
+  uid: string;
 }
 
 export interface SelectOptionsRenderDropDown {
@@ -32,6 +35,7 @@ export interface UserInformation {
   };
   email: string;
   uid: string;
+  status: boolean;
 }
 
 export interface SelectOptionsObject {

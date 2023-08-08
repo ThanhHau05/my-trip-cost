@@ -7,6 +7,7 @@ import { useContext } from 'react';
 import { Provider } from 'react-redux';
 import { PersistGate } from 'redux-persist/integration/react';
 
+import { Notification, NotificationConfirmOperation } from '@/components/base';
 import { Loading } from '@/components/base/loading';
 import { MainContext, MainProvider } from '@/context/main-context';
 import Redux from '@/redux';
@@ -24,12 +25,15 @@ const MyApp = ({ Component, pageProps }: AppProps) => (
 );
 
 const ContainerMyApp = ({ Component, pageProps }: any) => {
-  const { loadingstartnow } = useContext(MainContext);
+  const { loadingstartnow, contentconfirm, contentnotification } =
+    useContext(MainContext);
   return (
-    <div className="w-full">
+    <>
       {loadingstartnow ? <Loading /> : null}
+      {contentconfirm.length !== 0 ? <NotificationConfirmOperation /> : null}
+      {contentnotification.length !== 0 ? <Notification /> : null}
       <Component {...pageProps} />
-    </div>
+    </>
   );
 };
 

@@ -1,3 +1,8 @@
+import { useDispatch, useSelector } from 'react-redux';
+
+import { DataFirebase } from '@/firebase';
+import { selector, TripActions } from '@/redux';
+
 import { Button } from '../button';
 
 export const Invitation = ({
@@ -11,6 +16,19 @@ export const Invitation = ({
   name: string;
   dateandtime: string;
 }) => {
+  const { currentUserInformation } = useSelector(selector.user);
+
+  const dispatch = useDispatch();
+
+  const onJoinTrip = async (id: number) => {
+    await DataFirebase.useJoinTrip(id, currentUserInformation.uid);
+    dispatch(TripActions.setCurrentIdJoinTrip(id));
+  };
+
+  const onCancelJoin = async (id: number) => {
+    await DataFirebase.useRefuseInvitation(currentUserInformation.uid, id);
+  };
+
   return (
     <div className="w-full rounded-3xl border bg-slate-50 px-3 py-2 shadow-md">
       <h2 className="text-sm">
@@ -25,10 +43,14 @@ export const Invitation = ({
         <span className="text-sm">{dateandtime}</span>
         <div className="flex h-9 gap-2">
           <div className=" h-full w-20">
-            <Button title="Join" />
+            <Button title="Join" onClick={() => onJoinTrip(tripid)} />
           </div>
           <div className="h-full w-20">
-            <Button bgWhite title="Cancel" />
+            <Button
+              bgWhite
+              title="Cancel"
+              onClick={() => onCancelJoin(tripid)}
+            />
           </div>
         </div>
       </div>

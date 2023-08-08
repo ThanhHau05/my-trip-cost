@@ -1,7 +1,8 @@
-import { doc, getDoc, setDoc, updateDoc } from 'firebase/firestore';
+import { deleteDoc, doc, getDoc, setDoc, updateDoc } from 'firebase/firestore';
 
 import type {
   SelectOptionsInvitation,
+  SelectOptionsTrip,
   UserInformation,
 } from '@/constants/select-options';
 
@@ -106,6 +107,130 @@ export const DataFirebase = {
       updateDoc(docRef, {
         invitation: myFirebase.firestore.FieldValue.arrayUnion(data),
       });
+    }
+  },
+  useDeleteTheTripInUserData: async (uid: string, id: number) => {
+    const docRef = doc(db, 'UserInvitations', uid);
+    const isCheck = await getDoc(docRef);
+    if (isCheck.exists()) {
+      const value: SelectOptionsInvitation[] = isCheck.data().invitation;
+      const newArray = value.filter((item) => item.tripid !== id);
+      await setDoc(docRef, {
+        invitation: newArray,
+      });
+    }
+  },
+  useJoinTrip: async (id: number, uid: string) => {
+    const docRef = doc(db, 'Trips', id.toString());
+    const isCheck = await getDoc(docRef);
+    if (isCheck.exists()) {
+      const data: SelectOptionsTrip = isCheck.data().trip;
+      const userlists: UserInformation[] = data.userlist;
+      const updatedData = userlists.map((item) => {
+        if (item.uid === uid) {
+          return { ...item, status: true };
+        }
+        return item;
+      });
+      await setDoc(docRef, { trip: { ...data, userlist: updatedData } });
+    }
+  },
+  useRefuseInvitation: async (uid: string, id: number) => {
+    const docRef = doc(db, 'UserInvitations', uid);
+    const docTripRef = doc(db, 'Trips', id.toString());
+    const isCheck = await getDoc(docRef);
+    const isCheckTrip = await getDoc(docTripRef);
+    if (isCheck.exists()) {
+      const data: SelectOptionsInvitation[] = isCheck.data().invitation;
+      const updatedData = data.filter((item) => item.tripid !== id);
+      await updateDoc(docRef, { invitation: updatedData || [] });
+    }
+    if (isCheckTrip.exists()) {
+      const data: SelectOptionsTrip = isCheckTrip.data().trip;
+      const newuserlist = data.userlist.filter((item) => item.uid !== uid);
+      await setDoc(docTripRef, { trip: { ...data, userlist: newuserlist } });
+    }
+  },
+  useRandomIdCreateTrip: async () => {
+    const docRef = doc(db, 'Trips', 'id');
+    const isCheck = await getDoc(docRef);
+    let id = Math.floor(Math.random() * 900000) + 100000;
+    if (!isCheck.exists()) {
+      await setDoc(docRef, { id: [id] }, { merge: true });
+    } else {
+      const listID: number[] = isCheck.data().id;
+      while (listID.includes(id)) {
+        id = Math.floor(Math.random() * 900000) + 100000;
+      }
+      await updateDoc(docRef, {
+        id: myFirebase.firestore.FieldValue.arrayUnion(id),
+      });
+    }
+    return id;
+  },
+  useCreateTrip: async (id: number, data: SelectOptionsTrip) => {
+    const docRef = doc(db, 'Trips', id.toString());
+    const isCheck = await getDoc(docRef);
+    if (!isCheck.exists()) {
+      await setDoc(docRef, { trip: data }, { merge: true });
+    }
+  },
+  useGetTrip: async (id: number) => {
+    const docRef = doc(db, 'Trips', id.toString());
+    const isCheck = await getDoc(docRef);
+    if (isCheck.exists()) {
+      const trips: SelectOptionsTrip = isCheck.data().trip;
+      return trips;
+    }
+    return undefined;
+  },
+  useGetTripMaster: async (id: number) => {
+    const trip = await DataFirebase.useGetTrip(id);
+    if (trip) {
+      const master = trip.tripmaster;
+      if (master) {
+        const userlist = await DataFirebase.useGetUserList();
+        const user = userlist.find((item) => item.uid === master);
+        return user;
+      }
+    }
+    return undefined;
+  },
+  useGetInvitation: async (uid: string) => {
+    const docRef = doc(db, 'UserInvitations', uid);
+    const isCheck = await getDoc(docRef);
+    if (isCheck.exists()) {
+      const value: SelectOptionsInvitation[] = isCheck.data().invitation;
+      return value;
+    }
+    return [];
+  },
+  useDeleteUserInTrip: async (uid: string, id: number) => {
+    const docRef = doc(db, 'Trips', id.toString());
+    const docInvitationRef = doc(db, 'UserInvitations', uid);
+    const trip = await DataFirebase.useGetTrip(id);
+    if (trip) {
+      const userInvitation = await DataFirebase.useGetInvitation(uid);
+      const newUserInvitation = userInvitation?.filter(
+        (item) => item.tripid !== id,
+      );
+      await setDoc(docInvitationRef, { invitation: newUserInvitation });
+      const userlists = trip.userlist;
+      const newuserlist = userlists.filter((item) => item.uid !== uid);
+      await setDoc(docRef, { trip: { ...trip, userlist: newuserlist } });
+    }
+  },
+  useDeleteTheTrip: async (id: number) => {
+    const docRef = doc(db, 'Trips', id.toString());
+    const docIdListRef = doc(db, 'Trips', 'id');
+    await deleteDoc(docRef);
+    const isCheck = await getDoc(docIdListRef);
+    if (isCheck.exists()) {
+      const idlist: number[] = isCheck.data().id;
+      const newidlist = idlist.filter(
+        (item) => item.toString() !== id.toString(),
+      );
+      await setDoc(docIdListRef, { id: newidlist });
     }
   },
 };

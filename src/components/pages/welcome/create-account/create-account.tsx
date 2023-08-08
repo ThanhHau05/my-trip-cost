@@ -37,7 +37,7 @@ export const CreateAccount = ({
 
   return (
     <Wrapper>
-      <div className="relative h-full w-full">
+      <div className="relative h-full">
         <div className="relative">
           <img src={ImagesWelcomePage.Background2.src} alt="" />
           <GrLinkPrevious
@@ -49,7 +49,8 @@ export const CreateAccount = ({
           </h2>
         </div>
         <div className="absolute top-1/4 h-[536px] w-full rounded-t-[40px] bg-slate-100 shadow-md">
-          <div className="border_welcome_top absolute -right-16 top-9 h-56 w-52 bg-teal-500" />
+          <div className="border_welcome_bottom absolute -left-16 bottom-8 h-56 w-52 bg-teal-500" />
+          <div className="border_welcome_top absolute right-0 top-9 h-56 w-40 bg-teal-500" />
           <div className="absolute top-[-70px] z-10 flex h-full w-full flex-col items-center">
             <Avatar image={image} setImage={setImage} />
             <Options
@@ -59,7 +60,6 @@ export const CreateAccount = ({
               image={image}
             />
           </div>
-          <div className="border_welcome_bottom absolute -left-16 bottom-8 h-56 w-52 bg-teal-500" />
         </div>
       </div>
     </Wrapper>
