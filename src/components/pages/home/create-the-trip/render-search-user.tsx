@@ -51,15 +51,16 @@ export const RenderSearchUser = ({
                         url: item.photoURL.url,
                       },
                       uid: item.uid,
+                      status: false,
                     },
                   ]);
                 }}
               >
                 <Avatar
                   size="40"
-                  color={item.photoURL.color}
+                  color={item.photoURL.url ? '' : item.photoURL.color}
                   className="rounded-full shadow-md"
-                  value={item.photoURL.text}
+                  value={item.photoURL.url ? '' : item.photoURL.text}
                   src={item.photoURL.url}
                 />
                 <h2 className="ml-3">{item.displayName}</h2>

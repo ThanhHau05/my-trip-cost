@@ -6,18 +6,21 @@ import createSagaMiddleware from 'redux-saga';
 
 import immutablePersistenceTransform from './immutable-persistence-transfrom';
 import Saga from './saga';
+import type { TripState } from './Trip/TripRedux';
+import TripActions, { reducer as TripReducer } from './Trip/TripRedux';
 import type { UserState } from './User/UserRedux';
 import UserActions, { reducer as UserReducer } from './User/UserRedux';
 
 /* ------------- Assemble The Reducers ------------- */
 export const reducers = combineReducers({
   user: UserReducer,
+  trip: TripReducer,
 });
 
 const persistConfig = {
   key: 'root',
   storage,
-  whitelist: ['user'],
+  whitelist: ['user', 'trip'],
   transforms: [immutablePersistenceTransform],
 };
 
@@ -52,5 +55,6 @@ const createStore = (rootReducer: any, rootSaga: any) => {
 export type RootState = ReturnType<typeof reducers>;
 export const selector = {
   user: (state: RootState) => state.user as unknown as UserState,
+  trip: (state: RootState) => state.trip as unknown as TripState,
 };
-export { UserActions };
+export { TripActions, UserActions };

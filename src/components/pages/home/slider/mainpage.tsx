@@ -35,7 +35,7 @@ export const MainPage = ({
           </div>
         </div>
       </div>
-      <div className="mt-5">
+      <div className="h-[calc(100%-40px)]">
         <img src={ImagesHome.BackgroundHome.src} alt="" />
         <div className="mt-16 h-12 px-5">
           <Button

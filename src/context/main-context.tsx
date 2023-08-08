@@ -1,3 +1,4 @@
+import { doc, onSnapshot } from 'firebase/firestore';
 import type {
   Dispatch,
   MutableRefObject,
@@ -9,8 +10,8 @@ import { useCreateUserWithEmailAndPassword } from 'react-firebase-hooks/auth';
 import { useDispatch, useSelector } from 'react-redux';
 
 import { isCheckEmailFormat } from '@/components/pages';
-import { auth, DataFirebase } from '@/firebase';
-import { selector, UserActions } from '@/redux';
+import { auth, DataFirebase, db } from '@/firebase';
+import { selector, TripActions, UserActions } from '@/redux';
 
 interface MainProps {
   showverticalmenu: boolean;
@@ -63,7 +64,13 @@ interface MainProps {
     text: string,
     name: string,
     email: string,
+    uid: string,
   ) => void;
+  contentconfirm: string;
+  setConentConfirm: Dispatch<SetStateAction<string>>;
+  onSubmitEcceptToCancelTheTrip: () => Promise<void>;
+  contentnotification: string;
+  setContentNotification: Dispatch<SetStateAction<string>>;
 }
 
 export const MainContext = createContext({} as MainProps);
@@ -73,6 +80,7 @@ export const MainProvider = ({ children }: { children: ReactNode }) => {
     useCreateUserWithEmailAndPassword(auth);
 
   const { currentUserInformation } = useSelector(selector.user);
+  const { currentIdJoinTrip } = useSelector(selector.trip);
   const dispatch = useDispatch();
 
   const [loadingstartnow, setLoadingStartNow] = useState(false);
@@ -80,6 +88,8 @@ export const MainProvider = ({ children }: { children: ReactNode }) => {
   const [showcreatethetrip, setShowCreateTheTrip] = useState(false);
   const [name, setName] = useState({ value: '', error: '' });
   const [id, setId] = useState(0);
+  const [contentconfirm, setConentConfirm] = useState('');
+  const [contentnotification, setContentNotification] = useState('');
 
   const sliderRef = useRef<any>();
 
@@ -100,6 +110,21 @@ export const MainProvider = ({ children }: { children: ReactNode }) => {
     };
     handle();
   }, [userEmailAndPassword, id, currentUserInformation]);
+
+  useEffect(() => {
+    const handleInvitation = (_id: number) => {
+      if (_id !== 0) {
+        const docRef = doc(db, 'Trips', _id.toString());
+        onSnapshot(docRef, (data) => {
+          if (!data.exists()) {
+            dispatch(TripActions.setCurrentIdJoinTrip(0));
+          }
+        });
+      }
+    };
+
+    handleInvitation(currentIdJoinTrip);
+  }, [currentIdJoinTrip]);
 
   const isCheckSubmitStartNow = async (
     namevalue: string,
@@ -192,7 +217,15 @@ export const MainProvider = ({ children }: { children: ReactNode }) => {
       await DataFirebase.useAddEmailCheck(email);
       createUserWithEmailAndPassword(email, password);
       const newid = await DataFirebase.useRandomID();
-      AddUserInformationIntoRedux(newid, url, color, text, namevalue, email);
+      AddUserInformationIntoRedux(
+        newid,
+        url,
+        color,
+        text,
+        namevalue,
+        email,
+        userEmailAndPassword?.user.uid || '',
+      );
       setId(newid);
     }
   };
@@ -204,6 +237,7 @@ export const MainProvider = ({ children }: { children: ReactNode }) => {
     text: string,
     nameValue: string,
     email: string,
+    uid: string,
   ) => {
     setTimeout(async () => {
       dispatch(
@@ -216,12 +250,25 @@ export const MainProvider = ({ children }: { children: ReactNode }) => {
           },
           displayName: nameValue,
           email,
-          uid: '',
+          uid,
+          status: false,
         }),
       );
       setLoadingStartNow(false);
     }, 2700);
     setLoadingStartNow(true);
+  };
+
+  const onSubmitEcceptToCancelTheTrip = async () => {
+    const trip = await DataFirebase.useGetTrip(currentIdJoinTrip);
+    trip?.userlist.map(async (item) => {
+      await DataFirebase.useDeleteTheTripInUserData(
+        item.uid,
+        currentIdJoinTrip,
+      );
+    });
+    await DataFirebase.useDeleteTheTrip(trip?.id || 0);
+    dispatch(TripActions.setCurrentIdJoinTrip(0));
   };
 
   const value = {
@@ -236,6 +283,11 @@ export const MainProvider = ({ children }: { children: ReactNode }) => {
     name,
     setName,
     AddUserInformationIntoRedux,
+    contentconfirm,
+    setConentConfirm,
+    onSubmitEcceptToCancelTheTrip,
+    setContentNotification,
+    contentnotification,
   };
   return <MainContext.Provider value={value}>{children}</MainContext.Provider>;
 };

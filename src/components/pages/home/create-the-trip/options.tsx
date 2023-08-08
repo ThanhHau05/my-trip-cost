@@ -1,18 +1,20 @@
 import type { Dispatch, SetStateAction } from 'react';
-import { useEffect, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import Avatar from 'react-avatar';
 import { useAuthState } from 'react-firebase-hooks/auth';
 import { IoClose } from 'react-icons/io5';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 
 import { Button, Input } from '@/components/base';
 import type {
   SelectOptionsInvitation,
+  SelectOptionsTrip,
   UserInformation,
 } from '@/constants/select-options';
+import { MainContext } from '@/context/main-context';
 import { auth, DataFirebase } from '@/firebase';
 import { useGetTimeAndDate } from '@/hooks';
-import { selector } from '@/redux';
+import { selector, TripActions } from '@/redux';
 
 import { RemoveUserInUserListAdded } from './hook';
 import { RenderSearchUser } from './render-search-user';
@@ -21,6 +23,10 @@ export const OptionsCreateTheTrip = () => {
   const [user] = useAuthState(auth);
 
   const { currentUserInformation } = useSelector(selector.user);
+
+  const dispatch = useDispatch();
+
+  const { setShowCreateTheTrip } = useContext(MainContext);
 
   const [tripname, setTripName] = useState({ value: '', error: '' });
   const [companions, setCompanions] = useState({ value: '', error: '' });
@@ -60,21 +66,33 @@ export const OptionsCreateTheTrip = () => {
   const onSubmitCreateTrip = async () => {
     if (isCheck()) {
       if (user) {
+        const id = await DataFirebase.useRandomIdCreateTrip();
         const promises = userlistadded.map(async (item) => {
-          const id = await DataFirebase.useRandomID();
           const time = useGetTimeAndDate();
           const data: SelectOptionsInvitation = {
             name: user.displayName || currentUserInformation.displayName,
             tripid: id,
             tripname: tripname.value,
             dateandtime: time,
+            status: false,
+            uid: item.uid,
           };
           DataFirebase.useAcceptTheInvitation(item.uid, data);
         });
         await Promise.all(promises);
+        const data: SelectOptionsTrip = {
+          tripname: tripname.value,
+          userlist: userlistadded,
+          id,
+          tripmaster: currentUserInformation.uid,
+        };
+        await DataFirebase.useCreateTrip(id, data);
+        dispatch(TripActions.setCurrentIdJoinTrip(id));
+        setShowCreateTheTrip(false);
       }
     }
   };
+
   return (
     <div className="h-full">
       <Input
