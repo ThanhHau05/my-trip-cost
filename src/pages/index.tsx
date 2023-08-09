@@ -117,11 +117,11 @@ const RenderItemVerticalMenuHome = () => {
       {VERTICAL_MENU.map((item) => (
         <div
           key={item.value}
-          className="mb-2 flex cursor-pointer items-center justify-start rounded-xl bg-slate-300 py-2"
+          className="mb-2 flex cursor-pointer items-center justify-start rounded-xl bg-slate-300 p-2"
           onClick={() => onSubmit(item.value)}
         >
           {item.icon ? (
-            <item.icon className="mx-2 text-xl text-gray-900" />
+            <item.icon className="mr-2 text-xl text-gray-900" />
           ) : null}
           <h2 className="select-none">{item.title}</h2>
         </div>
