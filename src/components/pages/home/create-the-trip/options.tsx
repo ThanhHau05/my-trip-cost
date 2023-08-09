@@ -100,6 +100,7 @@ export const OptionsCreateTheTrip = () => {
         title="Trip name"
         value={tripname.value}
         error={tripname.error}
+        maxLength={15}
       />
       <div className="mt-12">
         <Input
