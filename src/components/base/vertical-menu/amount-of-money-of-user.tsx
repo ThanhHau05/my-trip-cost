@@ -1,7 +1,8 @@
 import { useMemo } from 'react';
-import Avatar from 'react-avatar';
 
 import { useFormatCurrentcy } from '@/hooks';
+
+import { Avatar } from '../avatar';
 
 export const AmountOfMoneyOfUser = ({
   name,
@@ -21,7 +22,7 @@ export const AmountOfMoneyOfUser = ({
   }, [money]);
   return (
     <div className="mx-1 flex items-center justify-center gap-1 rounded-xl border bg-white px-2 py-1 drop-shadow-md">
-      <Avatar round size="48" src={url} color={color} value={text} />
+      <Avatar img={{ url, color, text }} />
       <h2 className="mr-1 text-lg font-medium drop-shadow-md">{name}</h2>
       <h2 className="rounded-md border bg-slate-100 p-1 font-bold text-gray-800 drop-shadow-md">
         {valueMoney} VND

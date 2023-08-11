@@ -1,10 +1,11 @@
 import clsx from 'clsx';
 import { useEffect, useState } from 'react';
-import Avatar from 'react-avatar';
 import { BiChevronDown, BiLoaderAlt } from 'react-icons/bi';
 
 import type { SelectOptionsRenderDropDown } from '@/constants/select-options';
 import { useClickOutSide } from '@/hooks/useClickOutSide';
+
+import { Avatar } from '../avatar';
 
 export const Dropdown = ({
   option,
@@ -85,11 +86,11 @@ export const Dropdown = ({
           {image ? (
             <div className="ml-3">
               <Avatar
-                size="48"
-                round
-                src={defaultImage?.url}
-                color={defaultImage?.color}
-                value={defaultImage?.text}
+                img={{
+                  url: defaultImage?.url,
+                  color: defaultImage?.color,
+                  text: defaultImage?.text,
+                }}
               />
             </div>
           ) : null}
@@ -188,11 +189,7 @@ const OptionsRenderDropdown = ({
       {image ? (
         <div>
           <Avatar
-            size="48"
-            round
-            src={image.url}
-            color={image.color}
-            value={image.text}
+            img={{ url: image.url, color: image.color, text: image.text }}
           />
         </div>
       ) : null}

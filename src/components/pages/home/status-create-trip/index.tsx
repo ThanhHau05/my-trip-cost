@@ -1,11 +1,11 @@
 import clsx from 'clsx';
 import { doc, onSnapshot } from 'firebase/firestore';
 import { useContext, useEffect, useState } from 'react';
-import Avatar from 'react-avatar';
+import ReactAvatar from 'react-avatar';
 import { GrClose } from 'react-icons/gr';
 import { useSelector } from 'react-redux';
 
-import { Button } from '@/components/base';
+import { Avatar, Button } from '@/components/base';
 import type {
   SelectOptionsTrip,
   UserInformation,
@@ -45,12 +45,8 @@ export const StatusCreateTrip = () => {
           <h2 className="text-lg font-medium drop-shadow-md">Trip Master:</h2>
           <div className="mt-2 flex items-center justify-start">
             {masterinfo ? (
-              <Avatar
-                src={
-                  masterinfo?.photoURL.url
-                    ? masterinfo?.photoURL.url
-                    : masterinfo?.photoURL.text
-                }
+              <ReactAvatar
+                src={masterinfo?.photoURL.url ? masterinfo?.photoURL.url : ''}
                 size="48"
                 value={
                   masterinfo?.photoURL.url ? '' : masterinfo?.displayName[0]
@@ -145,11 +141,13 @@ export const RenderUser = ({ masterInfo }: { masterInfo: UserInformation }) => {
                 {item.displayName}
               </span>
               <Avatar
-                src={item.photoURL.url ? item.photoURL.url : item.photoURL.text}
-                size="48"
-                value={item.photoURL.url ? '' : item.displayName[0]}
-                color={item.photoURL.url ? '' : item.photoURL.color}
-                className="rounded-full"
+                img={{
+                  url: item.photoURL.url
+                    ? item.photoURL.url
+                    : item.photoURL.text,
+                  color: item.photoURL.url ? '' : item.photoURL.color,
+                  text: item.photoURL.url ? '' : item.displayName[0],
+                }}
               />
               <span
                 className={clsx(
