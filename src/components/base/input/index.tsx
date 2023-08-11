@@ -6,7 +6,7 @@ import { GrClose } from 'react-icons/gr';
 
 interface InputProps extends InputHTMLAttributes<HTMLInputElement> {
   titleCenter?: boolean;
-  title: string;
+  title?: string;
   value: string;
   error?: string;
   onChangeText: (value: string) => void;

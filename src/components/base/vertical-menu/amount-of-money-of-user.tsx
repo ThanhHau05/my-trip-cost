@@ -24,7 +24,7 @@ export const AmountOfMoneyOfUser = ({
       <Avatar round size="48" src={url} color={color} value={text} />
       <h2 className="mr-1 text-lg font-medium drop-shadow-md">{name}</h2>
       <h2 className="rounded-md border bg-slate-100 p-1 font-bold text-gray-800 drop-shadow-md">
-        {valueMoney} VNĐ
+        {valueMoney} VND
       </h2>
     </div>
   );

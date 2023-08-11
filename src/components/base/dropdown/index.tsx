@@ -1,6 +1,7 @@
 import clsx from 'clsx';
-import { useState } from 'react';
-import { BiChevronDown } from 'react-icons/bi';
+import { useEffect, useState } from 'react';
+import Avatar from 'react-avatar';
+import { BiChevronDown, BiLoaderAlt } from 'react-icons/bi';
 
 import type { SelectOptionsRenderDropDown } from '@/constants/select-options';
 import { useClickOutSide } from '@/hooks/useClickOutSide';
@@ -8,17 +9,33 @@ import { useClickOutSide } from '@/hooks/useClickOutSide';
 export const Dropdown = ({
   option,
   onClick,
-  title,
-  image,
+  defaultVitle,
   disabled,
+  defaultImage,
+  image,
+  onClickImage,
 }: {
   option: SelectOptionsRenderDropDown[];
-  onClick: (value: string, image?: string) => void;
-  title: string;
-  image?: string;
+  onClick: (
+    value: string,
+    image?: {
+      url?: string;
+      color?: string;
+      text?: string;
+    },
+  ) => void;
+  defaultVitle?: string;
   disabled?: boolean;
+  defaultImage?: {
+    url?: string;
+    color?: string;
+    text?: string;
+  };
+  image?: boolean;
+  onClickImage?: (url?: string, color?: string, text?: string) => void;
 }) => {
   const [iconpointdown, setIconPointDown] = useState(false);
+  const [valuetitle, setValueTitle] = useState('');
 
   const _handleShowDropDown = () => {
     setIconPointDown(!iconpointdown);
@@ -28,10 +45,30 @@ export const Dropdown = ({
     setIconPointDown(false);
   });
 
-  const _handleOnSubmit = (value: string, img?: string) => {
+  const _handleOnSubmit = (
+    valueTitle: string,
+    value: string,
+    img?: {
+      url?: string;
+      color?: string;
+      text?: string;
+    },
+  ) => {
+    setValueTitle(valueTitle);
+    if (onClickImage) {
+      onClickImage(
+        img?.url ? img.url : '',
+        img?.color ? img.color : '',
+        img?.text ? img.text : '',
+      );
+    }
     onClick(value, img);
     _handleShowDropDown();
   };
+
+  useEffect(() => {
+    if (defaultVitle) setValueTitle(defaultVitle);
+  }, [defaultVitle]);
 
   return (
     <div ref={dropdownRef} className="relative">
@@ -39,17 +76,22 @@ export const Dropdown = ({
         disabled={disabled}
         onClick={_handleShowDropDown}
         className={clsx(
-          'relative h-14 w-full cursor-pointer rounded-xl border-2 border-gray-400 bg-white shadow-md drop-shadow-md transition-all hover:shadow-lg disabled:cursor-not-allowed disabled:hover:shadow-md',
+          'relative h-12 w-full cursor-pointer rounded-xl bg-white shadow-md transition-all disabled:cursor-not-allowed',
           iconpointdown ? 'border-blue-600' : null,
+          image ? 'h-14' : null,
         )}
       >
         <div className="flex items-center justify-center">
           {image ? (
-            <img
-              className="ml-3 h-12 w-12 rounded-full border-2 border-slate-100"
-              src={image}
-              alt=""
-            />
+            <div className="ml-3">
+              <Avatar
+                size="48"
+                round
+                src={defaultImage?.url}
+                color={defaultImage?.color}
+                value={defaultImage?.text}
+              />
+            </div>
           ) : null}
           <span
             className={clsx(
@@ -57,7 +99,7 @@ export const Dropdown = ({
               image ? 'pl-2' : 'pl-5',
             )}
           >
-            {title}
+            {valuetitle}
           </span>
         </div>
         <div className="absolute right-0 top-0 flex h-full items-center justify-center pr-2">
@@ -84,18 +126,33 @@ const ContainerOptionsRenderDropDown = ({
   onClick,
 }: {
   option: SelectOptionsRenderDropDown[];
-  onClick: (value: string, image?: string) => void;
+  onClick: (
+    title: string,
+    value: string,
+    image?: {
+      url?: string;
+      color?: string;
+      text?: string;
+    },
+  ) => void;
 }) => {
   return (
     <div className="dropdown absolute z-10 mt-3 max-h-44 w-full overflow-auto rounded-lg border-2 border-gray-200 bg-white p-1 shadow-md drop-shadow-md transition-all hover:shadow-lg">
-      {option.map((item) => (
-        <OptionsRenderDropdown
-          key={item.title}
-          image={item.image}
-          title={item.title}
-          onClick={onClick}
-        />
-      ))}
+      {option.length !== 0 ? (
+        option.map((item) => (
+          <OptionsRenderDropdown
+            key={item.title}
+            image={item.image}
+            title={item.title}
+            onClick={onClick}
+            value={item.value}
+          />
+        ))
+      ) : (
+        <div className="flex items-center justify-center py-3">
+          <BiLoaderAlt className="animate-spin text-3xl" />
+        </div>
+      )}
     </div>
   );
 };
@@ -104,22 +161,40 @@ const OptionsRenderDropdown = ({
   image,
   title,
   onClick,
+  value,
 }: {
-  image?: string;
+  image?: {
+    url?: string;
+    color?: string;
+    text?: string;
+  };
   title: string;
-  onClick: (value: string, image?: string) => void;
+  onClick: (
+    title: string,
+    value: string,
+    image?: {
+      url?: string;
+      color?: string;
+      text?: string;
+    },
+  ) => void;
+  value: string;
 }) => {
   return (
     <button
-      onClick={() => onClick(title, image)}
+      onClick={() => onClick(title, value, image)}
       className="group flex w-full cursor-pointer items-center justify-center rounded-md px-2 py-1 text-left transition-all duration-75 hover:bg-slate-200 hover:font-medium hover:drop-shadow-md"
     >
       {image ? (
-        <img
-          className="h-12 w-12 rounded-full border-2 border-slate-100 transition-all duration-75 group-hover:border-slate-300 group-hover:shadow-md"
-          src={image}
-          alt=""
-        />
+        <div>
+          <Avatar
+            size="48"
+            round
+            src={image.url}
+            color={image.color}
+            value={image.text}
+          />
+        </div>
       ) : null}
       <span className="block w-full pl-2 ">{title}</span>
     </button>
