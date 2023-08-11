@@ -28,7 +28,7 @@ export const TripHeader = ({
           Total
         </span>
         <h2 className="text-lg font-bold text-gray-800 drop-shadow-md">
-          {valueMoney} VNĐ
+          {valueMoney} VND
         </h2>
       </div>
     </div>

@@ -2,6 +2,7 @@ import { deleteDoc, doc, getDoc, setDoc, updateDoc } from 'firebase/firestore';
 
 import type {
   SelectOptionsInvitation,
+  SelectOptionsInvoice,
   SelectOptionsTrip,
   UserInformation,
 } from '@/constants/select-options';
@@ -232,5 +233,29 @@ export const DataFirebase = {
       );
       await setDoc(docIdListRef, { id: newidlist });
     }
+  },
+  useGetUserListInTrip: async (id: number) => {
+    const docRef = doc(db, 'Trips', id.toString());
+    const isCheck = await getDoc(docRef);
+    if (isCheck.exists()) {
+      const { trip } = isCheck.data();
+      return trip.userlist;
+    }
+    return [];
+  },
+  useAddInvoiceIntoTripData: async (id: number, data: SelectOptionsInvoice) => {
+    const docRef = doc(db, 'Trips', id.toString());
+    const trip = await DataFirebase.useGetTrip(id);
+    if (trip) {
+      const vlaueInvoice = [...(trip.invoice || []), data];
+      await setDoc(docRef, { trip: { ...trip, invoice: vlaueInvoice } });
+    }
+  },
+  useGetInvoiceIntoTripData: async (id: number) => {
+    const trip = await DataFirebase.useGetTrip(id);
+    if (trip) {
+      return trip.invoice;
+    }
+    return [];
   },
 };

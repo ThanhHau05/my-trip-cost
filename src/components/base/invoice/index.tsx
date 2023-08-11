@@ -44,7 +44,7 @@ export const Invoice = ({
       <div className="flex h-full w-32 flex-col items-end gap-5">
         <GrClose className="invisible inline-block cursor-pointer group-hover:visible" />
         <h2 className="text-end text-lg font-bold text-gray-800 drop-shadow-md">
-          {valueMoney} VNĐ
+          {valueMoney} VND
         </h2>
       </div>
     </div>

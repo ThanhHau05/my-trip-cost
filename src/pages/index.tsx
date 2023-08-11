@@ -118,7 +118,7 @@ const RenderItemVerticalMenuHome = () => {
         <div
           key={item.value}
           className="mb-2 flex cursor-pointer items-center justify-start rounded-xl bg-slate-300 p-2"
-          onClick={() => onSubmit(item.value)}
+          onClick={() => onSubmit(item.value.toString())}
         >
           {item.icon ? (
             <item.icon className="mr-2 text-xl text-gray-900" />
