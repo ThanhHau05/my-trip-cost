@@ -1,6 +1,6 @@
 import type { Dispatch, SetStateAction } from 'react';
-import Avatar from 'react-avatar';
 
+import { Avatar } from '@/components/base';
 import type { UserInformation } from '@/constants/select-options';
 
 import { isCheckRender } from './hook';
@@ -58,10 +58,11 @@ export const RenderSearchUser = ({
               >
                 <Avatar
                   size="40"
-                  color={item.photoURL.url ? '' : item.photoURL.color}
-                  className="rounded-full shadow-md"
-                  value={item.photoURL.url ? '' : item.photoURL.text}
-                  src={item.photoURL.url}
+                  img={{
+                    url: item.photoURL.url,
+                    color: item.photoURL.url ? '' : item.photoURL.color,
+                    text: item.photoURL.url ? '' : item.photoURL.text,
+                  }}
                 />
                 <h2 className="ml-3">{item.displayName}</h2>
               </div>

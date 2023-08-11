@@ -6,7 +6,7 @@ import { MainContext } from '@/context/main-context';
 import { ImagesWelcomePage } from '@/public/images';
 
 import { getRandomColor } from '../hook';
-import { Avatar } from './avatar';
+import { AvatarCreateAccount } from './avatar';
 import { Options } from './options';
 
 export const CreateAccount = ({
@@ -52,7 +52,7 @@ export const CreateAccount = ({
           <div className="border_welcome_bottom absolute -left-16 bottom-8 h-56 w-52 bg-teal-500" />
           <div className="border_welcome_top absolute right-0 top-9 h-56 w-40 bg-teal-500" />
           <div className="absolute top-[-70px] z-10 flex h-full w-full flex-col items-center">
-            <Avatar image={image} setImage={setImage} />
+            <AvatarCreateAccount image={image} setImage={setImage} />
             <Options
               name={name.value}
               setName={setName}

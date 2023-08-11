@@ -1,8 +1,9 @@
 import { useMemo } from 'react';
-import Avatar from 'react-avatar';
 import { GrClose } from 'react-icons/gr';
 
 import { useFormatCurrentcy } from '@/hooks';
+
+import { Avatar } from '../avatar';
 
 export const Invoice = ({
   name,
@@ -31,7 +32,7 @@ export const Invoice = ({
   return (
     <div className="group mt-10 flex items-center justify-between rounded-xl pl-px">
       <div>
-        <Avatar round size="48" src={url} color={color} value={text} />
+        <Avatar img={{ url, color, text }} />
       </div>
       <div className="ml-2 w-44 drop-shadow-md">
         <h2 className="text-lg font-medium">{name}</h2>

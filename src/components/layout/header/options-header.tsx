@@ -1,9 +1,9 @@
 import clsx from 'clsx';
 import { useContext, useState } from 'react';
-import Avatar from 'react-avatar';
 import { BsCheckCircleFill } from 'react-icons/bs';
 import { MdOutlineContentCopy } from 'react-icons/md';
 
+import { Avatar } from '@/components/base';
 import { MainContext } from '@/context/main-context';
 import { useClickOutSide } from '@/hooks/useClickOutSide';
 
@@ -30,13 +30,10 @@ export const ImageUser = ({
     <div ref={showInfoUserRef} className="relative">
       <div className="rounded-full">
         <Avatar
-          onClick={() => setShowInfoUser(!showinfouser)}
-          round
           size="50"
-          src={image.url}
-          className="cursor-pointer select-none shadow-md"
-          value={image.text}
-          color={image.color}
+          onClick={() => setShowInfoUser(!showinfouser)}
+          img={{ url: image.url, color: image.color, text: image.text }}
+          cursorPointer
         />
       </div>
       {showinfouser ? <HandleInfoUserOnAvatar email={email} id={id} /> : null}

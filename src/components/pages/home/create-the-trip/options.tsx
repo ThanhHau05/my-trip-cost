@@ -1,11 +1,10 @@
 import type { Dispatch, SetStateAction } from 'react';
 import { useContext, useEffect, useState } from 'react';
-import Avatar from 'react-avatar';
 import { useAuthState } from 'react-firebase-hooks/auth';
 import { IoClose } from 'react-icons/io5';
 import { useDispatch, useSelector } from 'react-redux';
 
-import { Button, Input } from '@/components/base';
+import { Avatar, Button, Input } from '@/components/base';
 import type {
   SelectOptionsInvitation,
   SelectOptionsTrip,
@@ -155,10 +154,11 @@ export const RenderUserListAdded = ({
           <div className="flex items-center justify-center">
             <Avatar
               size="40"
-              color={item.photoURL.color}
-              className="rounded-full shadow-md"
-              value={item.photoURL.text}
-              src={item.photoURL.url}
+              img={{
+                url: item.photoURL.url,
+                color: item.photoURL.color,
+                text: item.photoURL.text,
+              }}
             />
             <h2 className="ml-3">{item.displayName}</h2>
           </div>

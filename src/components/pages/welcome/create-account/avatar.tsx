@@ -1,9 +1,10 @@
 import type { Dispatch, SetStateAction } from 'react';
 import { useRef } from 'react';
-import ReactAvatar from 'react-avatar';
 import { AiFillCamera } from 'react-icons/ai';
 
-export const Avatar = ({
+import { Avatar } from '@/components/base';
+
+export const AvatarCreateAccount = ({
   image,
   setImage,
 }: {
@@ -33,12 +34,9 @@ export const Avatar = ({
   };
   return (
     <div className="relative">
-      <ReactAvatar
+      <Avatar
         size="150"
-        color={image.color}
-        className="rounded-full shadow-md"
-        value={image.text}
-        src={image.url}
+        img={{ color: image.color, text: image.text, url: image.url }}
       />
       <div className="absolute bottom-px right-px cursor-pointer rounded-full border-2 bg-slate-100 p-1 shadow-md transition-all hover:bg-slate-200">
         <input
