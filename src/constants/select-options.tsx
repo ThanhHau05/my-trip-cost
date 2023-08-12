@@ -3,24 +3,22 @@ import { BiLogOut } from 'react-icons/bi';
 import type { IconType } from 'react-icons/lib';
 import { LuHistory } from 'react-icons/lu';
 
+export interface SelectOptionsAvatar {
+  url: string;
+  color: string;
+  text: string;
+}
+
 export interface SelectOptionsPeopleInVerticalMenu {
   name: string;
-  img: {
-    url: string;
-    color: string;
-    text: string;
-  };
+  img: SelectOptionsAvatar;
   money: number;
   uid: string;
 }
 
 export interface SelectOptionsInvoice {
   payerName: string;
-  payerImage: {
-    url: string;
-    color: string;
-    text: string;
-  };
+  payerImage: SelectOptionsAvatar;
   actiity: string;
   qty: number;
   description: string;
@@ -34,9 +32,10 @@ export interface SelectOptionsTrip {
   tripname: string;
   id: number;
   userlist: UserInformation[];
-  tripmaster?: string;
   status: boolean;
   invoice?: SelectOptionsInvoice[];
+  reservemoney?: number;
+  tripmaster: string;
 }
 
 export interface SelectOptionsInvitation {
@@ -60,15 +59,15 @@ export interface SelectOptionsRenderDropDown {
 
 export interface UserInformation {
   displayName: string;
-  id: number;
+  id?: number;
   photoURL: {
     url?: string;
     color?: string;
     text?: string;
   };
-  email: string;
   uid: string;
   status: boolean;
+  email?: string;
 }
 
 export interface SelectOptionsObject {

@@ -40,7 +40,6 @@ export const ContainerWelcome = ({
             dispatch(
               UserActions.setCurrentUserInformation({
                 displayName: useChangeNameStyle(user?.user.displayName || ''),
-                email: user?.user.email || '',
                 id,
                 photoURL: {
                   color: '',
@@ -60,7 +59,6 @@ export const ContainerWelcome = ({
               dispatch(
                 UserActions.setCurrentUserInformation({
                   displayName: useChangeNameStyle(user?.user.displayName || ''),
-                  email: user?.user.email || '',
                   id: value?.id,
                   photoURL: {
                     color: '',

@@ -32,7 +32,7 @@ export const LoginByAccount = ({
           const value = userlist.find((item) => item.email === email.value);
           if (value) {
             AddUserInformationIntoRedux(
-              value.id,
+              value.id || 0,
               value.photoURL.url || '',
               value.photoURL.color || '',
               value.photoURL.text || '',

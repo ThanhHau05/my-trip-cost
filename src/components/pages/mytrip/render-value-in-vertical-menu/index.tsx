@@ -26,9 +26,9 @@ export const RenderValueInVerticalMenu = ({
       const newData = userlist.map((item) => ({
         name: item.displayName,
         img: {
-          url: item.photoURL.url || '',
-          color: item.photoURL.color || '',
-          text: item.photoURL.text || '',
+          url: item.photoURL?.url || '',
+          color: item.photoURL?.color || '',
+          text: item.photoURL?.text || '',
         },
         money: 0,
         uid: item.uid,

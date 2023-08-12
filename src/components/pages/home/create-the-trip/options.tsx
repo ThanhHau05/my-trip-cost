@@ -62,38 +62,49 @@ export const OptionsCreateTheTrip = () => {
     return !isError;
   };
 
+  const onChangeCompanions = (e: string) => {
+    if (e.length <= 15) {
+      setCompanions({ value: e, error: '' });
+    }
+  };
+
   const onSubmitCreateTrip = async () => {
     if (isCheck()) {
       if (user) {
         const id = await DataFirebase.useRandomIdCreateTrip();
         const promises = userlistadded.map(async (item) => {
-          const time = useGetTimeAndDate();
-          const data: SelectOptionsInvitation = {
-            name: user.displayName || '',
-            tripid: id,
-            tripname: tripname.value,
-            dateandtime: time,
-            status: false,
-            uid: item.uid,
-          };
-          DataFirebase.useAcceptTheInvitation(item.uid, data);
+          if (item.id) {
+            const time = useGetTimeAndDate();
+            const data: SelectOptionsInvitation = {
+              name: user.displayName || '',
+              tripid: id,
+              tripname: tripname.value,
+              dateandtime: time,
+              status: false,
+              uid: item.uid,
+            };
+
+            if (item.uid) {
+              DataFirebase.useAcceptTheInvitation(item.uid, data);
+            }
+          }
         });
         await Promise.all(promises);
+        const { displayName, photoURL, uid } = currentUserInformation;
         const datauser: UserInformation = {
-          displayName: currentUserInformation.displayName,
-          email: currentUserInformation.email,
+          displayName,
           id: currentUserInformation.id,
-          photoURL: currentUserInformation.photoURL,
+          photoURL,
           status: true,
-          uid: currentUserInformation.uid,
+          uid,
         };
-        userlistadded.push(datauser);
+        const updatedUserList = [datauser, ...userlistadded];
         const data: SelectOptionsTrip = {
           tripname: tripname.value,
-          userlist: userlistadded,
+          userlist: updatedUserList,
           id,
-          tripmaster: currentUserInformation.uid,
           status: false,
+          tripmaster: uid || '',
         };
         await DataFirebase.useCreateTrip(id, data);
         dispatch(TripActions.setCurrentIdJoinTrip(id));
@@ -113,11 +124,11 @@ export const OptionsCreateTheTrip = () => {
       />
       <div className="mt-12">
         <Input
-          onChangeText={(e) => setCompanions({ value: e, error: '' })}
+          onChangeText={(e) => onChangeCompanions(e)}
           title="Add fellow companions"
           value={companions.value}
           error={companions.error}
-          placeholder="name or id or gmail"
+          placeholder="name or id"
         />
         <div className="relative mt-2 h-[189px]">
           {companions.value ? (
@@ -155,10 +166,10 @@ export const RenderUserListAdded = ({
   setUserListAdded: Dispatch<SetStateAction<UserInformation[]>>;
 }) => {
   return (
-    <div className="flex h-full flex-col justify-start gap-2 overflow-auto">
+    <div className="dropdown flex h-full flex-col justify-start gap-2 overflow-auto">
       {data.map((item) => (
         <div
-          key={item.id}
+          key={item.uid}
           className="flex items-center justify-between rounded-xl p-2 transition-all hover:bg-slate-100"
         >
           <div className="flex items-center justify-center">
@@ -175,7 +186,7 @@ export const RenderUserListAdded = ({
           <IoClose
             className="cursor-pointer text-xl text-gray-900"
             onClick={() =>
-              setUserListAdded(RemoveUserInUserListAdded(data, item.id))
+              setUserListAdded(RemoveUserInUserListAdded(data, item.uid || ''))
             }
           />
         </div>
