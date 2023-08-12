@@ -10,6 +10,7 @@ import { useCreateUserWithEmailAndPassword } from 'react-firebase-hooks/auth';
 import { useDispatch, useSelector } from 'react-redux';
 
 import { isCheckEmailFormat } from '@/components/pages';
+import type { UserInformation } from '@/constants/select-options';
 import { auth, DataFirebase, db } from '@/firebase';
 import { selector, TripActions, UserActions } from '@/redux';
 
@@ -69,8 +70,6 @@ interface MainProps {
   contentconfirm: string;
   setConentConfirm: Dispatch<SetStateAction<string>>;
   onSubmitEcceptToCancelTheTrip: () => Promise<void>;
-  contentnotification: string;
-  setContentNotification: Dispatch<SetStateAction<string>>;
   showaddinvoice: boolean;
   setShowAddInvoice: Dispatch<SetStateAction<boolean>>;
 }
@@ -91,7 +90,6 @@ export const MainProvider = ({ children }: { children: ReactNode }) => {
   const [name, setName] = useState({ value: '', error: '' });
   const [id, setId] = useState(0);
   const [contentconfirm, setConentConfirm] = useState('');
-  const [contentnotification, setContentNotification] = useState('');
   const [showaddinvoice, setShowAddInvoice] = useState(false);
 
   const sliderRef = useRef<any>();
@@ -106,7 +104,7 @@ export const MainProvider = ({ children }: { children: ReactNode }) => {
           currentUserInformation.photoURL?.url || '',
           currentUserInformation.photoURL?.color || '',
           currentUserInformation.photoURL?.text || '',
-          userEmailAndPassword.user.uid || '',
+          userEmailAndPassword.user.uid,
           [],
         );
       }
@@ -226,7 +224,6 @@ export const MainProvider = ({ children }: { children: ReactNode }) => {
         color,
         text,
         namevalue,
-        email,
         userEmailAndPassword?.user.uid || '',
       );
       setId(newid);
@@ -239,7 +236,6 @@ export const MainProvider = ({ children }: { children: ReactNode }) => {
     color: string,
     text: string,
     nameValue: string,
-    email: string,
     uid: string,
   ) => {
     setTimeout(async () => {
@@ -252,7 +248,6 @@ export const MainProvider = ({ children }: { children: ReactNode }) => {
             text: url ? '' : text,
           },
           displayName: nameValue,
-          email,
           uid,
           status: false,
         }),
@@ -264,13 +259,13 @@ export const MainProvider = ({ children }: { children: ReactNode }) => {
 
   const onSubmitEcceptToCancelTheTrip = async () => {
     const trip = await DataFirebase.useGetTrip(currentIdJoinTrip);
-    trip?.userlist.map(async (item) => {
-      await DataFirebase.useDeleteTheTripInUserData(
-        item.uid,
-        currentIdJoinTrip,
-      );
-    });
-    await DataFirebase.useDeleteTheTrip(trip?.id || 0);
+    const userlists = trip?.userlist;
+    if (userlists) {
+      const value: UserInformation[] = userlists?.filter((item) => item.id);
+      if (value.length === 1) {
+        await DataFirebase.useDeleteTheTrip(currentIdJoinTrip);
+      }
+    }
     dispatch(TripActions.setCurrentIdJoinTrip(0));
   };
 
@@ -289,8 +284,6 @@ export const MainProvider = ({ children }: { children: ReactNode }) => {
     contentconfirm,
     setConentConfirm,
     onSubmitEcceptToCancelTheTrip,
-    setContentNotification,
-    contentnotification,
     showaddinvoice,
     setShowAddInvoice,
   };

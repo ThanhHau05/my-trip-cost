@@ -1,5 +1,4 @@
-import { doc, onSnapshot } from 'firebase/firestore';
-import { useContext, useEffect } from 'react';
+import { useContext } from 'react';
 import { useSignOut } from 'react-firebase-hooks/auth';
 import { useDispatch, useSelector } from 'react-redux';
 
@@ -10,11 +9,10 @@ import {
   SliderPage,
   StatusCreateTrip,
 } from '@/components/pages';
-import type { SelectOptionsInvitation } from '@/constants/select-options';
 import { VERTICAL_MENU } from '@/constants/select-options';
 import { MainContext } from '@/context/main-context';
-import { auth, DataFirebase, db } from '@/firebase';
-import { selector, TripActions, UserActions } from '@/redux';
+import { auth } from '@/firebase';
+import { selector, UserActions } from '@/redux';
 
 import { Welcome } from './welcome';
 
@@ -26,46 +24,13 @@ const HomePage = () => {
 const ContainerHome = () => {
   const { currentIdJoinTrip } = useSelector(selector.trip);
   const { currentUserInformation } = useSelector(selector.user);
-  const { showverticalmenu, showcreatethetrip, setContentNotification } =
-    useContext(MainContext);
+  const { showverticalmenu, showcreatethetrip } = useContext(MainContext);
 
-  const { id, photoURL, displayName, email } = currentUserInformation || {};
-
-  const dispatch = useDispatch();
-
-  useEffect(() => {
-    const handleInvitation = (uid: string) => {
-      const docRef = doc(db, 'UserInvitations', uid);
-      onSnapshot(docRef, async (data) => {
-        if (data.exists()) {
-          const invitationData: SelectOptionsInvitation[] =
-            data.data().invitation;
-          const value = invitationData.find(
-            (item) => item.tripid === currentIdJoinTrip,
-          );
-          const trip = await DataFirebase.useGetTrip(currentIdJoinTrip);
-          if (
-            trip?.tripmaster !== currentUserInformation.uid &&
-            value === undefined &&
-            trip
-          ) {
-            setContentNotification(
-              `You have been removed from trip "${trip?.tripname}", trip ID: ${trip?.id}`,
-            );
-            dispatch(TripActions.setCurrentIdJoinTrip(0));
-          }
-        }
-      });
-    };
-
-    handleInvitation(currentUserInformation.uid);
-  }, [currentUserInformation.uid]);
+  const { id, photoURL, displayName } = currentUserInformation || {};
 
   return (
     <WrapperHeader
-      header={
-        <Header id={id} image={photoURL} name={displayName} email={email} />
-      }
+      header={<Header id={id || 0} image={photoURL} name={displayName} />}
     >
       <div className="h-full w-full">
         {showverticalmenu ? (
@@ -105,7 +70,6 @@ const RenderItemVerticalMenuHome = () => {
             color: undefined,
             text: undefined,
           },
-          email: '',
           uid: '',
           status: false,
         }),

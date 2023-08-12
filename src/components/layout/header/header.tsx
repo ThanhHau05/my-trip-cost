@@ -4,7 +4,6 @@ export const Header = ({
   name,
   image,
   id,
-  email,
 }: {
   name: string;
   image: {
@@ -13,7 +12,6 @@ export const Header = ({
     text?: string;
   };
   id: number;
-  email?: string;
 }) => {
   return (
     <div className="flex h-20 w-full items-center justify-between px-3 py-2">
@@ -28,7 +26,7 @@ export const Header = ({
           </span>
         </div>
       </div>
-      <ImageUser image={image} id={id} email={email} />
+      <ImageUser image={image} id={id} />
     </div>
   );
 };

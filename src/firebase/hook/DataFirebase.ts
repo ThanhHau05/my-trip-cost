@@ -110,7 +110,7 @@ export const DataFirebase = {
       });
     }
   },
-  useDeleteTheTripInUserData: async (uid: string, id: number) => {
+  useDeleteInvitationTheTripInUserData: async (uid: string, id: number) => {
     const docRef = doc(db, 'UserInvitations', uid);
     const isCheck = await getDoc(docRef);
     if (isCheck.exists()) {
@@ -206,21 +206,21 @@ export const DataFirebase = {
     }
     return [];
   },
-  useDeleteUserInTrip: async (uid: string, id: number) => {
-    const docRef = doc(db, 'Trips', id.toString());
-    const docInvitationRef = doc(db, 'UserInvitations', uid);
-    const trip = await DataFirebase.useGetTrip(id);
-    if (trip) {
-      const userInvitation = await DataFirebase.useGetInvitation(uid);
-      const newUserInvitation = userInvitation?.filter(
-        (item) => item.tripid !== id,
-      );
-      await setDoc(docInvitationRef, { invitation: newUserInvitation });
-      const userlists = trip.userlist;
-      const newuserlist = userlists.filter((item) => item.uid !== uid);
-      await setDoc(docRef, { trip: { ...trip, userlist: newuserlist } });
-    }
-  },
+  // useDeleteUserInTrip: async (uid: string, id: number) => {
+  //   const docRef = doc(db, 'Trips', id.toString());
+  //   const docInvitationRef = doc(db, 'UserInvitations', uid);
+  //   const trip = await DataFirebase.useGetTrip(id);
+  //   if (trip) {
+  //     const userInvitation = await DataFirebase.useGetInvitation(uid);
+  //     const newUserInvitation = userInvitation?.filter(
+  //       (item) => item.tripid !== id,
+  //     );
+  //     await setDoc(docInvitationRef, { invitation: newUserInvitation });
+  //     const userlists = trip.userlist;
+  //     const newuserlist = userlists.filter((item) => item.uid !== uid);
+  //     await setDoc(docRef, { trip: { ...trip, userlist: newuserlist } });
+  //   }
+  // },
   useDeleteTheTrip: async (id: number) => {
     const docRef = doc(db, 'Trips', id.toString());
     const docIdListRef = doc(db, 'Trips', 'id');

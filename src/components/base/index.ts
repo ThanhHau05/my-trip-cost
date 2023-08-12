@@ -5,5 +5,4 @@ export * from './dropdown';
 export * from './image';
 export * from './input';
 export * from './invoice';
-export * from './notification';
 export * from './vertical-menu';

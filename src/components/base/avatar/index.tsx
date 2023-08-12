@@ -24,7 +24,7 @@ export const Avatar = ({
       src={img.url ? img.url : ''}
       size={size || '48'}
       value={img.text ? img.text : ''}
-      color={img.url ? img.color : ''}
+      color={img.color ? img.color : ''}
       round
     />
   ) : (

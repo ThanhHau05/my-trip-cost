@@ -23,6 +23,10 @@ export const Invitation = ({
   const onJoinTrip = async (id: number) => {
     await DataFirebase.useJoinTrip(id, currentUserInformation.uid);
     dispatch(TripActions.setCurrentIdJoinTrip(id));
+    await DataFirebase.useDeleteInvitationTheTripInUserData(
+      currentUserInformation.uid,
+      id,
+    );
   };
 
   const onCancelJoin = async (id: number) => {

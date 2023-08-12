@@ -9,7 +9,6 @@ import { useClickOutSide } from '@/hooks/useClickOutSide';
 
 export const ImageUser = ({
   image,
-  email,
   id,
 }: {
   image: {
@@ -17,7 +16,6 @@ export const ImageUser = ({
     color?: string;
     text?: string;
   };
-  email?: string;
   id: number;
 }) => {
   const [showinfouser, setShowInfoUser] = useState(false);
@@ -36,30 +34,16 @@ export const ImageUser = ({
           cursorPointer
         />
       </div>
-      {showinfouser ? <HandleInfoUserOnAvatar email={email} id={id} /> : null}
+      {showinfouser ? <HandleInfoUserOnAvatar id={id} /> : null}
     </div>
   );
 };
 
-const HandleInfoUserOnAvatar = ({
-  email,
-  id,
-}: {
-  email?: string;
-  id: number;
-}) => {
+const HandleInfoUserOnAvatar = ({ id }: { id: number }) => {
   const [checkcopyid, setCheckCopyID] = useState(false);
-  const [checkcopygmail, setCheckCopyGmail] = useState(false);
 
   const _handleCopyInfo = (value: string) => {
     navigator.clipboard.writeText(value).then(() => {
-      if (value.includes('@')) {
-        setCheckCopyGmail(true);
-        const timer = setTimeout(() => {
-          setCheckCopyGmail(false);
-        }, 1500);
-        return () => clearTimeout(timer);
-      }
       setCheckCopyID(true);
       const timer = setTimeout(() => {
         setCheckCopyID(false);
@@ -69,26 +53,6 @@ const HandleInfoUserOnAvatar = ({
   };
   return (
     <div className="absolute right-0 z-10 mt-2 select-none rounded-xl border-2 bg-white px-3 py-1 shadow-md">
-      <span className="flex whitespace-nowrap text-sm font-normal">
-        Email:
-        {email ? (
-          <span className="ml-1 flex items-center font-medium">
-            {email}
-            <div className="flex pl-2">
-              {checkcopygmail ? (
-                <BsCheckCircleFill className="inline text-gray-600 drop-shadow-md" />
-              ) : (
-                <MdOutlineContentCopy
-                  className="inline cursor-pointer drop-shadow-md"
-                  onClick={() => _handleCopyInfo(email)}
-                />
-              )}
-            </div>
-          </span>
-        ) : (
-          <span className="ml-1 flex items-center font-medium">none</span>
-        )}
-      </span>
       <span className="flex text-sm font-normal">
         Id:
         <span className="ml-1 flex items-center font-medium">
