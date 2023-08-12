@@ -50,10 +50,10 @@ export const RenderValueInVerticalMenu = ({
     if (money !== 0 && uid) {
       handleUpdateMoney();
     }
-  }, [money, uid, data]);
+  }, [money, uid]);
 
   return (
-    <div className="dropdown h-[calc(100%-100px)] overflow-auto">
+    <div className="dropdown flex h-[calc(100%-100px)] flex-col gap-2 overflow-auto">
       {data.map((item) => (
         <AmountOfMoneyOfUser
           key={item.uid}

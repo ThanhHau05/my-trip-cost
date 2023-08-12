@@ -18,17 +18,27 @@ import { useTotalMoneyTheTrip } from '@/hooks';
 import { selector } from '@/redux';
 
 const TripDetail = () => {
-  const { currentIdJoinTrip, currentTripStatus } = useSelector(selector.trip);
+  const { currentIdJoinTrip } = useSelector(selector.trip);
   const router = useRouter();
   const { id } = router.query;
 
+  const [status, setStatus] = useState(false);
+
   useEffect(() => {
-    if (id && currentIdJoinTrip !== +id && !currentTripStatus) {
+    const handle = async () => {
+      const value = await DataFirebase.useGetStatusTrip(currentIdJoinTrip);
+      setStatus(value || false);
+    };
+    handle();
+  }, [currentIdJoinTrip]);
+
+  useEffect(() => {
+    if (id && currentIdJoinTrip !== +id && !status) {
       router.push('/');
     }
-  }, [id, currentIdJoinTrip, router, currentTripStatus]);
+  }, [id, currentIdJoinTrip, router, status]);
 
-  if (id && currentIdJoinTrip === +id && currentTripStatus) {
+  if (id && currentIdJoinTrip === +id && status) {
     return <ContainerTripDetail />;
   }
 
