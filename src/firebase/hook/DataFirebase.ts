@@ -258,4 +258,11 @@ export const DataFirebase = {
     }
     return [];
   },
+  useGetStatusTrip: async (id: number) => {
+    const trip = await DataFirebase.useGetTrip(id);
+    if (trip) {
+      return trip.status;
+    }
+    return undefined;
+  },
 };

@@ -1,5 +1,6 @@
 import clsx from 'clsx';
-import { doc, onSnapshot } from 'firebase/firestore';
+import { doc, onSnapshot, setDoc } from 'firebase/firestore';
+import { useRouter } from 'next/router';
 import { useContext, useEffect, useState } from 'react';
 import ReactAvatar from 'react-avatar';
 import { GrClose } from 'react-icons/gr';
@@ -17,11 +18,13 @@ import { selector } from '@/redux';
 export const StatusCreateTrip = () => {
   const { currentIdJoinTrip } = useSelector(selector.trip);
   const { currentUserInformation } = useSelector(selector.user);
+  const router = useRouter();
 
   const { setConentConfirm } = useContext(MainContext);
 
   const [data, setData] = useState<SelectOptionsTrip>();
   const [masterinfo, setMasterInfo] = useState<UserInformation>();
+  const [userlist, setUserList] = useState<UserInformation[]>([]);
 
   useEffect(() => {
     const handle = async (id: number) => {
@@ -34,6 +37,41 @@ export const StatusCreateTrip = () => {
       handle(currentIdJoinTrip);
     }
   }, [currentIdJoinTrip]);
+
+  useEffect(() => {
+    const handleInvitation = (id: number) => {
+      if (id) {
+        const docRef = doc(db, 'Trips', id.toString());
+        onSnapshot(docRef, (datas) => {
+          if (datas.exists()) {
+            const trips: SelectOptionsTrip = datas.data().trip;
+            if (trips.status) {
+              router.push(`mytrip/${currentIdJoinTrip}`);
+            }
+          }
+        });
+      }
+    };
+
+    handleInvitation(currentIdJoinTrip);
+  }, [currentIdJoinTrip]);
+
+  const onStartTrip = async () => {
+    const user = await DataFirebase.useGetTripMaster(currentIdJoinTrip);
+    if (user?.uid === currentUserInformation.uid) {
+      const userlists: UserInformation[] =
+        await DataFirebase.useGetUserListInTrip(currentIdJoinTrip);
+      const status = userlists.find((item) => item.status === false);
+      if (status === undefined) {
+        const trip = await DataFirebase.useGetTrip(currentIdJoinTrip);
+        const docRef = doc(db, 'Trips', currentIdJoinTrip.toString());
+        if (trip) {
+          await setDoc(docRef, { trip: { ...trip, status: true } });
+        }
+        router.push(`mytrip/${currentIdJoinTrip}`);
+      }
+    }
+  };
 
   return (
     <div className="flex h-full w-full flex-col justify-between rounded-t-[40px] bg-white px-5 pt-5">
@@ -81,7 +119,11 @@ export const StatusCreateTrip = () => {
               {!masterinfo ? (
                 <span className="h-12 w-12 rounded-full bg-slate-300 drop-shadow-md" />
               ) : (
-                <RenderUser masterInfo={masterinfo} />
+                <RenderUser
+                  masterInfo={masterinfo}
+                  setUserList={setUserList}
+                  userlist={userlist}
+                />
               )}
               {masterinfo?.uid === currentUserInformation.uid ? (
                 <div className="flex h-12 w-12 cursor-pointer items-center justify-center rounded-full border bg-white drop-shadow-md">
@@ -97,6 +139,7 @@ export const StatusCreateTrip = () => {
           <Button
             title="Start trip"
             disabled={masterinfo?.uid !== currentUserInformation.uid}
+            onClick={onStartTrip}
           />
           <Button
             bgWhite
@@ -109,10 +152,17 @@ export const StatusCreateTrip = () => {
   );
 };
 
-export const RenderUser = ({ masterInfo }: { masterInfo: UserInformation }) => {
+export const RenderUser = ({
+  masterInfo,
+  userlist,
+  setUserList,
+}: {
+  masterInfo: UserInformation;
+  userlist: UserInformation[];
+  setUserList: (value: UserInformation[]) => void;
+}) => {
   const { currentIdJoinTrip } = useSelector(selector.trip);
   const { currentUserInformation } = useSelector(selector.user);
-  const [userlist, setUserList] = useState<UserInformation[]>([]);
 
   useEffect(() => {
     const handle = async (id: number) => {
@@ -129,7 +179,8 @@ export const RenderUser = ({ masterInfo }: { masterInfo: UserInformation }) => {
     }
   }, [currentIdJoinTrip]);
   return (
-    <div>
+    // eslint-disable-next-line react/jsx-no-useless-fragment
+    <>
       {userlist &&
         userlist.map((item) => (
           <div
@@ -171,6 +222,6 @@ export const RenderUser = ({ masterInfo }: { masterInfo: UserInformation }) => {
             </div>
           </div>
         ))}
-    </div>
+    </>
   );
 };

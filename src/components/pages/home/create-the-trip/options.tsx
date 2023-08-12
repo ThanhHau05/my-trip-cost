@@ -69,7 +69,7 @@ export const OptionsCreateTheTrip = () => {
         const promises = userlistadded.map(async (item) => {
           const time = useGetTimeAndDate();
           const data: SelectOptionsInvitation = {
-            name: user.displayName || currentUserInformation.displayName,
+            name: user.displayName || '',
             tripid: id,
             tripname: tripname.value,
             dateandtime: time,
@@ -79,11 +79,21 @@ export const OptionsCreateTheTrip = () => {
           DataFirebase.useAcceptTheInvitation(item.uid, data);
         });
         await Promise.all(promises);
+        const datauser: UserInformation = {
+          displayName: currentUserInformation.displayName,
+          email: currentUserInformation.email,
+          id: currentUserInformation.id,
+          photoURL: currentUserInformation.photoURL,
+          status: true,
+          uid: currentUserInformation.uid,
+        };
+        userlistadded.push(datauser);
         const data: SelectOptionsTrip = {
           tripname: tripname.value,
           userlist: userlistadded,
           id,
           tripmaster: currentUserInformation.uid,
+          status: false,
         };
         await DataFirebase.useCreateTrip(id, data);
         dispatch(TripActions.setCurrentIdJoinTrip(id));

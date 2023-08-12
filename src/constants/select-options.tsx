@@ -35,7 +35,7 @@ export interface SelectOptionsTrip {
   id: number;
   userlist: UserInformation[];
   tripmaster?: string;
-  status?: boolean;
+  status: boolean;
   invoice?: SelectOptionsInvoice[];
 }
 
