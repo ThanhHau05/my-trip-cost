@@ -1,19 +1,20 @@
-import clsx from 'clsx';
 import { doc, onSnapshot, setDoc } from 'firebase/firestore';
 import { useRouter } from 'next/router';
-import { useContext, useEffect, useMemo, useState } from 'react';
-import { GrClose } from 'react-icons/gr';
+import { useContext, useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
-import { Avatar, Button, Input } from '@/components/base';
+import { Button } from '@/components/base';
 import type {
   SelectOptionsTrip,
   UserInformation,
 } from '@/constants/select-options';
 import { MainContext } from '@/context/main-context';
 import { DataFirebase, db } from '@/firebase';
-import { useFormatCurrentcy, useGetTimeAndDate } from '@/hooks';
+import { useGetTimeAndDate } from '@/hooks';
 import { selector, TripActions } from '@/redux';
+
+import { RenderReserveMoney } from './render-reserve-money';
+import { RenderUser } from './render-user';
 
 export const StatusCreateTrip = () => {
   const { currentIdJoinTrip } = useSelector(selector.trip);
@@ -26,12 +27,9 @@ export const StatusCreateTrip = () => {
   const [userlist, setUserList] = useState<UserInformation[]>([]);
   const [disabledstarttrip, setDisabledStartTrip] = useState(true);
   const [reservemoney, setReserveMoney] = useState({ value: '', error: '' });
+  const [masteruid, setMasterUid] = useState('');
 
   const dispatch = useDispatch();
-
-  const valueMoney = useMemo(() => {
-    return useFormatCurrentcy(+reservemoney.value);
-  }, [reservemoney.value]);
 
   useEffect(() => {
     const handle = async (id: number) => {
@@ -49,6 +47,10 @@ export const StatusCreateTrip = () => {
         const docRef = doc(db, 'Trips', id.toString());
         onSnapshot(docRef, async (datas) => {
           if (datas.exists()) {
+            const trip = await DataFirebase.useGetTrip(id);
+            if (trip) {
+              setMasterUid(trip.tripmaster);
+            }
             const userlists: UserInformation[] =
               await DataFirebase.useGetUserListInTrip(currentIdJoinTrip);
             const status = userlists.find((item) => item.status === false);
@@ -137,17 +139,12 @@ export const StatusCreateTrip = () => {
           Trip name:{' '}
           <span className="text-2xl font-bold">{data?.tripname}</span>
         </h2>
-        <div className="mt-3 h-32">
-          <h2>Reserve money (optional)</h2>
-          <Input
-            error={reservemoney.error}
-            value={reservemoney.value}
-            onChangeText={(e) => onChangeReserveMoney(e)}
-          />
-          <h2 className="ml-2 mt-2 font-medium text-gray-700">
-            {valueMoney} VNĐ
-          </h2>
-        </div>
+        <RenderReserveMoney
+          masteruid={masteruid}
+          error={reservemoney.error}
+          value={reservemoney.value}
+          onChangeMoney={onChangeReserveMoney}
+        />
         <div className="mt-6">
           <h2 className="text-lg font-medium drop-shadow-md">Participants:</h2>
           <div className="inline-block">
@@ -189,74 +186,5 @@ export const StatusCreateTrip = () => {
         </div>
       </div>
     </div>
-  );
-};
-
-export const RenderUser = ({
-  userlist,
-  setUserList,
-}: {
-  userlist: UserInformation[];
-  setUserList: (value: UserInformation[]) => void;
-}) => {
-  const { currentIdJoinTrip } = useSelector(selector.trip);
-
-  useEffect(() => {
-    const handle = async (id: number) => {
-      const docRef = doc(db, 'Trips', id.toString());
-      onSnapshot(docRef, (data) => {
-        if (data.exists()) {
-          const invitationData: SelectOptionsTrip = data.data().trip;
-          setUserList(invitationData.userlist);
-        }
-      });
-    };
-    if (currentIdJoinTrip) {
-      handle(currentIdJoinTrip);
-    }
-  }, [currentIdJoinTrip]);
-  return (
-    // eslint-disable-next-line react/jsx-no-useless-fragment
-    <>
-      {userlist &&
-        userlist.map((item) => (
-          <div
-            key={item.uid}
-            className="relative z-20 inline-block drop-shadow-md"
-          >
-            <div className="group relative inline-block">
-              <span className="absolute -top-5 z-10 ml-0 hidden rounded-2xl border bg-white px-2 py-0.5 text-xs font-medium group-hover:block">
-                {item.displayName}
-              </span>
-              <Avatar
-                img={{
-                  url: item.photoURL.url
-                    ? item.photoURL.url
-                    : item.photoURL.text,
-                  color: item.photoURL.url ? '' : item.photoURL.color,
-                  text: item.photoURL.url ? '' : item.displayName[0],
-                }}
-              />
-              <span
-                className={clsx(
-                  'absolute bottom-px right-[3px] h-2 w-2 rounded-full border border-white drop-shadow-md',
-                  item.status ? 'bg-green-500' : 'bg-orange-500',
-                )}
-              />
-              <div className="invisible absolute bottom-0 flex w-full justify-center transition-all duration-100 group-hover:visible group-hover:-translate-y-3">
-                <GrClose
-                  className="cursor-pointer rounded-full bg-slate-600 p-1 text-lg drop-shadow-md"
-                  onClick={() =>
-                    DataFirebase.useRefuseInvitation(
-                      item.uid,
-                      currentIdJoinTrip,
-                    )
-                  }
-                />
-              </div>
-            </div>
-          </div>
-        ))}
-    </>
   );
 };
