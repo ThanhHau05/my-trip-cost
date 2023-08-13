@@ -206,21 +206,6 @@ export const DataFirebase = {
     }
     return [];
   },
-  // useDeleteUserInTrip: async (uid: string, id: number) => {
-  //   const docRef = doc(db, 'Trips', id.toString());
-  //   const docInvitationRef = doc(db, 'UserInvitations', uid);
-  //   const trip = await DataFirebase.useGetTrip(id);
-  //   if (trip) {
-  //     const userInvitation = await DataFirebase.useGetInvitation(uid);
-  //     const newUserInvitation = userInvitation?.filter(
-  //       (item) => item.tripid !== id,
-  //     );
-  //     await setDoc(docInvitationRef, { invitation: newUserInvitation });
-  //     const userlists = trip.userlist;
-  //     const newuserlist = userlists.filter((item) => item.uid !== uid);
-  //     await setDoc(docRef, { trip: { ...trip, userlist: newuserlist } });
-  //   }
-  // },
   useDeleteTheTrip: async (id: number) => {
     const docRef = doc(db, 'Trips', id.toString());
     const docIdListRef = doc(db, 'Trips', 'id');
@@ -264,5 +249,14 @@ export const DataFirebase = {
       return trip.status;
     }
     return undefined;
+  },
+  useMinusReserveMoney: async (id: number, minusMoney: number) => {
+    const docRef = doc(db, 'Trips', id.toString());
+    const trip = await DataFirebase.useGetTrip(id);
+    const reserveMoney = trip?.reservemoney;
+    if (reserveMoney) {
+      const newMoney = reserveMoney - minusMoney;
+      await setDoc(docRef, { trip: { ...trip, reservemoney: newMoney } });
+    }
   },
 };

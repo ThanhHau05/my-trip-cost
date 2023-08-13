@@ -52,10 +52,10 @@ const ContainerTripDetail = () => {
     useContext(MainContext);
 
   const [valueInvoice, setValueInvoice] = useState<SelectOptionsInvoice[]>([]);
-
   const [totalmoney, setTotalMoney] = useState(0);
-
   const [uidandmoney, setUidAndMoney] = useState({ uid: '', money: 0 });
+  const [starttime, setStartTime] = useState('');
+  const [tripname, setTripName] = useState('');
 
   useEffect(() => {
     const fetchData = async () => {
@@ -74,8 +74,12 @@ const ContainerTripDetail = () => {
         const docRef = doc(db, 'Trips', id.toString());
         onSnapshot(docRef, async (data) => {
           if (data.exists()) {
+            const trip = await DataFirebase.useGetTrip(id);
             const value = await useTotalMoneyTheTrip(id);
+            const valueStartTime = trip?.starttime;
             setTotalMoney(value);
+            setStartTime(valueStartTime || '');
+            setTripName(trip?.tripname || '');
           }
         });
       }
@@ -88,12 +92,15 @@ const ContainerTripDetail = () => {
       <Head>
         <title>My Trip</title>
       </Head>
-      <WrapperHeader
-        bgWhite
-        header={<TripHeader tripName="Trip 1" money={totalmoney} />}
-      >
+      <WrapperHeader bgWhite header={<TripHeader money={totalmoney} />}>
         {showverticalmenu ? (
           <VerticalMenu>
+            <div className="flex flex-col">
+              <h2 className="font-medium">Trip name:</h2>
+              <h2 className="mb-2 text-2xl font-medium leading-7 drop-shadow-md">
+                {tripname}
+              </h2>
+            </div>
             <h2 className="pb-2 font-medium">People</h2>
             <RenderValueInVerticalMenu
               money={uidandmoney.money}
@@ -109,13 +116,15 @@ const ContainerTripDetail = () => {
             setUidAndMoney={(uid, money) => setUidAndMoney({ uid, money })}
           />
         ) : null}
-        <div className="h-full w-full px-3 pt-5">
+        <div className="relative h-full w-full px-3 pt-5">
+          <div className="border_welcome_bottom_status_trip absolute left-0 top-10 z-0 h-56 w-40 bg-teal-500" />
+          <div className="border_welcome_top absolute bottom-14 right-0 h-56 w-40 bg-teal-500" />
           <div className="dropdown h-[calc(100%-73px)] w-full overflow-auto pr-2">
-            <div className="flex items-center">
+            <div className="absolute z-10 flex items-center">
               <div className="ml-[18px] mr-3 inline-block h-3 w-3 rounded-full bg-gray-800" />
               <div className="flex flex-col">
                 <span className="text-lg">Start the trip</span>
-                <span>10.00 PM - 09/08/2023</span>
+                <span>{starttime}</span>
               </div>
             </div>
             <RenderInvoice data={valueInvoice} />

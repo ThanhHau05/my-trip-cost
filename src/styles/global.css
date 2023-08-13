@@ -37,6 +37,9 @@ h2, span, p {
 .border_welcome_top {
 border-radius: 100% 0% 34% 66% / 37% 97% 3% 63% 
 }
+.border_welcome_bottom_status_trip {
+border-radius: 38% 62% 100% 0% / 4% 52% 48% 96% 
+}
 
 .border_welcome_bottom {
   border-radius: 35% 65% 45% 55% / 46% 42% 58% 54% 

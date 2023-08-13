@@ -1,17 +1,18 @@
 import clsx from 'clsx';
 import { doc, onSnapshot, setDoc } from 'firebase/firestore';
 import { useRouter } from 'next/router';
-import { useContext, useEffect, useState } from 'react';
+import { useContext, useEffect, useMemo, useState } from 'react';
 import { GrClose } from 'react-icons/gr';
 import { useDispatch, useSelector } from 'react-redux';
 
-import { Avatar, Button } from '@/components/base';
+import { Avatar, Button, Input } from '@/components/base';
 import type {
   SelectOptionsTrip,
   UserInformation,
 } from '@/constants/select-options';
 import { MainContext } from '@/context/main-context';
 import { DataFirebase, db } from '@/firebase';
+import { useFormatCurrentcy, useGetTimeAndDate } from '@/hooks';
 import { selector, TripActions } from '@/redux';
 
 export const StatusCreateTrip = () => {
@@ -24,8 +25,13 @@ export const StatusCreateTrip = () => {
   const [data, setData] = useState<SelectOptionsTrip>();
   const [userlist, setUserList] = useState<UserInformation[]>([]);
   const [disabledstarttrip, setDisabledStartTrip] = useState(true);
+  const [reservemoney, setReserveMoney] = useState({ value: '', error: '' });
 
   const dispatch = useDispatch();
+
+  const valueMoney = useMemo(() => {
+    return useFormatCurrentcy(+reservemoney.value);
+  }, [reservemoney.value]);
 
   useEffect(() => {
     const handle = async (id: number) => {
@@ -82,25 +88,67 @@ export const StatusCreateTrip = () => {
   }, [currentIdJoinTrip]);
 
   const onStartTrip = async () => {
-    const userlists: UserInformation[] =
-      await DataFirebase.useGetUserListInTrip(currentIdJoinTrip);
-    const status = userlists.find((item) => item.status === false);
-    if (status === undefined) {
-      const trip = await DataFirebase.useGetTrip(currentIdJoinTrip);
-      const docRef = doc(db, 'Trips', currentIdJoinTrip.toString());
-      if (trip) {
-        await setDoc(docRef, { trip: { ...trip, status: true } });
+    if (+reservemoney.value < 50000) {
+      setReserveMoney({
+        ...reservemoney,
+        error: 'Minimum reserve amount 100.000 VND',
+      });
+    } else {
+      const userlists: UserInformation[] =
+        await DataFirebase.useGetUserListInTrip(currentIdJoinTrip);
+      const status = userlists.find((item) => item.status === false);
+      if (status === undefined) {
+        const trip = await DataFirebase.useGetTrip(currentIdJoinTrip);
+        const docRef = doc(db, 'Trips', currentIdJoinTrip.toString());
+        if (trip) {
+          const valueStartTime = useGetTimeAndDate();
+          await setDoc(docRef, {
+            trip: {
+              ...trip,
+              status: true,
+              reservemoney: +reservemoney.value,
+              starttime: valueStartTime,
+            },
+          });
+        }
+      }
+    }
+  };
+
+  const onChangeReserveMoney = (e: string) => {
+    if (+e >= 0) {
+      if (+e < 50000 && +e > 0) {
+        setReserveMoney({
+          value: e,
+          error: 'Minimum reserve amount 100.000 VND',
+        });
+      } else {
+        setReserveMoney({ value: e, error: '' });
       }
     }
   };
 
   return (
-    <div className="flex h-full w-full flex-col justify-between rounded-t-[40px] bg-white px-5 pt-5">
+    <div className="relative flex h-full w-full flex-col justify-between rounded-t-[40px] bg-white px-5 pt-5">
+      <div className="border_welcome_bottom_status_trip absolute bottom-14 left-0 h-56 w-40 bg-teal-500" />
+      <div className="border_welcome_top absolute right-0 top-10 h-56 w-40 bg-teal-500" />
       <div>
         <h2 className="text-lg font-medium drop-shadow-md">
-          Trip name: <span className="text-xl font-bold">{data?.tripname}</span>
+          Trip name:{' '}
+          <span className="text-2xl font-bold">{data?.tripname}</span>
         </h2>
-        <div className="mt-8">
+        <div className="mt-3 h-32">
+          <h2>Reserve money (optional)</h2>
+          <Input
+            error={reservemoney.error}
+            value={reservemoney.value}
+            onChangeText={(e) => onChangeReserveMoney(e)}
+          />
+          <h2 className="ml-2 mt-2 font-medium text-gray-700">
+            {valueMoney} VNĐ
+          </h2>
+        </div>
+        <div className="mt-6">
           <h2 className="text-lg font-medium drop-shadow-md">Participants:</h2>
           <div className="inline-block">
             <div>
@@ -112,7 +160,7 @@ export const StatusCreateTrip = () => {
               <span className="text-sm"> : Ready</span>
             </div>
           </div>
-          <div className="dropdown h-72 overflow-auto">
+          <div className="dropdown h-60 overflow-auto">
             <div className="grid grid-cols-5 gap-2 pt-6">
               {!userlist ? (
                 <span className="h-12 w-12 rounded-full bg-slate-300 drop-shadow-md" />
@@ -127,7 +175,7 @@ export const StatusCreateTrip = () => {
         </div>
       </div>
       <div>
-        <div className="mb-10 flex h-12 w-full items-center justify-center gap-3">
+        <div className="mb-9 flex h-12 w-full items-center justify-center gap-3">
           <Button
             title="Start trip"
             onClick={onStartTrip}

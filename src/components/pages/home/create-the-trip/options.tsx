@@ -105,6 +105,8 @@ export const OptionsCreateTheTrip = () => {
           id,
           status: false,
           tripmaster: uid || '',
+          endtime: '',
+          starttime: '',
         };
         await DataFirebase.useCreateTrip(id, data);
         dispatch(TripActions.setCurrentIdJoinTrip(id));
