@@ -97,7 +97,7 @@ const ContainerTripDetail = () => {
           <VerticalMenu>
             <div className="flex flex-col">
               <h2 className="font-medium">Trip name:</h2>
-              <h2 className="mb-2 text-2xl font-medium leading-7 drop-shadow-md">
+              <h2 className="mb-2 text-2xl font-bold leading-7 drop-shadow-md">
                 {tripname}
               </h2>
             </div>
