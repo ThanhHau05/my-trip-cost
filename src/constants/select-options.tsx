@@ -36,6 +36,8 @@ export interface SelectOptionsTrip {
   invoice?: SelectOptionsInvoice[];
   reservemoney?: number;
   tripmaster: string;
+  starttime: string;
+  endtime: string;
 }
 
 export interface SelectOptionsInvitation {

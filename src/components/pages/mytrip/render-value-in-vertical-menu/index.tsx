@@ -53,7 +53,7 @@ export const RenderValueInVerticalMenu = ({
   }, [money, uid]);
 
   return (
-    <div className="dropdown flex h-[calc(100%-100px)] flex-col gap-2 overflow-auto">
+    <div className="dropdown flex h-[calc(100%-160px)] flex-col gap-2 overflow-auto">
       {data.map((item) => (
         <AmountOfMoneyOfUser
           key={item.uid}

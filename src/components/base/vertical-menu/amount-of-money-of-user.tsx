@@ -22,7 +22,7 @@ export const AmountOfMoneyOfUser = ({
   }, [money]);
   return (
     <div className="mx-1 flex items-center justify-between gap-1 rounded-xl border bg-white px-2 py-1 drop-shadow-md">
-      <div className="flex items-center justify-center">
+      <div className="flex items-center justify-center pr-2">
         <Avatar img={{ url, color, text }} />
         <h2 className="ml-1 text-lg font-medium drop-shadow-md">{name}</h2>
       </div>

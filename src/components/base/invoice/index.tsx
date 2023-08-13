@@ -30,7 +30,7 @@ export const Invoice = ({
     return useFormatCurrentcy(money);
   }, [money]);
   return (
-    <div className="group mt-10 flex items-center justify-between rounded-xl pl-px">
+    <div className="group absolute z-10 mt-10 flex items-center justify-between rounded-xl pl-px">
       <div>
         <Avatar img={{ url, color, text }} />
       </div>
