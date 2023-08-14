@@ -3,6 +3,11 @@ import { BiLogOut } from 'react-icons/bi';
 import type { IconType } from 'react-icons/lib';
 import { LuHistory } from 'react-icons/lu';
 
+export interface VerticalMenuUserInfo {
+  uid: string;
+  money: number;
+}
+
 export interface SelectOptionsAvatar {
   url: string;
   color: string;
@@ -19,9 +24,9 @@ export interface SelectOptionsPeopleInVerticalMenu {
 export interface SelectOptionsInvoice {
   payerName: string;
   payerImage: SelectOptionsAvatar;
-  actiity: string;
+  activity: string;
+  other?: string;
   qty: number;
-  description: string;
   money: number;
   moneySuggest: number;
   time: string;

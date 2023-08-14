@@ -11,7 +11,10 @@ import {
   RenderInvoice,
   RenderValueInVerticalMenu,
 } from '@/components/pages';
-import type { SelectOptionsInvoice } from '@/constants/select-options';
+import type {
+  SelectOptionsInvoice,
+  VerticalMenuUserInfo,
+} from '@/constants/select-options';
 import { MainContext } from '@/context/main-context';
 import { DataFirebase, db } from '@/firebase';
 import { useTotalMoneyTheTrip } from '@/hooks';
@@ -53,13 +56,13 @@ const ContainerTripDetail = () => {
 
   const [valueInvoice, setValueInvoice] = useState<SelectOptionsInvoice[]>([]);
   const [totalmoney, setTotalMoney] = useState(0);
-  const [uidandmoney, setUidAndMoney] = useState({ uid: '', money: 0 });
+  const [uidandmoney, setUidAndMoney] = useState<VerticalMenuUserInfo[]>([]);
   const [starttime, setStartTime] = useState('');
   const [tripname, setTripName] = useState('');
 
   useEffect(() => {
     const fetchData = async () => {
-      const value = await DataFirebase.useGetInvoiceIntoTripData(
+      const value = await DataFirebase.useGetInvoiceInTripData(
         currentIdJoinTrip,
       );
       setValueInvoice(value || []);
@@ -102,20 +105,13 @@ const ContainerTripDetail = () => {
               </h2>
             </div>
             <h2 className="pb-2 font-medium">People</h2>
-            <RenderValueInVerticalMenu
-              money={uidandmoney.money}
-              uid={uidandmoney.uid}
-            />
+            <RenderValueInVerticalMenu userandmoney={uidandmoney} />
             <div className="mt-2 h-12 w-full">
               <Button title="Finish the trip" />
             </div>
           </VerticalMenu>
         ) : null}
-        {showaddinvoice ? (
-          <AddInvoice
-            setUidAndMoney={(uid, money) => setUidAndMoney({ uid, money })}
-          />
-        ) : null}
+        {showaddinvoice ? <AddInvoice setUidAndMoney={setUidAndMoney} /> : null}
         <div className="relative h-full w-full px-3 pt-5">
           <div className="border_welcome_bottom_status_trip absolute left-0 top-10 z-0 h-56 w-40 bg-teal-500" />
           <div className="border_welcome_top absolute bottom-14 right-0 h-56 w-40 bg-teal-500" />

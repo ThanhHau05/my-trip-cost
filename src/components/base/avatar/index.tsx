@@ -33,7 +33,7 @@ export const Avatar = ({
         src={Images.User.src}
         size="44"
         round
-        className={clsx(cursorPointer ? 'cursor-pointer' : null)}
+        className={clsx('z-20', cursorPointer ? 'cursor-pointer' : null)}
       />
     </div>
   );

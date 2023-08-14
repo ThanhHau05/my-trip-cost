@@ -1,6 +1,7 @@
 import clsx from 'clsx';
 import { useEffect, useState } from 'react';
 import { BiChevronDown, BiLoaderAlt } from 'react-icons/bi';
+import { GoPersonAdd } from 'react-icons/go';
 
 import type { SelectOptionsRenderDropDown } from '@/constants/select-options';
 import { useClickOutSide } from '@/hooks/useClickOutSide';
@@ -10,11 +11,12 @@ import { Avatar } from '../avatar';
 export const Dropdown = ({
   option,
   onClick,
-  defaultVitle,
+  defaultTitle,
   disabled,
   defaultImage,
   image,
   onClickImage,
+  title,
 }: {
   option: SelectOptionsRenderDropDown[];
   onClick: (
@@ -25,7 +27,7 @@ export const Dropdown = ({
       text?: string;
     },
   ) => void;
-  defaultVitle?: string;
+  defaultTitle?: string;
   disabled?: boolean;
   defaultImage?: {
     url?: string;
@@ -34,6 +36,7 @@ export const Dropdown = ({
   };
   image?: boolean;
   onClickImage?: (url?: string, color?: string, text?: string) => void;
+  title?: boolean;
 }) => {
   const [iconpointdown, setIconPointDown] = useState(false);
   const [valuetitle, setValueTitle] = useState('');
@@ -55,7 +58,9 @@ export const Dropdown = ({
       text?: string;
     },
   ) => {
-    setValueTitle(valueTitle);
+    if (title) {
+      setValueTitle(valueTitle);
+    }
     if (onClickImage) {
       onClickImage(
         img?.url ? img.url : '',
@@ -68,8 +73,13 @@ export const Dropdown = ({
   };
 
   useEffect(() => {
-    if (defaultVitle) setValueTitle(defaultVitle);
-  }, [defaultVitle]);
+    if (defaultTitle) {
+      const value = option.find((item) => item.value === defaultTitle);
+      if (value) {
+        setValueTitle(value?.title);
+      }
+    }
+  }, [defaultTitle]);
 
   return (
     <div ref={dropdownRef} className="relative">
@@ -138,7 +148,7 @@ const ContainerOptionsRenderDropDown = ({
   ) => void;
 }) => {
   return (
-    <div className="dropdown absolute z-10 mt-3 max-h-44 w-full overflow-auto rounded-lg border-2 border-gray-200 bg-white p-1 shadow-md drop-shadow-md transition-all hover:shadow-lg">
+    <div className="dropdown absolute z-30 mt-3 max-h-44 w-full overflow-auto rounded-lg border-2 border-gray-200 bg-white p-1 shadow-md drop-shadow-md transition-all hover:shadow-lg">
       {option.length !== 0 ? (
         option.map((item) => (
           <OptionsRenderDropdown
@@ -184,16 +194,19 @@ const OptionsRenderDropdown = ({
   return (
     <button
       onClick={() => onClick(title, value, image)}
-      className="group flex w-full cursor-pointer items-center justify-center rounded-md px-2 py-1 text-left transition-all duration-75 hover:bg-slate-200 hover:font-medium hover:drop-shadow-md"
+      className="group flex w-full cursor-pointer items-center justify-between rounded-md px-2 py-1 text-left transition-all duration-75 hover:bg-slate-200 hover:font-medium hover:drop-shadow-md"
     >
-      {image ? (
-        <div>
-          <Avatar
-            img={{ url: image.url, color: image.color, text: image.text }}
-          />
-        </div>
-      ) : null}
-      <span className="block w-full pl-2 ">{title}</span>
+      <div className="flex items-center justify-center">
+        {image ? (
+          <div>
+            <Avatar
+              img={{ url: image.url, color: image.color, text: image.text }}
+            />
+          </div>
+        ) : null}
+        <span className="block w-full pl-2 ">{title}</span>
+      </div>
+      <GoPersonAdd className="hidden text-xl font-medium group-hover:block" />
     </button>
   );
 };

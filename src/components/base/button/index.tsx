@@ -10,6 +10,7 @@ export const Button = ({
   to,
   bgWhite,
   icon,
+  textSmall,
 }: {
   title: string;
   onClick?: () => void;
@@ -17,6 +18,7 @@ export const Button = ({
   to?: string;
   bgWhite?: boolean;
   icon?: IconType;
+  textSmall?: boolean;
 }) => {
   return to ? (
     <Link href={to}>
@@ -26,6 +28,7 @@ export const Button = ({
         disabled={disabled}
         bgWhite={bgWhite}
         Icon={icon}
+        textSmall={textSmall}
       />
     </Link>
   ) : (
@@ -35,6 +38,7 @@ export const Button = ({
       disabled={disabled}
       bgWhite={bgWhite}
       Icon={icon}
+      textSmall={textSmall}
     />
   );
 };
@@ -45,21 +49,24 @@ export const ContainerButton = ({
   disabled,
   bgWhite,
   Icon,
+  textSmall,
 }: {
   title: string;
   onClick?: () => void;
   disabled?: boolean;
   bgWhite?: boolean;
   Icon?: IconType;
+  textSmall?: boolean;
 }) => {
   return (
     <button
       disabled={disabled}
       onClick={onClick}
       className={clsx(
-        'flex h-full w-full items-center rounded-full text-sm font-bold shadow-md drop-shadow-md transition-all hover:shadow-xl disabled:cursor-not-allowed disabled:bg-slate-400 disabled:hover:shadow-md',
+        'flex h-full w-full items-center rounded-full font-bold shadow-md drop-shadow-md transition-all hover:shadow-xl disabled:cursor-not-allowed disabled:bg-slate-400 disabled:hover:shadow-md',
         bgWhite ? 'bg-white text-gray-900' : 'bg-blue-600 text-white',
         Icon ? 'justify-start' : ' justify-center',
+        textSmall ? 'text-xs' : 'text-sm',
       )}
     >
       {Icon ? <Icon className="ml-20 mr-5 inline-block text-3xl" /> : null}
