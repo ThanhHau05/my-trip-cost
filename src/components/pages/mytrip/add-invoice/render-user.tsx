@@ -2,44 +2,22 @@ import clsx from 'clsx';
 import { useEffect } from 'react';
 
 import { Avatar } from '@/components/base';
-import type {
-  SelectOptionsInvoice,
-  SelectOptionsRenderDropDown,
-} from '@/constants/select-options';
+import type { SelectOptionsRenderDropDown } from '@/constants/select-options';
 
 export const RenderUserAddInvoice = ({
   data,
-  invoicelist,
   userUid,
   setUserUid,
-  setSelectedUserClick,
 }: {
   data: SelectOptionsRenderDropDown[];
-  invoicelist: SelectOptionsInvoice[];
   userUid: string;
   setUserUid: (value: string) => void;
-  setSelectedUserClick: (value: SelectOptionsInvoice[]) => void;
 }) => {
   useEffect(() => {
-    if (data.length !== 0 && invoicelist.length === 0) {
+    if (data.length !== 0) {
       setUserUid(data[0]?.value || '');
-      const value: SelectOptionsInvoice = {
-        uid: data[0]?.value || '',
-        payerName: '',
-        payerImage: {
-          color: '',
-          text: '',
-          url: '',
-        },
-        activity: 'shopping',
-        qty: 1,
-        money: 0,
-        moneySuggest: 0,
-        time: '',
-      };
-      setSelectedUserClick([value]);
     }
-  }, [data, invoicelist]);
+  }, [data]);
 
   return (
     <div>
@@ -49,7 +27,7 @@ export const RenderUserAddInvoice = ({
             data.map((item) => (
               <div
                 key={item.value}
-                className="relative z-20 inline-block drop-shadow-md"
+                className="relative z-20 inline-block cursor-pointer drop-shadow-md"
               >
                 <div
                   className={clsx(

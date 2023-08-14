@@ -33,10 +33,10 @@ export const RenderValueInVerticalMenu = ({
         uid: item.uid,
       }));
       const updatedArray = newData.map((item1) => {
-        const value = userandmoney.find((item2) => item2.uid === item1.uid);
-        if (value) {
-          const newMoney = item1.money + value.money;
-          return { ...item1, money: newMoney };
+        const value = userandmoney.filter((item2) => item2.uid === item1.uid);
+        if (value.length !== 0) {
+          const totalMoney = value.reduce((acc, curr) => acc + curr.money, 0);
+          return { ...item1, money: item1.money + totalMoney };
         }
         return item1;
       });

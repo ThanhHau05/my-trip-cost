@@ -1,6 +1,7 @@
 /* eslint-disable no-param-reassign */
 import type { Dispatch, SetStateAction } from 'react';
 import { useEffect, useMemo, useState } from 'react';
+import toast, { Toaster } from 'react-hot-toast';
 
 import { Button, Dropdown, Input } from '@/components/base';
 import type { SelectOptionsInvoice } from '@/constants/select-options';
@@ -54,7 +55,7 @@ export const OptionsUser = ({
       if (value.activity === 'others')
         setOthers({ value: value.other || '', error: '' });
     } else {
-      setMoney({ value: '0', error: '' });
+      setMoney({ value: '', error: '' });
       setActivity('shopping');
       if (activity === 'others') setOthers({ value: '', error: '' });
       setMoneySuggest(0);
@@ -91,25 +92,28 @@ export const OptionsUser = ({
 
   const onSave = () => {
     if (isCheck()) {
-      if (invoicelist.find((item) => item.uid !== userUid)) {
-        const value: SelectOptionsInvoice = {
-          activity,
-          money: +money.value,
-          moneySuggest: moneysuggest,
-          payerImage: {
-            color: '',
-            text: '',
-            url: '',
-          },
-          payerName: '',
-          qty: +quantity,
-          time: '',
-          uid: userUid,
-          other: others.value,
-        };
+      const value: SelectOptionsInvoice = {
+        activity,
+        money: +money.value,
+        moneySuggest: moneysuggest,
+        payerImage: {
+          color: '',
+          text: '',
+          url: '',
+        },
+        payerName: '',
+        qty: +quantity,
+        time: '',
+        uid: userUid,
+        other: others.value,
+      };
+      if (invoicelist && invoicelist.find((item) => item.uid !== userUid)) {
         setInvoiceList((e) => [...e, value]);
-      } else {
-        const value = invoicelist.map((item) => {
+      } else if (
+        invoicelist &&
+        invoicelist.find((item) => item.uid === userUid)
+      ) {
+        const values = invoicelist.map((item) => {
           if (item.uid === userUid) {
             return {
               activity,
@@ -129,13 +133,17 @@ export const OptionsUser = ({
           }
           return item;
         });
-        setInvoiceList(value);
+        setInvoiceList(values);
+      } else {
+        setInvoiceList([value]);
       }
+      toast.success('Saved!');
     }
   };
 
   return (
     <div className="px-3">
+      <Toaster />
       <div className="h-12 w-5/12">
         <Button
           onClick={onSave}
@@ -144,7 +152,7 @@ export const OptionsUser = ({
           textSmall
         />
       </div>
-      <div className="dropdown mt-3 h-96 overflow-auto pr-1">
+      <div className="dropdown mb-5 mt-3 h-96 overflow-auto pr-1">
         <div className="mt-2">
           <h2 className="mb-2 font-medium">Activities</h2>
           <Dropdown

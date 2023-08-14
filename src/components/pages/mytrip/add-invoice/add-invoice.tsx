@@ -1,16 +1,11 @@
 import { useContext } from 'react';
 import { GrClose } from 'react-icons/gr';
 
-import type { VerticalMenuUserInfo } from '@/constants/select-options';
 import { MainContext } from '@/context/main-context';
 
 import { OptionsAddInvoice } from './options';
 
-export const AddInvoice = ({
-  setUidAndMoney,
-}: {
-  setUidAndMoney: (value: VerticalMenuUserInfo[]) => void;
-}) => {
+export const AddInvoice = () => {
   const { setShowAddInvoice } = useContext(MainContext);
 
   return (
@@ -20,7 +15,7 @@ export const AddInvoice = ({
           className="absolute right-1 top-6 ml-auto mr-4 cursor-pointer"
           onClick={() => setShowAddInvoice(false)}
         />
-        <OptionsAddInvoice setUidAndMoney={setUidAndMoney} />
+        <OptionsAddInvoice />
       </div>
     </div>
   );

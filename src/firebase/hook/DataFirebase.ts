@@ -235,7 +235,18 @@ export const DataFirebase = {
     const docRef = doc(db, 'Trips', id.toString());
     const trip = await DataFirebase.useGetTrip(id);
     if (trip) {
-      await setDoc(docRef, { trip: { ...trip, invoice: data } });
+      const cleanedData = data.filter(
+        (item) => item.money !== 0 || item.moneySuggest !== 0,
+      );
+      let newValue: SelectOptionsInvoice[] = [];
+      if (trip.invoice) {
+        newValue = trip.invoice;
+      }
+      newValue?.push(...cleanedData);
+
+      await setDoc(docRef, {
+        trip: { ...trip, invoice: newValue },
+      });
     }
   },
   useGetInvoiceInTripData: async (id: number) => {

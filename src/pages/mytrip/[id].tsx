@@ -61,17 +61,6 @@ const ContainerTripDetail = () => {
   const [tripname, setTripName] = useState('');
 
   useEffect(() => {
-    const fetchData = async () => {
-      const value = await DataFirebase.useGetInvoiceInTripData(
-        currentIdJoinTrip,
-      );
-      setValueInvoice(value || []);
-    };
-
-    fetchData();
-  }, [currentIdJoinTrip]);
-
-  useEffect(() => {
     const handle = async (id: number) => {
       if (currentIdJoinTrip) {
         const docRef = doc(db, 'Trips', id.toString());
@@ -83,6 +72,18 @@ const ContainerTripDetail = () => {
             setTotalMoney(value);
             setStartTime(valueStartTime || '');
             setTripName(trip?.tripname || '');
+            if (trip?.invoice && trip?.invoice.length !== 0) {
+              setValueInvoice(trip?.invoice);
+              const newvalue: VerticalMenuUserInfo[] = trip?.invoice.map(
+                (item) => {
+                  return {
+                    uid: item.uid,
+                    money: (item.money || item.moneySuggest) * item.qty,
+                  };
+                },
+              );
+              setUidAndMoney(newvalue);
+            }
           }
         });
       }
@@ -111,19 +112,19 @@ const ContainerTripDetail = () => {
             </div>
           </VerticalMenu>
         ) : null}
-        {showaddinvoice ? <AddInvoice setUidAndMoney={setUidAndMoney} /> : null}
-        <div className="relative h-full w-full px-3 pt-5">
+        {showaddinvoice ? <AddInvoice /> : null}
+        <div className="relative h-full w-full pr-1 pt-5">
           <div className="border_welcome_bottom_status_trip absolute left-0 top-10 z-0 h-56 w-40 bg-teal-500" />
           <div className="border_welcome_top absolute bottom-14 right-0 h-56 w-40 bg-teal-500" />
-          <div className="dropdown h-[calc(100%-73px)] w-full overflow-auto pr-2">
-            <div className="absolute z-10 flex items-center">
+          <div className="dropdown flex h-[calc(100%-73px)] w-full flex-col overflow-auto pb-5 pl-3 pr-2">
+            <div className="z-10 flex items-center">
               <div className="ml-[18px] mr-3 inline-block h-3 w-3 rounded-full bg-gray-800" />
               <div className="flex flex-col">
                 <span className="text-lg">Start the trip</span>
                 <span>{starttime}</span>
               </div>
             </div>
-            <RenderInvoice data={valueInvoice} />
+            {valueInvoice ? <RenderInvoice data={valueInvoice} /> : null}
           </div>
           <div className="mt-3 h-12 w-full">
             <Button
