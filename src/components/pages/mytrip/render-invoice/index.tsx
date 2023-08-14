@@ -20,6 +20,7 @@ export const RenderInvoice = ({ data }: { data: SelectOptionsInvoice[] }) => {
             color={item.payerImage.color}
             text={item.payerImage.text}
             other={item.other || ''}
+            id={item.id}
           />
         ))}
     </>

@@ -83,7 +83,7 @@ export const OptionsUser = ({
         error: 'The amount is too small, at least 1.000 VND',
       });
     }
-    if (activity === 'others' && others.value && others.value.length <= 3) {
+    if (activity === 'others' && others.value && others.value.length < 3) {
       isError = true;
       setOthers({ ...others, error: 'Too short, at least 3 characters' });
     }
@@ -106,6 +106,7 @@ export const OptionsUser = ({
         time: '',
         uid: userUid,
         other: others.value,
+        id: '',
       };
       if (invoicelist && invoicelist.find((item) => item.uid !== userUid)) {
         setInvoiceList((e) => [...e, value]);
@@ -129,6 +130,7 @@ export const OptionsUser = ({
               time: '',
               uid: userUid,
               other: others.value,
+              id: '',
             };
           }
           return item;

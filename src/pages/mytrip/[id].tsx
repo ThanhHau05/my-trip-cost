@@ -13,6 +13,7 @@ import {
 } from '@/components/pages';
 import type {
   SelectOptionsInvoice,
+  SelectOptionsTrip,
   VerticalMenuUserInfo,
 } from '@/constants/select-options';
 import { MainContext } from '@/context/main-context';
@@ -73,7 +74,7 @@ const ContainerTripDetail = () => {
             setStartTime(valueStartTime || '');
             setTripName(trip?.tripname || '');
             if (trip?.invoice && trip?.invoice.length !== 0) {
-              setValueInvoice(trip?.invoice);
+              setValueInvoice(trip?.invoice || []);
               const newvalue: VerticalMenuUserInfo[] = trip?.invoice.map(
                 (item) => {
                   return {
@@ -90,6 +91,19 @@ const ContainerTripDetail = () => {
     };
     handle(currentIdJoinTrip);
   }, [currentIdJoinTrip]);
+
+  useEffect(() => {
+    const handle = async (id: number) => {
+      const docRef = doc(db, 'Trips', id.toString());
+      onSnapshot(docRef, (data) => {
+        if (data.exists()) {
+          const valueTrip: SelectOptionsTrip = data.data().trip;
+          setValueInvoice(valueTrip?.invoice || []);
+        }
+      });
+    };
+    handle(currentIdJoinTrip);
+  }, []);
 
   return (
     <>
@@ -124,7 +138,9 @@ const ContainerTripDetail = () => {
                 <span>{starttime}</span>
               </div>
             </div>
-            {valueInvoice ? <RenderInvoice data={valueInvoice} /> : null}
+            {valueInvoice.length !== 0 ? (
+              <RenderInvoice data={valueInvoice} />
+            ) : null}
           </div>
           <div className="mt-3 h-12 w-full">
             <Button

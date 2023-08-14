@@ -1,8 +1,11 @@
 import clsx from 'clsx';
 import { useMemo } from 'react';
 import { GrClose } from 'react-icons/gr';
+import { useSelector } from 'react-redux';
 
+import { DataFirebase } from '@/firebase';
 import { useFormatCurrentcy } from '@/hooks';
+import { selector } from '@/redux';
 
 import { Avatar } from '../avatar';
 
@@ -16,6 +19,7 @@ export const Invoice = ({
   color,
   text,
   other,
+  id,
 }: {
   name: string;
   activity: string;
@@ -26,7 +30,10 @@ export const Invoice = ({
   color: string;
   text: string;
   other: string;
+  id: string;
 }) => {
+  const { currentIdJoinTrip } = useSelector(selector.trip);
+
   const valueMoney = useMemo(() => {
     return useFormatCurrentcy(money);
   }, [money]);
@@ -38,12 +45,19 @@ export const Invoice = ({
     return undefined;
   }, [money, qty]);
 
+  const onDeleteInvoice = async (idInvoice: string) => {
+    await DataFirebase.useDeleteInvoice(currentIdJoinTrip, idInvoice);
+  };
+
   return (
     <div className="group relative z-10 mt-4 flex items-center justify-between rounded-xl bg-gray-200/60 px-2 py-6 shadow drop-shadow-md">
       <div className="absolute -top-3 flex h-3 w-full justify-center">
         <div className="h-full w-0.5 bg-gray-800 shadow" />
       </div>
-      <GrClose className="invisible absolute right-0 top-0 mr-2 mt-4 inline-block cursor-pointer group-hover:visible" />
+      <GrClose
+        onClick={() => onDeleteInvoice(id)}
+        className="invisible absolute right-0 top-0 mr-2 mt-4 inline-block cursor-pointer group-hover:visible"
+      />
       <div>
         <Avatar img={{ url, color, text }} />
       </div>

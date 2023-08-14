@@ -9,7 +9,7 @@ import type {
 } from '@/constants/select-options';
 import { MainContext } from '@/context/main-context';
 import { DataFirebase } from '@/firebase';
-import { useGetTimeAndDate } from '@/hooks';
+import { useGetTimeAndDate, useRandomIdInvoice } from '@/hooks';
 import { selector } from '@/redux';
 
 import { OptionsUser } from './options-user';
@@ -57,6 +57,7 @@ export const OptionsAddInvoice = () => {
           currentIdJoinTrip,
         );
         const { activity, moneySuggest, qty, uid, other } = item;
+        const id = useRandomIdInvoice();
         const data: SelectOptionsInvoice = {
           activity,
           money: item.money,
@@ -71,6 +72,7 @@ export const OptionsAddInvoice = () => {
           qty,
           uid,
           other,
+          id,
         };
         dataInvoice.push(data);
       });
