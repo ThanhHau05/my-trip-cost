@@ -228,15 +228,17 @@ export const DataFirebase = {
     }
     return [];
   },
-  useAddInvoiceIntoTripData: async (id: number, data: SelectOptionsInvoice) => {
+  useUpdateInvoiceIntoTripData: async (
+    id: number,
+    data: SelectOptionsInvoice[],
+  ) => {
     const docRef = doc(db, 'Trips', id.toString());
     const trip = await DataFirebase.useGetTrip(id);
     if (trip) {
-      const vlaueInvoice = [...(trip.invoice || []), data];
-      await setDoc(docRef, { trip: { ...trip, invoice: vlaueInvoice } });
+      await setDoc(docRef, { trip: { ...trip, invoice: data } });
     }
   },
-  useGetInvoiceIntoTripData: async (id: number) => {
+  useGetInvoiceInTripData: async (id: number) => {
     const trip = await DataFirebase.useGetTrip(id);
     if (trip) {
       return trip.invoice;
@@ -258,5 +260,16 @@ export const DataFirebase = {
       const newMoney = reserveMoney - minusMoney;
       await setDoc(docRef, { trip: { ...trip, reservemoney: newMoney } });
     }
+  },
+  useGetUserInfoInTrip: async (uid: string, id: number) => {
+    const trip = await DataFirebase.useGetTrip(id);
+    if (trip) {
+      const { userlist } = trip;
+      if (userlist) {
+        const value = userlist.find((item) => item.uid === uid);
+        return value;
+      }
+    }
+    return undefined;
   },
 };

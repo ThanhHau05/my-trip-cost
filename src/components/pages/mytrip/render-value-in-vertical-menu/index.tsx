@@ -5,16 +5,15 @@ import { AmountOfMoneyOfUser } from '@/components/base';
 import type {
   SelectOptionsPeopleInVerticalMenu,
   UserInformation,
+  VerticalMenuUserInfo,
 } from '@/constants/select-options';
 import { DataFirebase } from '@/firebase';
 import { selector } from '@/redux';
 
 export const RenderValueInVerticalMenu = ({
-  money,
-  uid,
+  userandmoney,
 }: {
-  money: number;
-  uid: string;
+  userandmoney: VerticalMenuUserInfo[];
 }) => {
   const { currentIdJoinTrip } = useSelector(selector.trip);
   const [data, setData] = useState<SelectOptionsPeopleInVerticalMenu[]>([]);
@@ -33,24 +32,18 @@ export const RenderValueInVerticalMenu = ({
         money: 0,
         uid: item.uid,
       }));
-      setData(newData);
+      const updatedArray = newData.map((item1) => {
+        const value = userandmoney.find((item2) => item2.uid === item1.uid);
+        if (value) {
+          const newMoney = item1.money + value.money;
+          return { ...item1, money: newMoney };
+        }
+        return item1;
+      });
+      setData(updatedArray);
     };
     handle();
-  }, [currentIdJoinTrip]);
-
-  useEffect(() => {
-    const handleUpdateMoney = async () => {
-      const updatedData = data.map((item) =>
-        item.uid === uid ? { ...item, money: item.money + money } : item,
-      );
-
-      setData(updatedData);
-    };
-
-    if (money !== 0 && uid) {
-      handleUpdateMoney();
-    }
-  }, [money, uid]);
+  }, [userandmoney]);
 
   return (
     <div className="dropdown flex h-[calc(100%-160px)] flex-col gap-2 overflow-auto">

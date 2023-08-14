@@ -9,7 +9,6 @@ export const Invoice = ({
   name,
   activity,
   qty,
-  description,
   time,
   money,
   url,
@@ -18,7 +17,6 @@ export const Invoice = ({
 }: {
   name: string;
   activity: string;
-  description?: string;
   time: string;
   money: number;
   qty?: number;
@@ -39,7 +37,6 @@ export const Invoice = ({
         <span className="font-medium">
           {qty ? `${activity} - qty: ${qty}` : activity}
         </span>
-        <p className="text-sm">{description}</p>
         <span className="text-sm">{time}</span>
       </div>
       <div className="flex h-full w-32 flex-col items-end gap-5">

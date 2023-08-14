@@ -17,7 +17,7 @@ export const RenderSuggest = ({
     }
   };
   return (
-    <div className="grid grid-cols-3 gap-2 pb-10">
+    <div className="grid grid-cols-3 gap-2">
       {PRICEOPTIONS.map((item) => (
         <h2
           key={item.value}

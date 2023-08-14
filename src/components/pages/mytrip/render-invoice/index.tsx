@@ -9,10 +9,9 @@ export const RenderInvoice = ({ data }: { data: SelectOptionsInvoice[] }) => {
           key={item.time + item.payerName + item.money + item.moneySuggest}
           name={item.payerName}
           activity={
-            item.actiity.charAt(0).toUpperCase() + item.actiity.slice(1)
+            item.activity.charAt(0).toUpperCase() + item.activity.slice(1)
           }
           qty={item.qty}
-          description={item.description}
           money={item.money}
           time={item.time}
           url={item.payerImage.url}
