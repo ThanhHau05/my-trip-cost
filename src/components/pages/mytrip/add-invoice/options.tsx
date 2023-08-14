@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 
 import { Button } from '@/components/base';
@@ -6,8 +6,8 @@ import type {
   SelectOptionsInvoice,
   SelectOptionsRenderDropDown,
   UserInformation,
-  VerticalMenuUserInfo,
 } from '@/constants/select-options';
+import { MainContext } from '@/context/main-context';
 import { DataFirebase } from '@/firebase';
 import { useGetTimeAndDate } from '@/hooks';
 import { selector } from '@/redux';
@@ -15,12 +15,10 @@ import { selector } from '@/redux';
 import { OptionsUser } from './options-user';
 import { RenderUserAddInvoice } from './render-user';
 
-export const OptionsAddInvoice = ({
-  setUidAndMoney,
-}: {
-  setUidAndMoney: (value: VerticalMenuUserInfo[]) => void;
-}) => {
+export const OptionsAddInvoice = () => {
   const { currentIdJoinTrip } = useSelector(selector.trip);
+
+  const { setShowAddInvoice } = useContext(MainContext);
 
   const [payerlist, setPayerList] = useState<SelectOptionsRenderDropDown[]>([]);
 
@@ -48,43 +46,41 @@ export const OptionsAddInvoice = ({
   }, [currentIdJoinTrip]);
 
   const onSubmitAddInvoice = async () => {
-    let money = 0;
-    const dataInvoice: SelectOptionsInvoice[] =
-      (await DataFirebase.useGetInvoiceInTripData(currentIdJoinTrip)) || [];
-    const userandmoney: VerticalMenuUserInfo[] = [];
-    const promises = selectedpayerlist.map(async (item) => {
-      const userinfo = await DataFirebase.useGetUserInfoInTrip(
-        item.uid,
-        currentIdJoinTrip,
-      );
-      const { activity, moneySuggest, qty, uid, other } = item;
-      const data: SelectOptionsInvoice = {
-        activity,
-        money: item.money,
-        moneySuggest,
-        payerImage: {
-          url: userinfo?.photoURL.url || '',
-          color: userinfo?.photoURL.color || '',
-          text: userinfo?.photoURL.text || '',
-        },
-        payerName: userinfo?.displayName || '',
-        time: useGetTimeAndDate(),
-        qty,
-        uid,
-        other,
-      };
-      money += item.money + item.moneySuggest;
-      dataInvoice.push(data);
-      userandmoney.push({ money: item.money + moneySuggest, uid });
-    });
-    await Promise.all(promises).then(async () => {
-      await DataFirebase.useUpdateInvoiceIntoTripData(
-        currentIdJoinTrip,
-        dataInvoice,
-      );
-    });
-    if (money !== 0) {
-      setUidAndMoney(userandmoney);
+    const dataInvoice: SelectOptionsInvoice[] = [];
+    const newdata = selectedpayerlist.filter(
+      (item) => item.money !== 0 || item.moneySuggest !== 0,
+    );
+    if (newdata.length !== 0) {
+      const promises = selectedpayerlist.map(async (item) => {
+        const userinfo = await DataFirebase.useGetUserInfoInTrip(
+          item.uid,
+          currentIdJoinTrip,
+        );
+        const { activity, moneySuggest, qty, uid, other } = item;
+        const data: SelectOptionsInvoice = {
+          activity,
+          money: item.money,
+          moneySuggest,
+          payerImage: {
+            url: userinfo?.photoURL.url || '',
+            color: userinfo?.photoURL.color || '',
+            text: userinfo?.photoURL.text || '',
+          },
+          payerName: userinfo?.displayName || '',
+          time: useGetTimeAndDate(),
+          qty,
+          uid,
+          other,
+        };
+        dataInvoice.push(data);
+      });
+      await Promise.all(promises).then(async () => {
+        await DataFirebase.useUpdateInvoiceIntoTripData(
+          currentIdJoinTrip,
+          dataInvoice,
+        );
+      });
+      setShowAddInvoice(false);
     }
   };
   return (
@@ -94,8 +90,6 @@ export const OptionsAddInvoice = ({
           data={payerlist}
           setUserUid={setUserUidClick}
           userUid={useruidclick}
-          invoicelist={selectedpayerlist}
-          setSelectedUserClick={setSelectedPayerList}
         />
       </div>
       <OptionsUser
@@ -103,8 +97,11 @@ export const OptionsAddInvoice = ({
         setInvoiceList={setSelectedPayerList}
         userUid={useruidclick}
       />
-      <div className=" mt-5 h-12 w-full px-3">
-        <Button title="Add" onClick={onSubmitAddInvoice} />
+      <div className="mt-1 px-3">
+        <p className="text-sm">*Save user information before adding</p>
+        <div className=" mt-2 h-12 w-full">
+          <Button title="Add" onClick={onSubmitAddInvoice} />
+        </div>
       </div>
     </div>
   );

@@ -1,3 +1,4 @@
+import clsx from 'clsx';
 import { useMemo } from 'react';
 import { GrClose } from 'react-icons/gr';
 
@@ -14,21 +15,35 @@ export const Invoice = ({
   url,
   color,
   text,
+  other,
 }: {
   name: string;
   activity: string;
   time: string;
   money: number;
-  qty?: number;
+  qty: number;
   url: string;
   color: string;
   text: string;
+  other: string;
 }) => {
   const valueMoney = useMemo(() => {
     return useFormatCurrentcy(money);
   }, [money]);
+
+  const valueMoneyQty = useMemo(() => {
+    if (qty >= 2) {
+      return useFormatCurrentcy(money * 2);
+    }
+    return undefined;
+  }, [money, qty]);
+
   return (
-    <div className="group absolute z-10 mt-10 flex items-center justify-between rounded-xl pl-px">
+    <div className="group relative z-10 mt-4 flex items-center justify-between rounded-xl bg-gray-200/60 px-2 py-6 shadow drop-shadow-md">
+      <div className="absolute -top-3 flex h-3 w-full justify-center">
+        <div className="h-full w-0.5 bg-gray-800 shadow" />
+      </div>
+      <GrClose className="invisible absolute right-0 top-0 mr-2 mt-4 inline-block cursor-pointer group-hover:visible" />
       <div>
         <Avatar img={{ url, color, text }} />
       </div>
@@ -37,13 +52,23 @@ export const Invoice = ({
         <span className="font-medium">
           {qty ? `${activity} - qty: ${qty}` : activity}
         </span>
-        <span className="text-sm">{time}</span>
+        <p>{other}</p>
+        <span className="block text-sm">{time}</span>
       </div>
-      <div className="flex h-full w-32 flex-col items-end gap-5">
-        <GrClose className="invisible inline-block cursor-pointer group-hover:visible" />
+      <div
+        className={clsx(
+          'flex h-full w-32 flex-col items-end',
+          valueMoneyQty ? 'justify-end' : 'justify-center',
+        )}
+      >
         <h2 className="text-end text-lg font-bold text-gray-800 drop-shadow-md">
-          {valueMoney} VND
+          {valueMoney} {qty >= 2 ? `x ${qty}` : 'VND'}
         </h2>
+        {valueMoneyQty ? (
+          <h2 className="text-end text-xl font-bold text-gray-800 drop-shadow-md">
+            {valueMoneyQty} VND
+          </h2>
+        ) : null}
       </div>
     </div>
   );
