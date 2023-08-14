@@ -22,6 +22,7 @@ export interface SelectOptionsPeopleInVerticalMenu {
 }
 
 export interface SelectOptionsInvoice {
+  id: string;
   payerName: string;
   payerImage: SelectOptionsAvatar;
   activity: string;

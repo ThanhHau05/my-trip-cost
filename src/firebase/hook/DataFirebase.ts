@@ -283,4 +283,13 @@ export const DataFirebase = {
     }
     return undefined;
   },
+  useDeleteInvoice: async (id: number, idInvoice: string) => {
+    const invoice = await DataFirebase.useGetInvoiceInTripData(id);
+    if (invoice) {
+      const newInvoice = invoice.filter((item) => item.id !== idInvoice);
+      const docRef = doc(db, 'Trips', id.toString());
+      const trip = await DataFirebase.useGetTrip(id);
+      await setDoc(docRef, { trip: { ...trip, invoice: newInvoice } });
+    }
+  },
 };
