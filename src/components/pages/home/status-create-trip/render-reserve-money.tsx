@@ -30,6 +30,7 @@ export const RenderReserveMoney = ({
             error={error}
             value={value}
             onChangeText={(e) => onChangeMoney(e)}
+            placeholder="Ex: 2000000"
           />
           <h2 className="ml-2 mt-2 font-medium text-gray-700">
             {valueMoney} VNĐ

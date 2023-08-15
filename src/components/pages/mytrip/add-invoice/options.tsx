@@ -8,6 +8,7 @@ import type {
   UserInformation,
 } from '@/constants/select-options';
 import { MainContext } from '@/context/main-context';
+import { MyTripContext } from '@/context/mytrip-context';
 import { DataFirebase } from '@/firebase';
 import { useGetTimeAndDate, useRandomIdInvoice } from '@/hooks';
 import { selector } from '@/redux';
@@ -20,12 +21,10 @@ export const OptionsAddInvoice = () => {
 
   const { setShowAddInvoice } = useContext(MainContext);
 
-  const [payerlist, setPayerList] = useState<SelectOptionsRenderDropDown[]>([]);
+  const { onSaveUserInfoToData, setSelectedPayerList } =
+    useContext(MyTripContext);
 
-  const [selectedpayerlist, setSelectedPayerList] = useState<
-    SelectOptionsInvoice[]
-  >([]);
-  const [useruidclick, setUserUidClick] = useState('');
+  const [payerlist, setPayerList] = useState<SelectOptionsRenderDropDown[]>([]);
 
   useEffect(() => {
     const handle = async () => {
@@ -47,11 +46,9 @@ export const OptionsAddInvoice = () => {
 
   const onSubmitAddInvoice = async () => {
     const dataInvoice: SelectOptionsInvoice[] = [];
-    const newdata = selectedpayerlist.filter(
-      (item) => item.money !== 0 || item.moneySuggest !== 0,
-    );
-    if (newdata.length !== 0) {
-      const promises = selectedpayerlist.map(async (item) => {
+    const value = onSaveUserInfoToData(true);
+    if (value && value.length !== 0) {
+      const promises = value.map(async (item) => {
         const userinfo = await DataFirebase.useGetUserInfoInTrip(
           item.uid,
           currentIdJoinTrip,
@@ -81,29 +78,22 @@ export const OptionsAddInvoice = () => {
           currentIdJoinTrip,
           dataInvoice,
         );
+        setSelectedPayerList([]);
       });
       setShowAddInvoice(false);
     }
   };
+
   return (
-    <div className="flex h-full flex-col justify-start">
+    <div className="flex h-full flex-col justify-between">
       <div>
-        <RenderUserAddInvoice
-          data={payerlist}
-          setUserUid={setUserUidClick}
-          userUid={useruidclick}
-        />
-      </div>
-      <OptionsUser
-        invoicelist={selectedpayerlist}
-        setInvoiceList={setSelectedPayerList}
-        userUid={useruidclick}
-      />
-      <div className="mt-1 px-3">
-        <p className="text-sm">*Save user information before adding</p>
-        <div className=" mt-2 h-12 w-full">
-          <Button title="Add" onClick={onSubmitAddInvoice} />
+        <div>
+          <RenderUserAddInvoice data={payerlist} />
         </div>
+        <OptionsUser />
+      </div>
+      <div className=" mb-5 h-12 w-full px-3">
+        <Button title="Add" onClick={onSubmitAddInvoice} />
       </div>
     </div>
   );

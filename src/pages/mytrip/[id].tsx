@@ -17,6 +17,7 @@ import type {
   VerticalMenuUserInfo,
 } from '@/constants/select-options';
 import { MainContext } from '@/context/main-context';
+import { MyTripProvider } from '@/context/mytrip-context';
 import { DataFirebase, db } from '@/firebase';
 import { useTotalMoneyTheTrip } from '@/hooks';
 import { selector } from '@/redux';
@@ -142,7 +143,7 @@ const ContainerTripDetail = () => {
               <RenderInvoice data={valueInvoice} />
             ) : null}
           </div>
-          <div className="mt-3 h-12 w-full">
+          <div className="mt-3 h-12 w-full pl-3 pr-2">
             <Button
               title="Add Invoice"
               onClick={() => setShowAddInvoice(true)}
@@ -154,4 +155,12 @@ const ContainerTripDetail = () => {
   );
 };
 
-export default TripDetail;
+const MyTrip = () => {
+  return (
+    <MyTripProvider>
+      <TripDetail />
+    </MyTripProvider>
+  );
+};
+
+export default MyTrip;

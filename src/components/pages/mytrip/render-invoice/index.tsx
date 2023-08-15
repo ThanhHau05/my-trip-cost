@@ -8,7 +8,7 @@ export const RenderInvoice = ({ data }: { data: SelectOptionsInvoice[] }) => {
       {data &&
         data.map((item) => (
           <Invoice
-            key={item.time + item.payerName + item.money + item.moneySuggest}
+            key={item.id}
             name={item.payerName}
             activity={
               item.activity.charAt(0).toUpperCase() + item.activity.slice(1)
