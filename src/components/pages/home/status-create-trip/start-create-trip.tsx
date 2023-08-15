@@ -90,7 +90,7 @@ export const StatusCreateTrip = () => {
   }, [currentIdJoinTrip]);
 
   const onStartTrip = async () => {
-    if (+reservemoney.value < 50000) {
+    if (reservemoney.value && +reservemoney.value < 50000) {
       setReserveMoney({
         ...reservemoney,
         error: 'Minimum reserve amount 100.000 VND',

@@ -1,6 +1,7 @@
 export * from './useChangeNameStyle';
 export * from './useClickOutSide';
 export * from './useConvertNumberToTextInVND';
+export * from './useDebounce';
 export * from './useFormatCurrency';
 export * from './useGetMasterTrip';
 export * from './useGetTimeAndDate';
