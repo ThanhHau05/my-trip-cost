@@ -52,9 +52,14 @@ const TripDetail = () => {
 
 const ContainerTripDetail = () => {
   const { currentIdJoinTrip } = useSelector(selector.trip);
+  const { currentUserInformation } = useSelector(selector.user);
 
-  const { showverticalmenu, showaddinvoice, setShowAddInvoice } =
-    useContext(MainContext);
+  const {
+    showverticalmenu,
+    showaddinvoice,
+    setShowAddInvoice,
+    setFinishTheTrip,
+  } = useContext(MainContext);
 
   const [valueInvoice, setValueInvoice] = useState<SelectOptionsInvoice[]>([]);
   const [totalmoney, setTotalMoney] = useState(0);
@@ -106,6 +111,13 @@ const ContainerTripDetail = () => {
     handle(currentIdJoinTrip);
   }, []);
 
+  const FinishTheTrip = async () => {
+    const trip = await DataFirebase.useGetTrip(currentIdJoinTrip);
+    if (trip?.tripmaster === currentUserInformation.uid) {
+      setFinishTheTrip('You want to end the trip with the members');
+    }
+  };
+
   return (
     <>
       <Head>
@@ -123,7 +135,7 @@ const ContainerTripDetail = () => {
             <h2 className="pb-2 font-medium">People</h2>
             <RenderValueInVerticalMenu userandmoney={uidandmoney} />
             <div className="mt-2 h-12 w-full">
-              <Button title="Finish the trip" />
+              <Button title="Finish the trip" onClick={FinishTheTrip} />
             </div>
           </VerticalMenu>
         ) : null}
@@ -140,7 +152,7 @@ const ContainerTripDetail = () => {
               </div>
             </div>
             {valueInvoice.length !== 0 ? (
-              <RenderInvoice data={valueInvoice} />
+              <RenderInvoice showClose data={valueInvoice} />
             ) : null}
           </div>
           <div className="mt-3 h-12 w-full pl-3 pr-2">

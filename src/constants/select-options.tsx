@@ -41,6 +41,7 @@ export interface SelectOptionsTrip {
   status: boolean;
   invoice?: SelectOptionsInvoice[];
   reservemoney?: number;
+  totalmoney?: number;
   tripmaster: string;
   starttime: string;
   endtime: string;
@@ -76,6 +77,7 @@ export interface UserInformation {
   uid: string;
   status: boolean;
   email?: string;
+  totalmoney?: number;
 }
 
 export interface SelectOptionsObject {

@@ -72,6 +72,8 @@ interface MainProps {
   onSubmitEcceptToCancelTheTrip: () => Promise<void>;
   showaddinvoice: boolean;
   setShowAddInvoice: Dispatch<SetStateAction<boolean>>;
+  finishthetrip: string;
+  setFinishTheTrip: Dispatch<SetStateAction<string>>;
 }
 
 export const MainContext = createContext({} as MainProps);
@@ -91,6 +93,7 @@ export const MainProvider = ({ children }: { children: ReactNode }) => {
   const [id, setId] = useState(0);
   const [contentconfirm, setConentConfirm] = useState('');
   const [showaddinvoice, setShowAddInvoice] = useState(false);
+  const [finishthetrip, setFinishTheTrip] = useState('');
 
   const sliderRef = useRef<any>();
 
@@ -286,6 +289,8 @@ export const MainProvider = ({ children }: { children: ReactNode }) => {
     onSubmitEcceptToCancelTheTrip,
     showaddinvoice,
     setShowAddInvoice,
+    finishthetrip,
+    setFinishTheTrip,
   };
   return <MainContext.Provider value={value}>{children}</MainContext.Provider>;
 };

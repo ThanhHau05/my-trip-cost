@@ -1,4 +1,5 @@
-import { useContext } from 'react';
+import { doc, onSnapshot } from 'firebase/firestore';
+import { useContext, useEffect, useState } from 'react';
 import { useSignOut } from 'react-firebase-hooks/auth';
 import { useDispatch, useSelector } from 'react-redux';
 
@@ -8,10 +9,12 @@ import {
   CreateTheTrip,
   SliderPage,
   StatusCreateTrip,
+  TemporaryNotice,
 } from '@/components/pages';
+import type { SelectOptionsTrip } from '@/constants/select-options';
 import { VERTICAL_MENU } from '@/constants/select-options';
 import { MainContext } from '@/context/main-context';
-import { auth } from '@/firebase';
+import { auth, db } from '@/firebase';
 import { selector, UserActions } from '@/redux';
 
 import { Welcome } from './welcome';
@@ -28,11 +31,28 @@ const ContainerHome = () => {
 
   const { id, photoURL, displayName } = currentUserInformation || {};
 
+  const [temporarynotice, setTemporaryNotice] = useState<SelectOptionsTrip>();
+
+  useEffect(() => {
+    const docRef = doc(db, 'UserInvitations', currentUserInformation.uid);
+    onSnapshot(docRef, (data) => {
+      if (data.exists()) {
+        const value = data.data().temporaryNotice;
+        if (value) {
+          setTemporaryNotice(value);
+        }
+      }
+    });
+  }, []);
+
   return (
     <WrapperHeader
       header={<Header id={id || 0} image={photoURL} name={displayName} />}
     >
       <div className="h-full w-full">
+        {temporarynotice?.id ? (
+          <TemporaryNotice data={temporarynotice} />
+        ) : null}
         {showverticalmenu ? (
           <VerticalMenu>
             <RenderItemVerticalMenuHome />

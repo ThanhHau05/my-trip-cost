@@ -1,7 +1,13 @@
 import { Invoice } from '@/components/base';
 import type { SelectOptionsInvoice } from '@/constants/select-options';
 
-export const RenderInvoice = ({ data }: { data: SelectOptionsInvoice[] }) => {
+export const RenderInvoice = ({
+  data,
+  showClose,
+}: {
+  data: SelectOptionsInvoice[];
+  showClose?: boolean;
+}) => {
   return (
     // eslint-disable-next-line react/jsx-no-useless-fragment
     <>
@@ -21,6 +27,7 @@ export const RenderInvoice = ({ data }: { data: SelectOptionsInvoice[] }) => {
             text={item.payerImage.text}
             other={item.other || ''}
             id={item.id}
+            showClose={showClose}
           />
         ))}
     </>

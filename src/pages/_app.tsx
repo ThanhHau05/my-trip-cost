@@ -9,6 +9,7 @@ import { PersistGate } from 'redux-persist/integration/react';
 
 import { NotificationConfirmOperation } from '@/components/base';
 import { Loading } from '@/components/base/loading';
+import { NotiFinishTheTrip } from '@/components/pages';
 import { MainContext, MainProvider } from '@/context/main-context';
 import Redux from '@/redux';
 
@@ -25,10 +26,12 @@ const MyApp = ({ Component, pageProps }: AppProps) => (
 );
 
 const ContainerMyApp = ({ Component, pageProps }: any) => {
-  const { loadingstartnow, contentconfirm } = useContext(MainContext);
+  const { loadingstartnow, contentconfirm, finishthetrip } =
+    useContext(MainContext);
   return (
     <>
       {loadingstartnow ? <Loading /> : null}
+      {finishthetrip ? <NotiFinishTheTrip value={finishthetrip} /> : null}
       {contentconfirm.length !== 0 ? <NotificationConfirmOperation /> : null}
       <Component {...pageProps} />
     </>
