@@ -20,6 +20,7 @@ export const Invoice = ({
   text,
   other,
   id,
+  showClose,
 }: {
   name: string;
   activity: string;
@@ -31,6 +32,7 @@ export const Invoice = ({
   text: string;
   other: string;
   id: string;
+  showClose?: boolean;
 }) => {
   const { currentIdJoinTrip } = useSelector(selector.trip);
 
@@ -54,10 +56,12 @@ export const Invoice = ({
       <div className="absolute -top-3 flex h-3 w-full justify-center">
         <div className="h-full w-0.5 bg-gray-800 shadow" />
       </div>
-      <GrClose
-        onClick={() => onDeleteInvoice(id)}
-        className="invisible absolute right-0 top-0 mr-2 mt-4 inline-block cursor-pointer group-hover:visible"
-      />
+      {showClose ? (
+        <GrClose
+          onClick={() => onDeleteInvoice(id)}
+          className="invisible absolute right-0 top-0 mr-2 mt-4 inline-block cursor-pointer group-hover:visible"
+        />
+      ) : null}
       <div>
         <Avatar img={{ url, color, text }} />
       </div>

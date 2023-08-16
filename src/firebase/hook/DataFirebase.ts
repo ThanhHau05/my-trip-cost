@@ -292,4 +292,40 @@ export const DataFirebase = {
       await setDoc(docRef, { trip: { ...trip, invoice: newInvoice } });
     }
   },
+  useAddTempoaryNotice: async (uid: string, trip: SelectOptionsTrip) => {
+    const docRef = doc(db, 'UserInvitations', uid);
+    const isCheck = await getDoc(docRef);
+    if (isCheck.exists()) {
+      await setDoc(docRef, { ...isCheck.data(), temporaryNotice: trip });
+    }
+  },
+  useAddTripIntoUserHistory: async (uid: string, trip: SelectOptionsTrip) => {
+    const docRef = doc(db, 'UserInvitations', uid);
+    const isCheck = await getDoc(docRef);
+    if (isCheck.exists()) {
+      const valueTripHistory = isCheck.data().tripHistory;
+      if (valueTripHistory) {
+        await updateDoc(docRef, {
+          ...isCheck.data(),
+          tripHistory: myFirebase.firestore.FieldValue.arrayUnion(trip),
+        });
+      } else {
+        await setDoc(docRef, { ...isCheck.data(), tripHistory: [trip] });
+      }
+    }
+  },
+  useAddTotalForUser: async (id: number, uid: string, money: number) => {
+    const docRef = doc(db, 'Trips', id.toString());
+    const trip = await DataFirebase.useGetTrip(id);
+    if (trip) {
+      const { userlist } = trip;
+      const newuserlist = userlist.map((item) => {
+        if (item.uid === uid) {
+          return { ...item, totalmoney: money };
+        }
+        return item;
+      });
+      await setDoc(docRef, { ...trip, userlist: newuserlist });
+    }
+  },
 };

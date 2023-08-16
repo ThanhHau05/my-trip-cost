@@ -32,14 +32,21 @@ export const RenderValueInVerticalMenu = ({
         money: 0,
         uid: item.uid,
       }));
-      const updatedArray = newData.map((item1) => {
-        const value = userandmoney.filter((item2) => item2.uid === item1.uid);
-        if (value.length !== 0) {
-          const totalMoney = value.reduce((acc, curr) => acc + curr.money, 0);
-          return { ...item1, money: item1.money + totalMoney };
-        }
-        return item1;
-      });
+      const updatedArray = await Promise.all(
+        newData.map(async (item1) => {
+          const value = userandmoney.filter((item2) => item2.uid === item1.uid);
+          if (value.length !== 0) {
+            const totalMoney = value.reduce((acc, curr) => acc + curr.money, 0);
+            await DataFirebase.useAddTotalForUser(
+              currentIdJoinTrip,
+              item1.uid,
+              totalMoney,
+            );
+            return { ...item1, money: item1.money + totalMoney };
+          }
+          return item1;
+        }),
+      );
       setData(updatedArray);
     };
     handle();
