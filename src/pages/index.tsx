@@ -10,6 +10,7 @@ import {
   SliderPage,
   StatusCreateTrip,
   TemporaryNotice,
+  TripHistory,
 } from '@/components/pages';
 import type { SelectOptionsTrip } from '@/constants/select-options';
 import { VERTICAL_MENU } from '@/constants/select-options';
@@ -27,7 +28,8 @@ const HomePage = () => {
 const ContainerHome = () => {
   const { currentIdJoinTrip } = useSelector(selector.trip);
   const { currentUserInformation } = useSelector(selector.user);
-  const { showverticalmenu, showcreatethetrip } = useContext(MainContext);
+  const { showverticalmenu, showcreatethetrip, showtriphistory } =
+    useContext(MainContext);
 
   const { id, photoURL, displayName } = currentUserInformation || {};
 
@@ -58,6 +60,7 @@ const ContainerHome = () => {
             <RenderItemVerticalMenuHome />
           </VerticalMenu>
         ) : null}
+        {showtriphistory ? <TripHistory /> : null}
         {showcreatethetrip ? <CreateTheTrip /> : null}
         {currentIdJoinTrip !== 0 ? (
           <div className="h-full">
@@ -74,6 +77,8 @@ const ContainerHome = () => {
 const RenderItemVerticalMenuHome = () => {
   const [signOut] = useSignOut(auth);
   const dispatch = useDispatch();
+
+  const { setShowVerticalMenu, setShowTripHistory } = useContext(MainContext);
 
   const onSubmit = async (value: string) => {
     if (value === 'sign out') {
@@ -94,6 +99,9 @@ const RenderItemVerticalMenuHome = () => {
           status: false,
         }),
       );
+    } else if (value === 'trip history') {
+      setShowVerticalMenu(false);
+      setShowTripHistory(true);
     }
   };
   return (

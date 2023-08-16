@@ -26,7 +26,7 @@ export const Header = ({
           </span>
         </div>
       </div>
-      <ImageUser image={image} id={id} />
+      <ImageUser image={image} id={id} name={name} />
     </div>
   );
 };
