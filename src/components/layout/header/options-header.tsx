@@ -10,6 +10,7 @@ import { useClickOutSide } from '@/hooks/useClickOutSide';
 export const ImageUser = ({
   image,
   id,
+  name,
 }: {
   image: {
     url?: string;
@@ -17,6 +18,7 @@ export const ImageUser = ({
     text?: string;
   };
   id: number;
+  name: string;
 }) => {
   const [showinfouser, setShowInfoUser] = useState(false);
 
@@ -26,7 +28,7 @@ export const ImageUser = ({
 
   return (
     <div ref={showInfoUserRef} className="relative">
-      <div className="rounded-full">
+      <div className="cursor-pointer rounded-full">
         <Avatar
           size="50"
           onClick={() => setShowInfoUser(!showinfouser)}
@@ -34,25 +36,47 @@ export const ImageUser = ({
           cursorPointer
         />
       </div>
-      {showinfouser ? <HandleInfoUserOnAvatar id={id} /> : null}
+      {showinfouser ? <HandleInfoUserOnAvatar id={id} name={name} /> : null}
     </div>
   );
 };
 
-const HandleInfoUserOnAvatar = ({ id }: { id: number }) => {
+const HandleInfoUserOnAvatar = ({ id, name }: { id: number; name: string }) => {
   const [checkcopyid, setCheckCopyID] = useState(false);
+  const [checkcopyname, setCheckCopyName] = useState(false);
 
-  const _handleCopyInfo = (value: string) => {
+  const _handleCopyInfo = (
+    value: string,
+    setCopy: (value: boolean) => void,
+  ) => {
     navigator.clipboard.writeText(value).then(() => {
-      setCheckCopyID(true);
+      setCopy(true);
       const timer = setTimeout(() => {
-        setCheckCopyID(false);
+        setCopy(false);
       }, 1500);
       return () => clearTimeout(timer);
     });
   };
   return (
-    <div className="absolute right-0 z-10 mt-2 select-none rounded-xl border-2 bg-white px-3 py-1 shadow-md">
+    <div className="absolute right-0 z-20 mt-2 select-none rounded-xl border-2 bg-white px-3 py-1 shadow-md">
+      <span className="flex text-sm font-normal">
+        Name:
+        <span className="ml-1 flex items-center font-medium">
+          {name}
+          <div className="flex pl-2">
+            {checkcopyname ? (
+              <BsCheckCircleFill className="inline text-gray-600 drop-shadow-md" />
+            ) : (
+              <MdOutlineContentCopy
+                className="inline cursor-pointer drop-shadow-md"
+                onClick={() =>
+                  _handleCopyInfo(name.toString(), setCheckCopyName)
+                }
+              />
+            )}
+          </div>
+        </span>
+      </span>
       <span className="flex text-sm font-normal">
         Id:
         <span className="ml-1 flex items-center font-medium">
@@ -63,7 +87,7 @@ const HandleInfoUserOnAvatar = ({ id }: { id: number }) => {
             ) : (
               <MdOutlineContentCopy
                 className="inline cursor-pointer drop-shadow-md"
-                onClick={() => _handleCopyInfo(id.toString())}
+                onClick={() => _handleCopyInfo(id.toString(), setCheckCopyID)}
               />
             )}
           </div>

@@ -32,8 +32,10 @@ export const NotiFinishTheTrip = ({ value }: { value: string }) => {
     );
     invoice?.map(async (item) => {
       if (trip) {
-        await DataFirebase.useAddTempoaryNotice(item.uid, trip);
-        await DataFirebase.useAddTripIntoUserHistory(item.uid, trip);
+        if (!item.uid.includes('name-')) {
+          await DataFirebase.useAddTempoaryNotice(item.uid, trip);
+          await DataFirebase.useAddTripIntoUserHistory(item.uid, trip);
+        }
       }
     });
     await DataFirebase.useDeleteTheTrip(currentIdJoinTrip);

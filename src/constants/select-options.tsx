@@ -88,9 +88,9 @@ export interface SelectOptionsObject {
 
 export const VERTICAL_MENU: SelectOptionsObject[] = [
   {
-    title: 'Invoice History',
+    title: 'Trip history',
     icon: LuHistory,
-    value: 'invoice history',
+    value: 'trip history',
   },
   {
     title: 'Sign Out',
