@@ -29,16 +29,8 @@ const TripDetail = () => {
 
   const [status, setStatus] = useState(true);
 
-  // useEffect(() => {
-  //   const handle = async () => {
-  //     const value = await DataFirebase.useGetStatusTrip(currentIdJoinTrip);
-  //     setStatus(value || false);
-  //   };
-  //   handle();
-  // }, [currentIdJoinTrip]);
-
   useEffect(() => {
-    if (id && currentIdJoinTrip !== +id && !status === false) {
+    if (id && currentIdJoinTrip !== +id && status === false) {
       router.push('/');
     }
   }, [id, currentIdJoinTrip, status]);
@@ -111,7 +103,7 @@ const ContainerTripDetail = ({
       });
     };
     handle(currentIdJoinTrip);
-  }, []);
+  }, [currentIdJoinTrip]);
 
   const FinishTheTrip = async () => {
     const trip = await DataFirebase.useGetTrip(currentIdJoinTrip);

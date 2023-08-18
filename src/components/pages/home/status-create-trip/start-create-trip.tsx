@@ -18,9 +18,11 @@ import { RenderUser } from './render-user';
 export const StatusCreateTrip = ({
   masterUid,
   disabledStartTrip,
+  checkReserveMoney,
 }: {
   masterUid: string;
   disabledStartTrip: boolean;
+  checkReserveMoney: number;
 }) => {
   const { currentIdJoinTrip } = useSelector(selector.trip);
 
@@ -40,8 +42,35 @@ export const StatusCreateTrip = ({
     }
   }, [currentIdJoinTrip]);
 
+  useEffect(() => {
+    const handle = async () => {
+      const trip = await DataFirebase.useGetTrip(currentIdJoinTrip);
+      const docRef = doc(db, 'Trips', currentIdJoinTrip.toString());
+      if (+reservemoney.value >= 10) {
+        await setDoc(docRef, {
+          trip: {
+            ...trip,
+            reservemoney: +reservemoney.value,
+          },
+        });
+      } else {
+        await setDoc(docRef, {
+          trip: {
+            ...trip,
+            reservemoney: 0,
+          },
+        });
+      }
+    };
+    if (reservemoney.value) {
+      setTimeout(() => {
+        handle();
+      }, 1000);
+    }
+  }, [reservemoney.value, currentIdJoinTrip]);
+
   const onStartTrip = async () => {
-    if (reservemoney.value && +reservemoney.value < 50000) {
+    if (checkReserveMoney < 100000) {
       setReserveMoney({
         ...reservemoney,
         error: 'Minimum reserve amount 100.000 VND',
@@ -59,7 +88,6 @@ export const StatusCreateTrip = ({
             trip: {
               ...trip,
               status: true,
-              reservemoney: +reservemoney.value,
               starttime: valueStartTime,
             },
           });
@@ -109,7 +137,7 @@ export const StatusCreateTrip = ({
             </div>
           </div>
           <div className="dropdown h-60 overflow-auto">
-            <div className="grid grid-cols-5 gap-2 pt-6">
+            <div className="grid grid-cols-5 gap-2 pt-8">
               {!userlist ? (
                 <span className="h-12 w-12 rounded-full bg-slate-300 drop-shadow-md" />
               ) : (

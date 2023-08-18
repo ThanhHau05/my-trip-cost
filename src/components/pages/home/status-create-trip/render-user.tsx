@@ -20,6 +20,7 @@ export const RenderUser = ({
   setUserList: (value: UserInformation[]) => void;
 }) => {
   const { currentIdJoinTrip } = useSelector(selector.trip);
+  const { currentUserInformation } = useSelector(selector.user);
 
   useEffect(() => {
     const handle = async (id: number) => {
@@ -45,7 +46,7 @@ export const RenderUser = ({
             className="relative z-20 inline-block drop-shadow-md"
           >
             <div className="group relative inline-block">
-              <span className="absolute -top-5 z-10 ml-0 hidden rounded-2xl border bg-white px-2 py-0.5 text-xs font-medium group-hover:block">
+              <span className="absolute -top-7 z-10 ml-0 hidden rounded-2xl border bg-white px-2 py-0.5 text-xs font-medium group-hover:block">
                 {item.displayName}
               </span>
               <Avatar
@@ -61,7 +62,14 @@ export const RenderUser = ({
                   item.status ? 'bg-green-500' : 'bg-orange-500',
                 )}
               />
-              <div className="invisible absolute bottom-0 flex w-full justify-center transition-all duration-100 group-hover:visible group-hover:-translate-y-3">
+              <div
+                className={clsx(
+                  'invisible absolute bottom-0 flex w-full justify-center transition-all duration-100',
+                  item.uid !== currentUserInformation.uid
+                    ? 'group-hover:visible group-hover:-translate-y-3'
+                    : null,
+                )}
+              >
                 <GrClose
                   className="cursor-pointer rounded-full bg-slate-600 p-1 text-lg drop-shadow-md"
                   onClick={() =>

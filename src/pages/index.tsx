@@ -33,21 +33,26 @@ const HomePage = () => {
 
 const ContainerHome = () => {
   const { currentIdJoinTrip } = useSelector(selector.trip);
-  const { currentUserInformation } = useSelector(selector.user);
+  const { currentUserInformation, currentTripHistory } = useSelector(
+    selector.user,
+  );
   const { showverticalmenu, showcreatethetrip, showtriphistory } =
     useContext(MainContext);
 
   const router = useRouter();
+  const { id } = router.query;
 
   const dispatch = useDispatch();
 
-  const { id, photoURL, displayName } = currentUserInformation || {};
+  const { photoURL, displayName } = currentUserInformation || {};
 
   const [temporarynotice, setTemporaryNotice] = useState<SelectOptionsTrip>();
   const [triphistory, setTripHistory] = useState<SelectOptionsTrip[]>([]);
   const [masteruid, setMasterUid] = useState('');
   const [disabledstarttrip, setDisabledStartTrip] = useState(true);
   const [invitation, setInvitation] = useState<SelectOptionsInvitation[]>([]);
+  const [showhistorytrip, setShowHistoryTrip] = useState<SelectOptionsTrip>();
+  const [checkreservemoney, setCheckReserveMoney] = useState(0);
 
   useEffect(() => {
     const handle = () => {
@@ -57,9 +62,6 @@ const ContainerHome = () => {
           const valueData: SelectOptionsUserInvitations = data.data();
           if (valueData.temporaryNotice) {
             setTemporaryNotice(valueData.temporaryNotice);
-          }
-          if (valueData.tripHistory) {
-            setTripHistory(valueData.tripHistory);
           }
           if (valueData.invitation) {
             setInvitation(valueData.invitation);
@@ -77,8 +79,11 @@ const ContainerHome = () => {
           const valueTrip: SelectOptionsTrip = trip;
           if (valueTrip) {
             setMasterUid(trip.tripmaster);
+            setCheckReserveMoney(valueTrip.reservemoney || 0);
             if (valueTrip.status) {
-              router.push(`mytrip/${currentIdJoinTrip}`);
+              if (!(id && +id !== currentIdJoinTrip)) {
+                router.push(`mytrip/${currentIdJoinTrip}`);
+              }
             } else {
               const checkData = valueTrip.userlist.find(
                 (item) => item.uid === currentUserInformation.uid,
@@ -98,9 +103,21 @@ const ContainerHome = () => {
     }
   }, [currentIdJoinTrip]);
 
+  useEffect(() => {
+    if (currentTripHistory) {
+      setTripHistory(currentTripHistory);
+    }
+  }, [currentTripHistory]);
+
   return (
     <WrapperHeader
-      header={<Header id={id || 0} image={photoURL} name={displayName} />}
+      header={
+        <Header
+          id={currentUserInformation.id || 0}
+          image={photoURL}
+          name={displayName}
+        />
+      }
     >
       <div className="h-full w-full">
         {temporarynotice?.id ? (
@@ -111,13 +128,22 @@ const ContainerHome = () => {
             <RenderItemVerticalMenuHome />
           </VerticalMenu>
         ) : null}
-        {showtriphistory ? <TripHistory data={triphistory} /> : null}
+        {showhistorytrip ? (
+          <TemporaryNotice
+            data={showhistorytrip}
+            onSubmitValue={() => setShowHistoryTrip(undefined)}
+          />
+        ) : null}
+        {showtriphistory ? (
+          <TripHistory data={triphistory} setTripHistory={setShowHistoryTrip} />
+        ) : null}
         {showcreatethetrip ? <CreateTheTrip /> : null}
         {currentIdJoinTrip !== 0 ? (
           <div className="h-full">
             <StatusCreateTrip
               disabledStartTrip={disabledstarttrip}
               masterUid={masteruid}
+              checkReserveMoney={checkreservemoney}
             />
           </div>
         ) : (

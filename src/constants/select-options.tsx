@@ -5,7 +5,6 @@ import { LuHistory } from 'react-icons/lu';
 
 export interface SelectOptionsUserInvitations {
   temporaryNotice?: SelectOptionsTrip;
-  tripHistory?: SelectOptionsTrip[];
   invitation?: SelectOptionsInvitation[];
 }
 
