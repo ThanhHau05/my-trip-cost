@@ -85,7 +85,7 @@ export const OptionsCreateTheTrip = () => {
             };
 
             if (item.uid) {
-              DataFirebase.useAcceptTheInvitation(item.uid, data);
+              await DataFirebase.useAcceptTheInvitation(item.uid, data);
             }
           }
         });

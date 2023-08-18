@@ -1,8 +1,6 @@
 import clsx from 'clsx';
 import ReactAvatar from 'react-avatar';
 
-import { Images } from '../image';
-
 export const Avatar = ({
   img,
   onClick,
@@ -18,7 +16,9 @@ export const Avatar = ({
   cursorPointer?: boolean;
   size?: string;
 }) => {
-  return img && (img.url || img.color || img.text) ? (
+  return img.url?.length !== 0 ||
+    img.color?.length !== 0 ||
+    img.text?.length !== 0 ? (
     <ReactAvatar
       onClick={onClick}
       src={img.url ? img.url : ''}
@@ -28,13 +28,11 @@ export const Avatar = ({
       round
     />
   ) : (
-    <div className="flex h-12 w-12 select-none items-center justify-center rounded-full border-2 border-slate-100 bg-gray-400 shadow-md">
-      <ReactAvatar
-        src={Images.User.src}
-        size="44"
-        round
-        className={clsx('z-20', cursorPointer ? 'cursor-pointer' : null)}
-      />
-    </div>
+    <div
+      className={clsx(
+        'skeleton z-20 h-11 w-11 select-none rounded-full border-2 border-slate-100 bg-gray-400 shadow-md',
+        cursorPointer ? 'cursor-pointer' : null,
+      )}
+    />
   );
 };

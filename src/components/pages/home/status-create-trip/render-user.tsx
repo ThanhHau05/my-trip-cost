@@ -50,13 +50,9 @@ export const RenderUser = ({
               </span>
               <Avatar
                 img={{
-                  url: item.photoURL.url
-                    ? item.photoURL.url
-                    : item.photoURL.text,
-                  color: item.photoURL.url ? '' : item.photoURL.color,
-                  text: item.photoURL.url
-                    ? ''
-                    : item.displayName[0]?.toUpperCase(),
+                  url: item.photoURL.url,
+                  color: item.photoURL.color || '',
+                  text: item.displayName[0]?.toUpperCase() || '',
                 }}
               />
               <span

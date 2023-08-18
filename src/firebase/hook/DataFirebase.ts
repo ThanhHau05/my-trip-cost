@@ -5,6 +5,7 @@ import type {
   SelectOptionsInvoice,
   SelectOptionsTrip,
   UserInformation,
+  VerticalMenuUserInfo,
 } from '@/constants/select-options';
 
 import { db, myFirebase } from '../firebase';
@@ -286,10 +287,37 @@ export const DataFirebase = {
   useDeleteInvoice: async (id: number, idInvoice: string) => {
     const invoice = await DataFirebase.useGetInvoiceInTripData(id);
     if (invoice) {
-      const newInvoice = invoice.filter((item) => item.id !== idInvoice);
+      const newListMoney: VerticalMenuUserInfo[] = [];
+      const newInvoice = invoice.filter((item) => {
+        if (item.id === idInvoice) {
+          newListMoney.push({
+            money: (item.money || item.moneySuggest) * item.qty,
+            uid: item.uid,
+          });
+          return false;
+        }
+        return true;
+      });
       const docRef = doc(db, 'Trips', id.toString());
       const trip = await DataFirebase.useGetTrip(id);
-      await setDoc(docRef, { trip: { ...trip, invoice: newInvoice } });
+      if (trip) {
+        const { userlist } = trip;
+        const newuserlist = userlist.map((item1) => {
+          const valueFind = newListMoney?.find(
+            (item2) => item2.uid === item1.uid,
+          );
+          if (valueFind) {
+            return {
+              ...item1,
+              totalmoney: (item1.totalmoney || 0) - valueFind.money,
+            };
+          }
+          return item1;
+        });
+        await setDoc(docRef, {
+          trip: { ...trip, invoice: newInvoice, userlist: newuserlist },
+        });
+      }
     }
   },
   useAddTempoaryNotice: async (uid: string, trip: SelectOptionsTrip) => {
@@ -314,18 +342,28 @@ export const DataFirebase = {
       }
     }
   },
-  useAddTotalForUser: async (id: number, uid: string, money: number) => {
+  useAddTotalForUser: async (id: number, valueUserList: UserInformation[]) => {
+    const docRef = doc(db, 'Trips', id.toString());
+    const trip = await DataFirebase.useGetTrip(id);
+    if (trip) {
+      await setDoc(docRef, { trip: { ...trip, userlist: valueUserList } });
+    }
+  },
+  useDeductMoneyOfUser: async (id: number, uid: string, money: number) => {
     const docRef = doc(db, 'Trips', id.toString());
     const trip = await DataFirebase.useGetTrip(id);
     if (trip) {
       const { userlist } = trip;
       const newuserlist = userlist.map((item) => {
         if (item.uid === uid) {
-          return { ...item, totalmoney: money };
+          return {
+            ...item,
+            totalmoney: item.totalmoney ? item.totalmoney - money : money,
+          };
         }
         return item;
       });
-      await setDoc(docRef, { ...trip, userlist: newuserlist });
+      await setDoc(docRef, { trip: { ...trip, userlist: newuserlist } });
     }
   },
 };

@@ -5,6 +5,7 @@ import { useSelector } from 'react-redux';
 import { Button } from '@/components/base';
 import type { SelectOptionsTrip } from '@/constants/select-options';
 import { db } from '@/firebase';
+import { useFormatCurrentcy } from '@/hooks';
 import { selector } from '@/redux';
 
 import { RenderInvoice } from '../../mytrip';
@@ -26,7 +27,7 @@ export const TemporaryNotice = ({ data }: { data: SelectOptionsTrip }) => {
 
   return (
     <div className="fixed z-40 h-full w-400 rounded-[40px] bg-slate-300/40 p-4">
-      <div className="dropdown relative flex h-full w-full flex-col justify-between rounded-3xl bg-slate-100 p-3">
+      <div className="dropdown relative flex h-full w-full flex-col justify-between rounded-3xl bg-slate-100 pl-3 pr-1">
         <div className="dropdown flex h-4/5 w-full flex-col gap-2 overflow-y-auto overflow-x-hidden">
           <h2 className="text-center text-lg font-medium drop-shadow-md">
             Recent trip
@@ -50,13 +51,14 @@ export const TemporaryNotice = ({ data }: { data: SelectOptionsTrip }) => {
           <span>
             Total amount spent:{' '}
             <h2 className="inline-block font-bold drop-shadow-md">
-              {data.totalmoney ? data.totalmoney : 0} VND
+              {data.totalmoney ? useFormatCurrentcy(data.totalmoney) : 0} VND
             </h2>
           </span>
           <span>
             Reserve Money:{' '}
             <h2 className="inline-block font-bold drop-shadow-md">
-              {data.reservemoney ? data.reservemoney : 0} VND
+              {data.reservemoney ? useFormatCurrentcy(data.reservemoney) : 0}{' '}
+              VND
             </h2>
           </span>
           <div>

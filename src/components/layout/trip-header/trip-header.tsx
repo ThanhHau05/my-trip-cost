@@ -1,18 +1,17 @@
 import clsx from 'clsx';
-import { doc, onSnapshot } from 'firebase/firestore';
-import { useEffect, useMemo, useState } from 'react';
-import { useSelector } from 'react-redux';
+import { useMemo, useState } from 'react';
 
-import { DataFirebase, db } from '@/firebase';
 import { useFormatCurrentcy } from '@/hooks';
-import { selector } from '@/redux';
 
 import { MenuBarsBox } from '../header';
 
-export const TripHeader = ({ money }: { money: number }) => {
-  const { currentIdJoinTrip } = useSelector(selector.trip);
-
-  const [reservemoney, setReserveMoney] = useState(0);
+export const TripHeader = ({
+  money,
+  reservemoney,
+}: {
+  money: number;
+  reservemoney: number;
+}) => {
   const [clickmoney, setClickMoney] = useState(false);
 
   const valueMoney = useMemo(() => {
@@ -28,19 +27,6 @@ export const TripHeader = ({ money }: { money: number }) => {
     }
     return '0';
   }, [reservemoney]);
-
-  useEffect(() => {
-    const handle = async (id: number) => {
-      const docRef = doc(db, 'Trips', id.toString());
-      onSnapshot(docRef, async () => {
-        const trip = await DataFirebase.useGetTrip(id);
-        if (trip?.reservemoney) {
-          setReserveMoney(trip.reservemoney);
-        }
-      });
-    };
-    handle(currentIdJoinTrip);
-  }, [currentIdJoinTrip]);
 
   const onClickMoney = () => {
     if (reservemoney) {

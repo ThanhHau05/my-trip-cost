@@ -40,6 +40,8 @@ interface MytripProps {
     error: string;
   };
   onSaveUserInfoToData: (add?: boolean) => SelectOptionsInvoice[] | undefined;
+  deletemoney: boolean;
+  setDeleteMoney: Dispatch<SetStateAction<boolean>>;
 }
 
 export const MyTripContext = createContext({} as MytripProps);
@@ -54,10 +56,12 @@ export const MyTripProvider = ({ children }: { children: ReactNode }) => {
     SelectOptionsInvoice[]
   >([]);
   const [useruidclick, setUserUidClick] = useState('');
+  const [deletemoney, setDeleteMoney] = useState(false);
 
   const handleChangeMoney = (e: string) => {
     if (e.length <= 9 && +e >= 0) {
       setMoney({ value: e, error: '' });
+      setDeleteMoney(false);
     }
   };
 
@@ -81,7 +85,7 @@ export const MyTripProvider = ({ children }: { children: ReactNode }) => {
       isError = true;
       setOthers({ value: '', error: 'Please enter another activity' });
     }
-    if (money.value && +money.value < 1000) {
+    if (money.value && +money.value !== 0 && +money.value < 1000) {
       isError = true;
       setMoney({
         ...money,
@@ -96,6 +100,15 @@ export const MyTripProvider = ({ children }: { children: ReactNode }) => {
   };
 
   const onSaveUserInfoToData = (add?: boolean) => {
+    if (
+      add &&
+      selectedpayerlist.length === 0 &&
+      !money.value &&
+      !moneysuggest
+    ) {
+      toast.error('No information has been saved yet.');
+      return undefined;
+    }
     if (isCheck()) {
       const value: SelectOptionsInvoice = {
         activity,
@@ -115,7 +128,7 @@ export const MyTripProvider = ({ children }: { children: ReactNode }) => {
       };
       if (
         selectedpayerlist &&
-        selectedpayerlist.find((item) => item.uid !== useruidclick)
+        !selectedpayerlist.find((item) => item.uid === useruidclick)
       ) {
         toast.success('Saved!');
         setSelectedPayerList((e) => [...e, value]);
@@ -125,8 +138,13 @@ export const MyTripProvider = ({ children }: { children: ReactNode }) => {
         selectedpayerlist &&
         selectedpayerlist.find((item) => item.uid === useruidclick)
       ) {
+        let isCheckValue = false;
         const values = selectedpayerlist.map((item) => {
-          if (item.uid === useruidclick) {
+          if (
+            item.uid === useruidclick &&
+            (item.money !== +money.value || item.moneySuggest !== +moneysuggest)
+          ) {
+            isCheckValue = true;
             return {
               activity,
               money: +money.value,
@@ -146,6 +164,9 @@ export const MyTripProvider = ({ children }: { children: ReactNode }) => {
           }
           return item;
         });
+        if (isCheckValue) {
+          toast.success('Saved!');
+        }
         setSelectedPayerList(values);
         return values;
       }
@@ -153,11 +174,7 @@ export const MyTripProvider = ({ children }: { children: ReactNode }) => {
       setSelectedPayerList([value]);
       return [value];
     }
-
-    if (add) {
-      toast.error('No information has been saved yet.');
-    }
-    return undefined;
+    return selectedpayerlist;
   };
 
   useEffect(() => {
@@ -184,6 +201,24 @@ export const MyTripProvider = ({ children }: { children: ReactNode }) => {
     }
   }, [selectedpayerlist, useruidclick]);
 
+  useEffect(() => {
+    if (
+      selectedpayerlist.find(
+        (item) =>
+          item.uid === useruidclick &&
+          (item.money !== +money.value || item.moneySuggest !== moneysuggest),
+      )
+    ) {
+      if (money.value === '' || moneysuggest === 0) {
+        const values = selectedpayerlist.filter(
+          (item) => item.uid !== useruidclick,
+        );
+        setSelectedPayerList(values);
+        toast.success('Saved!');
+      }
+    }
+  }, [money.value, moneysuggest, useruidclick, deletemoney]);
+
   const value = {
     activity,
     setActivity,
@@ -203,6 +238,8 @@ export const MyTripProvider = ({ children }: { children: ReactNode }) => {
     useruidclick,
     setUserUidClick,
     onSaveUserInfoToData,
+    setDeleteMoney,
+    deletemoney,
   };
   return (
     <MyTripContext.Provider value={value}>{children}</MyTripContext.Provider>

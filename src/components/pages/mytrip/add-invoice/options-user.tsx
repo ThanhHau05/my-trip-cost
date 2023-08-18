@@ -23,6 +23,7 @@ export const OptionsUser = () => {
     money,
     handleChangeMoney,
     setMoneySuggest,
+    setDeleteMoney,
   } = useContext(MyTripContext);
 
   return (
@@ -58,6 +59,7 @@ export const OptionsUser = () => {
             otherType="number"
             placeholder="enter the amount"
             disabled={!!moneysuggest}
+            onRemoveText={() => setDeleteMoney(true)}
           />
           <h2 className="ml-2 mt-2 font-medium text-gray-700">
             {valueMoney} VNĐ {`x ${quantity}`}

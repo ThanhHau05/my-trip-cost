@@ -1,7 +1,6 @@
-import { doc, onSnapshot, setDoc } from 'firebase/firestore';
-import { useRouter } from 'next/router';
+import { doc, setDoc } from 'firebase/firestore';
 import { useContext, useEffect, useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import { useSelector } from 'react-redux';
 
 import { Button } from '@/components/base';
 import type {
@@ -11,25 +10,25 @@ import type {
 import { MainContext } from '@/context/main-context';
 import { DataFirebase, db } from '@/firebase';
 import { useGetTimeAndDate } from '@/hooks';
-import { selector, TripActions } from '@/redux';
+import { selector } from '@/redux';
 
 import { RenderReserveMoney } from './render-reserve-money';
 import { RenderUser } from './render-user';
 
-export const StatusCreateTrip = () => {
+export const StatusCreateTrip = ({
+  masterUid,
+  disabledStartTrip,
+}: {
+  masterUid: string;
+  disabledStartTrip: boolean;
+}) => {
   const { currentIdJoinTrip } = useSelector(selector.trip);
-  const { currentUserInformation } = useSelector(selector.user);
-  const router = useRouter();
 
   const { setConentConfirm } = useContext(MainContext);
 
   const [data, setData] = useState<SelectOptionsTrip>();
   const [userlist, setUserList] = useState<UserInformation[]>([]);
-  const [disabledstarttrip, setDisabledStartTrip] = useState(true);
   const [reservemoney, setReserveMoney] = useState({ value: '', error: '' });
-  const [masteruid, setMasterUid] = useState('');
-
-  const dispatch = useDispatch();
 
   useEffect(() => {
     const handle = async (id: number) => {
@@ -39,54 +38,6 @@ export const StatusCreateTrip = () => {
     if (currentIdJoinTrip) {
       handle(currentIdJoinTrip);
     }
-  }, [currentIdJoinTrip]);
-
-  useEffect(() => {
-    const handleInvitation = (id: number) => {
-      if (id) {
-        const docRef = doc(db, 'Trips', id.toString());
-        onSnapshot(docRef, async (datas) => {
-          if (datas.exists()) {
-            const trip = await DataFirebase.useGetTrip(id);
-            if (trip) {
-              setMasterUid(trip.tripmaster);
-            }
-            const userlists: UserInformation[] =
-              await DataFirebase.useGetUserListInTrip(currentIdJoinTrip);
-            const status = userlists.find((item) => item.status === false);
-            if (status === undefined) {
-              setDisabledStartTrip(false);
-            }
-          }
-        });
-      }
-    };
-
-    handleInvitation(currentIdJoinTrip);
-  }, [currentIdJoinTrip]);
-
-  useEffect(() => {
-    const handle = async (id: number) => {
-      const docRef = doc(db, 'Trips', id.toString());
-      const unOnSnapshot = onSnapshot(docRef, (datas) => {
-        if (datas.exists()) {
-          const tripValue: SelectOptionsTrip = datas.data().trip;
-          if (tripValue.status) {
-            router.push(`mytrip/${currentIdJoinTrip}`);
-          } else {
-            const checkData = tripValue.userlist.find(
-              (item) => item.uid === currentUserInformation.uid,
-            );
-            if (checkData === undefined) {
-              dispatch(TripActions.setCurrentIdJoinTrip(0));
-            }
-          }
-        }
-      });
-      return () => unOnSnapshot();
-    };
-
-    handle(currentIdJoinTrip);
   }, [currentIdJoinTrip]);
 
   const onStartTrip = async () => {
@@ -140,7 +91,7 @@ export const StatusCreateTrip = () => {
           <span className="text-2xl font-bold">{data?.tripname}</span>
         </h2>
         <RenderReserveMoney
-          masteruid={masteruid}
+          masteruid={masterUid}
           error={reservemoney.error}
           value={reservemoney.value}
           onChangeMoney={onChangeReserveMoney}
@@ -176,7 +127,7 @@ export const StatusCreateTrip = () => {
           <Button
             title="Start trip"
             onClick={onStartTrip}
-            disabled={disabledstarttrip}
+            disabled={disabledStartTrip}
           />
           <Button
             bgWhite
