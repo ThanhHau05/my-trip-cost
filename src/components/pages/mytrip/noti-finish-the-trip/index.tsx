@@ -23,7 +23,7 @@ export const NotiFinishTheTrip = ({ value }: { value: string }) => {
         ...valueTrip,
         status: false,
         endtime: useGetTimeAndDate(),
-        totalmoney: useTotalMoneyTheTrip(currentIdJoinTrip),
+        totalmoney: await useTotalMoneyTheTrip(currentIdJoinTrip),
       },
     });
     const trip = await DataFirebase.useGetTrip(currentIdJoinTrip);
@@ -35,6 +35,7 @@ export const NotiFinishTheTrip = ({ value }: { value: string }) => {
         if (!item.uid.includes('name-')) {
           await DataFirebase.useAddTempoaryNotice(item.uid, trip);
           await DataFirebase.useAddTripIntoUserHistory(item.uid, trip);
+          //
         }
       }
     });

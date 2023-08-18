@@ -47,6 +47,25 @@ export const OptionsAddInvoice = () => {
   const onSubmitAddInvoice = async () => {
     const dataInvoice: SelectOptionsInvoice[] = [];
     const value = onSaveUserInfoToData(true);
+    const trip = await DataFirebase.useGetTrip(currentIdJoinTrip);
+    if (value) {
+      if (trip) {
+        const { userlist } = trip;
+        const newuserlist = userlist.map((item1) => {
+          const valueFind = value?.find((item2) => item2.uid === item1.uid);
+          if (valueFind) {
+            return {
+              ...item1,
+              totalmoney:
+                (item1.totalmoney || 0) +
+                (valueFind.money + valueFind.moneySuggest) * valueFind.qty,
+            };
+          }
+          return item1;
+        });
+        await DataFirebase.useAddTotalForUser(currentIdJoinTrip, newuserlist);
+      }
+    }
     if (value && value.length !== 0) {
       const promises = value.map(async (item) => {
         const userinfo = await DataFirebase.useGetUserInfoInTrip(

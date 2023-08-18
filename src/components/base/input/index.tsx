@@ -13,6 +13,7 @@ interface InputProps extends InputHTMLAttributes<HTMLInputElement> {
   otherType?: string;
   disabled?: boolean;
   noSpaces?: boolean;
+  onRemoveText?: () => void;
 }
 
 export const Input: FC<InputProps> = ({
@@ -24,13 +25,19 @@ export const Input: FC<InputProps> = ({
   otherType,
   disabled,
   noSpaces,
+  onRemoveText,
   ...rest
 }) => {
   const inputRef = useRef<HTMLInputElement>(null);
+
   const _handleRemoveText = () => {
     onChangeText('');
+    if (onRemoveText) {
+      onRemoveText();
+    }
     if (inputRef.current) {
       inputRef.current.focus();
+      onChangeText('');
     }
   };
   const _handleChangeText = (e: string) => {
@@ -56,6 +63,11 @@ export const Input: FC<InputProps> = ({
           value={value}
           disabled={disabled}
           type={otherType || 'text'}
+          onFocus={() => {
+            if (value === '0') {
+              onChangeText('');
+            }
+          }}
           onChange={(e) => {
             _handleChangeText(e.target.value);
           }}

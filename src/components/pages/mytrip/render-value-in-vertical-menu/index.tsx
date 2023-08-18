@@ -1,69 +1,30 @@
-import { useEffect, useState } from 'react';
-import { useSelector } from 'react-redux';
-
 import { AmountOfMoneyOfUser } from '@/components/base';
-import type {
-  SelectOptionsPeopleInVerticalMenu,
-  UserInformation,
-  VerticalMenuUserInfo,
-} from '@/constants/select-options';
-import { DataFirebase } from '@/firebase';
-import { selector } from '@/redux';
+import type { SelectOptionsPeopleInVerticalMenu } from '@/constants/select-options';
 
 export const RenderValueInVerticalMenu = ({
-  userandmoney,
+  data,
 }: {
-  userandmoney: VerticalMenuUserInfo[];
+  data: SelectOptionsPeopleInVerticalMenu[];
 }) => {
-  const { currentIdJoinTrip } = useSelector(selector.trip);
-  const [data, setData] = useState<SelectOptionsPeopleInVerticalMenu[]>([]);
-
-  useEffect(() => {
-    const handle = async () => {
-      const userlist: UserInformation[] =
-        await DataFirebase.useGetUserListInTrip(currentIdJoinTrip);
-      const newData = userlist.map((item) => ({
-        name: item.displayName,
-        img: {
-          url: item.photoURL?.url || '',
-          color: item.photoURL?.color || '',
-          text: item.photoURL?.text || '',
-        },
-        money: 0,
-        uid: item.uid,
-      }));
-      const updatedArray = await Promise.all(
-        newData.map(async (item1) => {
-          const value = userandmoney.filter((item2) => item2.uid === item1.uid);
-          if (value.length !== 0) {
-            const totalMoney = value.reduce((acc, curr) => acc + curr.money, 0);
-            await DataFirebase.useAddTotalForUser(
-              currentIdJoinTrip,
-              item1.uid,
-              totalMoney,
-            );
-            return { ...item1, money: item1.money + totalMoney };
-          }
-          return item1;
-        }),
-      );
-      setData(updatedArray);
-    };
-    handle();
-  }, [userandmoney]);
-
   return (
     <div className="dropdown flex h-[calc(100%-160px)] flex-col gap-2 overflow-auto">
-      {data.map((item) => (
-        <AmountOfMoneyOfUser
-          key={item.uid}
-          name={item.name}
-          url={item.img.url}
-          color={item.img.color}
-          text={item.img.text}
-          money={item.money}
-        />
-      ))}
+      {data ? (
+        data.map((item) => (
+          <AmountOfMoneyOfUser
+            key={item.uid}
+            name={item.name}
+            url={item.img.url}
+            color={item.img.color}
+            text={item.img.text}
+            money={item.money}
+          />
+        ))
+      ) : (
+        <div className="flex h-14 w-80 items-center justify-start rounded-xl bg-white px-2 drop-shadow-md">
+          <div className="skeleton h-12 w-12 rounded-full" />
+          <div className="skeleton ml-1 h-7 w-36 rounded-lg" />
+        </div>
+      )}
     </div>
   );
 };

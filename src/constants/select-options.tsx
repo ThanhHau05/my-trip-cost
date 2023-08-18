@@ -3,6 +3,12 @@ import { BiLogOut } from 'react-icons/bi';
 import type { IconType } from 'react-icons/lib';
 import { LuHistory } from 'react-icons/lu';
 
+export interface SelectOptionsUserInvitations {
+  temporaryNotice?: SelectOptionsTrip;
+  tripHistory?: SelectOptionsTrip[];
+  invitation?: SelectOptionsInvitation[];
+}
+
 export interface VerticalMenuUserInfo {
   uid: string;
   money: number;

@@ -10,8 +10,18 @@ export const RenderUserAddInvoice = ({
 }: {
   data: SelectOptionsRenderDropDown[];
 }) => {
-  const { useruidclick, setUserUidClick, onSaveUserInfoToData } =
-    useContext(MyTripContext);
+  const {
+    activity,
+    setActivity,
+    setOthers,
+    setQuantity,
+    selectedpayerlist,
+    onSaveUserInfoToData,
+    setUserUidClick,
+    setMoneySuggest,
+    setMoney,
+    useruidclick,
+  } = useContext(MyTripContext);
   useEffect(() => {
     if (data.length !== 0) {
       setUserUidClick(data[0]?.value || '');
@@ -19,8 +29,23 @@ export const RenderUserAddInvoice = ({
   }, [data]);
 
   const onSubmit = (value: string) => {
-    setUserUidClick(value);
     onSaveUserInfoToData();
+    setUserUidClick(value);
+    const values = selectedpayerlist.find((item) => item.uid === value);
+    if (values) {
+      setActivity(values.activity);
+      setMoney({ value: values.money.toString(), error: '' });
+      setMoneySuggest(values.moneySuggest);
+      setQuantity(values.qty.toString());
+      if (values.activity === 'others')
+        setOthers({ value: values.other || '', error: '' });
+    } else {
+      setMoney({ value: '', error: '' });
+      setActivity('shopping');
+      if (activity === 'others') setOthers({ value: '', error: '' });
+      setMoneySuggest(0);
+      setQuantity('1');
+    }
   };
 
   return (

@@ -1,8 +1,6 @@
 import clsx from 'clsx';
-import { doc, onSnapshot } from 'firebase/firestore';
-import { useContext, useEffect, useState } from 'react';
+import { useContext } from 'react';
 import { GrClose } from 'react-icons/gr';
-import { useSelector } from 'react-redux';
 
 import { Avatar } from '@/components/base';
 import type {
@@ -10,23 +8,8 @@ import type {
   UserInformation,
 } from '@/constants/select-options';
 import { MainContext } from '@/context/main-context';
-import { db } from '@/firebase';
-import { selector } from '@/redux';
 
-export const TripHistory = () => {
-  const { currentUserInformation } = useSelector(selector.user);
-  const [data, setData] = useState<SelectOptionsTrip[]>([]);
-  useEffect(() => {
-    const docRef = doc(db, 'UserInvitations', currentUserInformation.uid);
-    onSnapshot(docRef, (dataValue) => {
-      if (dataValue.exists()) {
-        const triphistory: SelectOptionsTrip[] = dataValue.data().tripHistory;
-        if (triphistory) {
-          setData(triphistory);
-        }
-      }
-    });
-  }, [currentUserInformation]);
+export const TripHistory = ({ data }: { data: SelectOptionsTrip[] }) => {
   const { setShowTripHistory } = useContext(MainContext);
   return (
     <div className="fixed bottom-0 z-10 h-[calc(100%-80px)] w-400 rounded-[40px] bg-slate-100 px-5 pt-5">

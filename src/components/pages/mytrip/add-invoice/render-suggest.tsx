@@ -1,6 +1,8 @@
 import clsx from 'clsx';
+import { useContext } from 'react';
 
 import { PRICEOPTIONS } from '@/constants/select-options';
+import { MyTripContext } from '@/context/mytrip-context';
 
 export const RenderSuggest = ({
   valueMoneySuggest,
@@ -9,11 +11,14 @@ export const RenderSuggest = ({
   valueMoneySuggest: number;
   onChange: (value: number) => void;
 }) => {
+  const { setDeleteMoney } = useContext(MyTripContext);
   const _handleOnChangeMoneySuggest = (e: number) => {
     if (valueMoneySuggest === 0 || e !== valueMoneySuggest) {
       onChange(+e);
+      setDeleteMoney(false);
     } else {
       onChange(0);
+      setDeleteMoney(true);
     }
   };
   return (

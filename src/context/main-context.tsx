@@ -1,4 +1,3 @@
-import { doc, onSnapshot } from 'firebase/firestore';
 import type {
   Dispatch,
   MutableRefObject,
@@ -11,7 +10,7 @@ import { useDispatch, useSelector } from 'react-redux';
 
 import { isCheckEmailFormat } from '@/components/pages';
 import type { UserInformation } from '@/constants/select-options';
-import { auth, DataFirebase, db } from '@/firebase';
+import { auth, DataFirebase } from '@/firebase';
 import { selector, TripActions, UserActions } from '@/redux';
 
 interface MainProps {
@@ -117,21 +116,6 @@ export const MainProvider = ({ children }: { children: ReactNode }) => {
     };
     handle();
   }, [userEmailAndPassword, id, currentUserInformation]);
-
-  useEffect(() => {
-    const handleInvitation = (_id: number) => {
-      if (_id !== 0) {
-        const docRef = doc(db, 'Trips', _id.toString());
-        onSnapshot(docRef, (data) => {
-          if (!data.exists()) {
-            dispatch(TripActions.setCurrentIdJoinTrip(0));
-          }
-        });
-      }
-    };
-
-    handleInvitation(currentIdJoinTrip);
-  }, [currentIdJoinTrip]);
 
   const isCheckSubmitStartNow = async (
     namevalue: string,
@@ -268,6 +252,10 @@ export const MainProvider = ({ children }: { children: ReactNode }) => {
     const userlists = trip?.userlist;
     if (userlists) {
       const value: UserInformation[] = userlists?.filter((item) => item.id);
+      DataFirebase.useRefuseInvitation(
+        currentUserInformation.uid,
+        currentIdJoinTrip,
+      );
       if (value.length === 1) {
         await DataFirebase.useDeleteTheTrip(currentIdJoinTrip);
       }

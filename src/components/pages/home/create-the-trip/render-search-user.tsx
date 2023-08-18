@@ -151,6 +151,7 @@ export const RenderUserByName = ({
                 photoURL: {
                   color,
                   text,
+                  url: '',
                 },
                 uid,
                 status: true,
