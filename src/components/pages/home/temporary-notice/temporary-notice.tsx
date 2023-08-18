@@ -1,27 +1,39 @@
 import { doc, getDoc, setDoc } from 'firebase/firestore';
 import { useState } from 'react';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 
 import { Button } from '@/components/base';
 import type { SelectOptionsTrip } from '@/constants/select-options';
 import { db } from '@/firebase';
 import { useFormatCurrentcy } from '@/hooks';
-import { selector } from '@/redux';
+import { selector, UserActions } from '@/redux';
 
 import { RenderInvoice } from '../../mytrip';
 import { RenderAmountSpentOfUser } from './render-amount-spent-of-user';
 import { RenderUserAvt } from './render-avt';
 import { RenderShowInfo } from './render-show-info';
 
-export const TemporaryNotice = ({ data }: { data: SelectOptionsTrip }) => {
+export const TemporaryNotice = ({
+  data,
+  onSubmitValue,
+}: {
+  data: SelectOptionsTrip;
+  onSubmitValue?: () => void;
+}) => {
   const { currentUserInformation } = useSelector(selector.user);
   const [showuser, setShowUser] = useState(false);
   const [showtriphistory, setShowTripHistory] = useState(false);
+  const dispatch = useDispatch();
   const onSubmit = async () => {
-    const docRef = doc(db, 'UserInvitations', currentUserInformation.uid);
-    const isCheck = await getDoc(docRef);
-    if (isCheck.exists()) {
-      await setDoc(docRef, { ...isCheck.data(), temporaryNotice: [] });
+    if (onSubmitValue) {
+      onSubmitValue();
+    } else {
+      const docRef = doc(db, 'UserInvitations', currentUserInformation.uid);
+      const isCheck = await getDoc(docRef);
+      if (isCheck.exists()) {
+        dispatch(UserActions.setCurrentTripHistory(data));
+        await setDoc(docRef, { ...isCheck.data(), temporaryNotice: [] });
+      }
     }
   };
 

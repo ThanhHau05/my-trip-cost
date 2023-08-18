@@ -31,10 +31,10 @@ export const Input: FC<InputProps> = ({
   const inputRef = useRef<HTMLInputElement>(null);
 
   const _handleRemoveText = () => {
-    onChangeText('');
     if (onRemoveText) {
       onRemoveText();
     }
+    onChangeText('');
     if (inputRef.current) {
       inputRef.current.focus();
       onChangeText('');
