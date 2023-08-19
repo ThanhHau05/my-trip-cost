@@ -26,11 +26,28 @@ export const StatusCreateTrip = ({
 }) => {
   const { currentIdJoinTrip } = useSelector(selector.trip);
 
-  const { setConentConfirm } = useContext(MainContext);
+  const { setConentConfirm, setReload } = useContext(MainContext);
 
   const [data, setData] = useState<SelectOptionsTrip>();
   const [userlist, setUserList] = useState<UserInformation[]>([]);
   const [reservemoney, setReserveMoney] = useState({ value: '', error: '' });
+
+  useEffect(() => {
+    const handle = async () => {
+      if (checkReserveMoney !== 0 && !reservemoney.value) {
+        const trip = await DataFirebase.useGetTrip(currentIdJoinTrip);
+        const docRef = doc(db, 'Trips', currentIdJoinTrip.toString());
+        setReserveMoney({ value: '', error: '' });
+        await setDoc(docRef, {
+          trip: {
+            ...trip,
+            reservemoney: 0,
+          },
+        });
+      }
+    };
+    handle();
+  }, [checkReserveMoney, reservemoney.value]);
 
   useEffect(() => {
     const handle = async (id: number) => {
@@ -70,7 +87,7 @@ export const StatusCreateTrip = ({
   }, [reservemoney.value, currentIdJoinTrip]);
 
   const onStartTrip = async () => {
-    if (checkReserveMoney < 100000) {
+    if (checkReserveMoney !== 0 && checkReserveMoney < 100000) {
       setReserveMoney({
         ...reservemoney,
         error: 'Minimum reserve amount 100.000 VND',
@@ -91,6 +108,7 @@ export const StatusCreateTrip = ({
               starttime: valueStartTime,
             },
           });
+          setReload(true);
         }
       }
     }

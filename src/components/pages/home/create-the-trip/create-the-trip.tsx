@@ -9,7 +9,7 @@ export const CreateTheTrip = () => {
   const { setShowCreateTheTrip } = useContext(MainContext);
 
   return (
-    <div className="fixed z-10 h-full w-400 p-2">
+    <div className="fixed z-10 h-full w-full p-2 sm:w-[400px]">
       <div className="h-full w-full rounded-t-[40px] border bg-slate-50 p-3 shadow-md">
         <div className="flex w-full justify-end">
           <IoClose

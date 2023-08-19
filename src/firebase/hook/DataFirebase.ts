@@ -198,15 +198,15 @@ export const DataFirebase = {
     }
     return undefined;
   },
-  useGetInvitation: async (uid: string) => {
-    const docRef = doc(db, 'UserInvitations', uid);
-    const isCheck = await getDoc(docRef);
-    if (isCheck.exists()) {
-      const value: SelectOptionsInvitation[] = isCheck.data().invitation;
-      return value;
-    }
-    return [];
-  },
+  // useGetInvitation: async (uid: string) => {
+  //   const docRef = doc(db, 'UserInvitations', uid);
+  //   const isCheck = await getDoc(docRef);
+  //   if (isCheck.exists()) {
+  //     const value: SelectOptionsInvitation[] = isCheck.data().invitation;
+  //     return value;
+  //   }
+  //   return [];
+  // },
   useDeleteTheTrip: async (id: number) => {
     const docRef = doc(db, 'Trips', id.toString());
     const docIdListRef = doc(db, 'Trips', 'id');
@@ -257,22 +257,22 @@ export const DataFirebase = {
     }
     return [];
   },
-  useGetStatusTrip: async (id: number) => {
-    const trip = await DataFirebase.useGetTrip(id);
-    if (trip) {
-      return trip.status;
-    }
-    return undefined;
-  },
-  useMinusReserveMoney: async (id: number, minusMoney: number) => {
-    const docRef = doc(db, 'Trips', id.toString());
-    const trip = await DataFirebase.useGetTrip(id);
-    const reserveMoney = trip?.reservemoney;
-    if (reserveMoney) {
-      const newMoney = reserveMoney - minusMoney;
-      await setDoc(docRef, { trip: { ...trip, reservemoney: newMoney } });
-    }
-  },
+  // useGetStatusTrip: async (id: number) => {
+  //   const trip = await DataFirebase.useGetTrip(id);
+  //   if (trip) {
+  //     return trip.status;
+  //   }
+  //   return undefined;
+  // },
+  // useMinusReserveMoney: async (id: number, minusMoney: number) => {
+  //   const docRef = doc(db, 'Trips', id.toString());
+  //   const trip = await DataFirebase.useGetTrip(id);
+  //   const reserveMoney = trip?.reservemoney;
+  //   if (reserveMoney) {
+  //     const newMoney = reserveMoney - minusMoney;
+  //     await setDoc(docRef, { trip: { ...trip, reservemoney: newMoney } });
+  //   }
+  // },
   useGetUserInfoInTrip: async (uid: string, id: number) => {
     const trip = await DataFirebase.useGetTrip(id);
     if (trip) {
@@ -327,21 +327,21 @@ export const DataFirebase = {
       await setDoc(docRef, { ...isCheck.data(), temporaryNotice: trip });
     }
   },
-  useAddTripIntoUserHistory: async (uid: string, trip: SelectOptionsTrip) => {
-    const docRef = doc(db, 'UserInvitations', uid);
-    const isCheck = await getDoc(docRef);
-    if (isCheck.exists()) {
-      const valueTripHistory = isCheck.data().tripHistory;
-      if (valueTripHistory) {
-        await updateDoc(docRef, {
-          ...isCheck.data(),
-          tripHistory: myFirebase.firestore.FieldValue.arrayUnion(trip),
-        });
-      } else {
-        await setDoc(docRef, { ...isCheck.data(), tripHistory: [trip] });
-      }
-    }
-  },
+  // useAddTripIntoUserHistory: async (uid: string, trip: SelectOptionsTrip) => {
+  //   const docRef = doc(db, 'UserInvitations', uid);
+  //   const isCheck = await getDoc(docRef);
+  //   if (isCheck.exists()) {
+  //     const valueTripHistory = isCheck.data().tripHistory;
+  //     if (valueTripHistory) {
+  //       await updateDoc(docRef, {
+  //         ...isCheck.data(),
+  //         tripHistory: myFirebase.firestore.FieldValue.arrayUnion(trip),
+  //       });
+  //     } else {
+  //       await setDoc(docRef, { ...isCheck.data(), tripHistory: [trip] });
+  //     }
+  //   }
+  // },
   useAddTotalForUser: async (id: number, valueUserList: UserInformation[]) => {
     const docRef = doc(db, 'Trips', id.toString());
     const trip = await DataFirebase.useGetTrip(id);
@@ -349,21 +349,21 @@ export const DataFirebase = {
       await setDoc(docRef, { trip: { ...trip, userlist: valueUserList } });
     }
   },
-  useDeductMoneyOfUser: async (id: number, uid: string, money: number) => {
-    const docRef = doc(db, 'Trips', id.toString());
-    const trip = await DataFirebase.useGetTrip(id);
-    if (trip) {
-      const { userlist } = trip;
-      const newuserlist = userlist.map((item) => {
-        if (item.uid === uid) {
-          return {
-            ...item,
-            totalmoney: item.totalmoney ? item.totalmoney - money : money,
-          };
-        }
-        return item;
-      });
-      await setDoc(docRef, { trip: { ...trip, userlist: newuserlist } });
-    }
-  },
+  // useDeductMoneyOfUser: async (id: number, uid: string, money: number) => {
+  //   const docRef = doc(db, 'Trips', id.toString());
+  //   const trip = await DataFirebase.useGetTrip(id);
+  //   if (trip) {
+  //     const { userlist } = trip;
+  //     const newuserlist = userlist.map((item) => {
+  //       if (item.uid === uid) {
+  //         return {
+  //           ...item,
+  //           totalmoney: item.totalmoney ? item.totalmoney - money : money,
+  //         };
+  //       }
+  //       return item;
+  //     });
+  //     await setDoc(docRef, { trip: { ...trip, userlist: newuserlist } });
+  //   }
+  // },
 };

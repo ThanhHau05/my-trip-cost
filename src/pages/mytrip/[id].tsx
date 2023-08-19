@@ -27,7 +27,16 @@ const TripDetail = () => {
   const router = useRouter();
   const { id } = router.query;
 
+  const { reload, setReload } = useContext(MainContext);
+
   const [status, setStatus] = useState(true);
+
+  useEffect(() => {
+    if (id && currentIdJoinTrip === +id && status && reload) {
+      setReload(false);
+      window.location.reload();
+    }
+  }, [reload, id, currentIdJoinTrip, status]);
 
   useEffect(() => {
     if (id && currentIdJoinTrip !== +id && status === false) {

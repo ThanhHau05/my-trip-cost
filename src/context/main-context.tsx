@@ -75,6 +75,8 @@ interface MainProps {
   setFinishTheTrip: Dispatch<SetStateAction<string>>;
   showtriphistory: boolean;
   setShowTripHistory: Dispatch<SetStateAction<boolean>>;
+  reload: boolean;
+  setReload: Dispatch<SetStateAction<boolean>>;
 }
 
 export const MainContext = createContext({} as MainProps);
@@ -96,6 +98,7 @@ export const MainProvider = ({ children }: { children: ReactNode }) => {
   const [showaddinvoice, setShowAddInvoice] = useState(false);
   const [finishthetrip, setFinishTheTrip] = useState('');
   const [showtriphistory, setShowTripHistory] = useState(false);
+  const [reload, setReload] = useState(false);
 
   const sliderRef = useRef<any>();
 
@@ -284,6 +287,8 @@ export const MainProvider = ({ children }: { children: ReactNode }) => {
     setFinishTheTrip,
     showtriphistory,
     setShowTripHistory,
+    reload,
+    setReload,
   };
   return <MainContext.Provider value={value}>{children}</MainContext.Provider>;
 };
