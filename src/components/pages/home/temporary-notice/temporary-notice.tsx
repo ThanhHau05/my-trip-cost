@@ -16,9 +16,11 @@ import { RenderShowInfo } from './render-show-info';
 export const TemporaryNotice = ({
   data,
   onSubmitValue,
+  showTitle,
 }: {
   data: SelectOptionsTrip;
   onSubmitValue?: () => void;
+  showTitle?: boolean;
 }) => {
   const { currentUserInformation } = useSelector(selector.user);
   const [showuser, setShowUser] = useState(false);
@@ -40,10 +42,12 @@ export const TemporaryNotice = ({
   return (
     <div className="fixed z-40 h-full w-full rounded-[40px] bg-slate-300/40 p-4 sm:w-[400px]">
       <div className="dropdown relative flex h-full w-full flex-col justify-between rounded-3xl bg-slate-100 pl-3 pr-1">
-        <div className="dropdown flex h-4/5 w-full flex-col gap-2 overflow-y-auto overflow-x-hidden">
-          <h2 className="text-center text-lg font-medium drop-shadow-md">
-            Recent trip
-          </h2>
+        <div className="dropdown flex h-4/5 w-full flex-col gap-2 overflow-y-auto overflow-x-hidden pt-3">
+          {showTitle ? (
+            <h2 className="text-center text-lg font-medium drop-shadow-md">
+              Recent trip
+            </h2>
+          ) : null}
           <span className="text-xl font-medium drop-shadow-md">
             Tripname :{' '}
             <h2 className="inline-block text-2xl font-bold">{data.tripname}</h2>
