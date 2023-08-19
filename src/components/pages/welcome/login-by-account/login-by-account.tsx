@@ -78,7 +78,7 @@ export const LoginByAccount = ({
             className="absolute left-0 top-0 ml-3 mt-3 cursor-pointer rounded-full border-2 bg-slate-50 p-1 text-3xl text-gray-900 hover:bg-slate-100"
           />
           <div className="border_welcome_top absolute right-0 top-9 h-56 w-40 bg-teal-500" />
-          <div className="border_welcome_bottom absolute -left-16 bottom-8 h-56 w-52 bg-teal-500" />
+          <div className="border_welcome_bottom absolute bottom-8 left-0 h-56 w-44 bg-teal-500" />
           <div className="flex h-full w-full flex-col items-center justify-center gap-3 px-5">
             <h2 className="text-3xl font-bold text-cyan-800 drop-shadow-md">
               Sign In

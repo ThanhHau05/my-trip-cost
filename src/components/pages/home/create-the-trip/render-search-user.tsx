@@ -1,11 +1,14 @@
-import type { Dispatch, SetStateAction } from 'react';
+/* eslint-disable jsx-a11y/alt-text */
+import { type Dispatch, type SetStateAction, useEffect, useState } from 'react';
+import { useSelector } from 'react-redux';
 
 import { Avatar, Button } from '@/components/base';
 import type { UserInformation } from '@/constants/select-options';
 import { useRandomUid } from '@/hooks';
+import { selector } from '@/redux';
 
 import { getRandomColor } from '../../welcome';
-import { CheckUserInData, isCheckUserMaster } from './hook';
+import { CheckUserInData } from './hook';
 
 export const RenderSearchUser = ({
   searchvalue,
@@ -25,6 +28,9 @@ export const RenderSearchUser = ({
     }>
   >;
 }) => {
+  const { currentUserInformation } = useSelector(selector.user);
+  const [userlist, setUserList] = useState<UserInformation[]>([]);
+
   const onSubmit = (
     uid: string,
     displayName: string,
@@ -51,6 +57,19 @@ export const RenderSearchUser = ({
       ]);
     }
   };
+
+  useEffect(() => {
+    const users = data.filter(
+      (item) =>
+        (item.displayName.toLowerCase().includes(searchvalue) ||
+          item.id?.toString().includes(searchvalue)) &&
+        currentUserInformation.displayName !== item.displayName &&
+        currentUserInformation.id !== item.id &&
+        currentUserInformation.uid !== item.uid,
+    );
+    setUserList(users);
+  }, [searchvalue, data]);
+
   return (
     <div className="scroll_invitation absolute z-10 flex max-h-full w-full flex-col gap-2 overflow-auto rounded-xl bg-white p-2 shadow-md">
       {searchvalue.length >= 3 ? (
@@ -61,42 +80,48 @@ export const RenderSearchUser = ({
           setUserListAdded={setUserListAdded}
         />
       ) : null}
-      {searchvalue
-        ? data.map((item) => {
-            const { displayName, id, uid } = item;
-            const { color, text, url } = item.photoURL;
-            return isCheckUserMaster(
-              item.displayName,
-              item.id || 0,
-              item.uid,
-            ) ? (
-              <div
-                key={item.id}
-                className="flex cursor-pointer items-center justify-start rounded-xl p-2 transition-all hover:bg-slate-50"
-                onClick={() => {
-                  onSubmit(
-                    uid,
-                    displayName,
-                    id || 0,
-                    color || '',
-                    text || '',
-                    url || '',
-                  );
+      {userlist.length !== 0 ? (
+        userlist.map((item) => {
+          const { displayName, id, uid } = item;
+          const { color, text, url } = item.photoURL;
+          return (
+            <div
+              key={item.id}
+              className="flex cursor-pointer items-center justify-start rounded-xl p-2 transition-all hover:bg-slate-50"
+              onClick={() => {
+                onSubmit(
+                  uid,
+                  displayName,
+                  id || 0,
+                  color || '',
+                  text || '',
+                  url || '',
+                );
+              }}
+            >
+              <Avatar
+                size="40"
+                img={{
+                  url,
+                  color,
+                  text,
                 }}
-              >
-                <Avatar
-                  size="40"
-                  img={{
-                    url,
-                    color,
-                    text,
-                  }}
-                />
-                <h2 className="ml-3">{item.displayName}</h2>
-              </div>
-            ) : null;
-          })
-        : null}
+              />
+              <h2 className="ml-3">{item.displayName}</h2>
+            </div>
+          );
+        })
+      ) : (
+        <div className="flex flex-col items-center justify-center">
+          <img
+            width="30"
+            height="30"
+            src="https://img.icons8.com/ios-glyphs/30/000000/nothing-found.png"
+            alt="nothing-found"
+          />
+          <h2 className="">No users found</h2>
+        </div>
+      )}
     </div>
   );
 };
