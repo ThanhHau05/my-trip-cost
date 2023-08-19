@@ -11,6 +11,7 @@ export const Button = ({
   bgWhite,
   icon,
   textSmall,
+  height,
 }: {
   title: string;
   onClick?: () => void;
@@ -19,6 +20,7 @@ export const Button = ({
   bgWhite?: boolean;
   icon?: IconType;
   textSmall?: boolean;
+  height?: number;
 }) => {
   return to ? (
     <Link href={to}>
@@ -29,6 +31,7 @@ export const Button = ({
         bgWhite={bgWhite}
         Icon={icon}
         textSmall={textSmall}
+        height={height}
       />
     </Link>
   ) : (
@@ -39,6 +42,7 @@ export const Button = ({
       bgWhite={bgWhite}
       Icon={icon}
       textSmall={textSmall}
+      height={height}
     />
   );
 };
@@ -50,6 +54,7 @@ export const ContainerButton = ({
   bgWhite,
   Icon,
   textSmall,
+  height,
 }: {
   title: string;
   onClick?: () => void;
@@ -57,9 +62,11 @@ export const ContainerButton = ({
   bgWhite?: boolean;
   Icon?: IconType;
   textSmall?: boolean;
+  height?: number;
 }) => {
   return (
     <button
+      style={{ height: `${height}rem` }}
       disabled={disabled}
       onClick={onClick}
       className={clsx(

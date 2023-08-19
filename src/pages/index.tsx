@@ -51,7 +51,8 @@ const ContainerHome = () => {
   const [masteruid, setMasterUid] = useState('');
   const [disabledstarttrip, setDisabledStartTrip] = useState(true);
   const [invitation, setInvitation] = useState<SelectOptionsInvitation[]>([]);
-  const [showhistorytrip, setShowHistoryTrip] = useState<SelectOptionsTrip>();
+  const [showformtriphistory, setShowFormTripHistory] =
+    useState<SelectOptionsTrip>();
   const [checkreservemoney, setCheckReserveMoney] = useState(0);
 
   useEffect(() => {
@@ -122,21 +123,24 @@ const ContainerHome = () => {
     >
       <div className="h-full w-full">
         {temporarynotice?.id ? (
-          <TemporaryNotice data={temporarynotice} />
+          <TemporaryNotice showTitle data={temporarynotice} />
         ) : null}
         {showverticalmenu ? (
           <VerticalMenu>
             <RenderItemVerticalMenuHome />
           </VerticalMenu>
         ) : null}
-        {showhistorytrip ? (
+        {showformtriphistory ? (
           <TemporaryNotice
-            data={showhistorytrip}
-            onSubmitValue={() => setShowHistoryTrip(undefined)}
+            data={showformtriphistory}
+            onSubmitValue={() => setShowFormTripHistory(undefined)}
           />
         ) : null}
         {showtriphistory ? (
-          <TripHistory data={triphistory} setTripHistory={setShowHistoryTrip} />
+          <TripHistory
+            data={triphistory}
+            setTripHistory={setShowFormTripHistory}
+          />
         ) : null}
         {showcreatethetrip ? <CreateTheTrip /> : null}
         {currentIdJoinTrip !== 0 ? (

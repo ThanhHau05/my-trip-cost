@@ -42,7 +42,7 @@ export const Invoice = ({
 
   const valueMoneyQty = useMemo(() => {
     if (qty >= 2) {
-      return useFormatCurrentcy(money * 2);
+      return useFormatCurrentcy(money * qty);
     }
     return undefined;
   }, [money, qty]);
