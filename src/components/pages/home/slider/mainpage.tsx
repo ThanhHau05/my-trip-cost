@@ -35,9 +35,9 @@ export const MainPage = ({
           </div>
         </div>
       </div>
-      <div className="h-[calc(100%-40px)]">
+      <div className="flex h-[calc(100%-40px)] flex-col justify-between">
         <img src={ImagesHome.BackgroundHome.src} alt="" />
-        <div className="mt-16 h-12 px-5">
+        <div className="mb-16 h-12 px-5">
           <Button
             title="Create a new trip"
             onClick={() => setShowCreateTheTrip(true)}

@@ -20,7 +20,7 @@ export const TripHistory = ({
 }) => {
   const { setShowTripHistory } = useContext(MainContext);
   return (
-    <div className="fixed bottom-0 z-10 h-[calc(100%-80px)] w-400 cursor-pointer rounded-[40px] bg-slate-100 pt-5">
+    <div className="fixed bottom-0 z-10 h-[calc(100%-80px)] w-full cursor-pointer rounded-t-[40px] bg-slate-100 pt-5 sm:w-[400px]">
       <div className="flex items-center justify-between px-5">
         <h2 className="text-xl font-medium drop-shadow-md">Trip History</h2>
         <GrClose
@@ -28,7 +28,7 @@ export const TripHistory = ({
           onClick={() => setShowTripHistory(false)}
         />
       </div>
-      <div className="dropdown h-full overflow-auto pt-5">
+      <div className="dropdown h-[calc(100%-30px)] overflow-auto py-5">
         <div className="flex w-full flex-col justify-start gap-2">
           {data.length !== 0 ? (
             <RenderTripsInvoice data={data} setTripHistory={setTripHistory} />

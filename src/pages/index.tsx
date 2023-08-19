@@ -82,6 +82,7 @@ const ContainerHome = () => {
             setCheckReserveMoney(valueTrip.reservemoney || 0);
             if (valueTrip.status) {
               if (!(id && +id !== currentIdJoinTrip)) {
+                // window.location.reload();
                 router.push(`mytrip/${currentIdJoinTrip}`);
               }
             } else {
