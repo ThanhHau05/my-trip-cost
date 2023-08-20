@@ -2,6 +2,7 @@ import { doc, onSnapshot } from 'firebase/firestore';
 import Head from 'next/head';
 import { useRouter } from 'next/router';
 import { useContext, useEffect, useState } from 'react';
+import { IoIosAdd } from 'react-icons/io';
 import { useDispatch, useSelector } from 'react-redux';
 
 import { Button, VerticalMenu } from '@/components/base';
@@ -84,12 +85,14 @@ const ContainerTripDetail = ({
           const { trip } = data.data();
           const valueTrip: SelectOptionsTrip = trip;
           setStatus(valueTrip.status);
+
           const value = await useTotalMoneyTheTrip(id);
           const valueStartTime = valueTrip?.starttime;
           setTotalMoney(value);
           setStartTime(valueStartTime || '');
           setTripName(valueTrip?.tripname || '');
           setValueInvoice(valueTrip?.invoice || []);
+
           const newvalue: SelectOptionsPeopleInVerticalMenu[] =
             valueTrip?.userlist.map((item) => {
               return {
@@ -162,12 +165,15 @@ const ContainerTripDetail = ({
                 <RenderInvoice showClose data={valueInvoice} />
               ) : null}
             </div>
-            <div className="mt-3 h-12 w-full pl-3 pr-2">
-              <Button
-                title="Add Invoice"
-                onClick={() => setShowAddInvoice(true)}
-              />
-            </div>
+            <button
+              onClick={() => setShowAddInvoice(true)}
+              className="group relative mx-auto flex h-12 w-12 select-none items-center justify-center rounded-full bg-blue-600 drop-shadow-md transition-all hover:w-40 hover:shadow-xl"
+            >
+              <IoIosAdd className="flex h-8 w-8 items-center justify-center text-sm font-bold text-white group-hover:invisible" />
+              <h2 className="invisible absolute text-sm font-bold text-white group-hover:visible group-hover:delay-150">
+                Add Invoice
+              </h2>
+            </button>
           </div>
         </div>
       </WrapperHeader>

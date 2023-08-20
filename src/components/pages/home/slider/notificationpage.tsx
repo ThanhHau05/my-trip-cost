@@ -19,10 +19,12 @@ export const NotificationPage = ({
           className="group relative flex h-4 w-6 cursor-pointer flex-col justify-center drop-shadow-md"
           onClick={() => sliderRef.current.slickGoTo(0)}
         >
-          <div className="absolute h-4 w-4 rotate-[315deg] border-l-[3px] border-t-[3px] border-gray-800 group-hover:border-gray-900" />
-          <div className="h-[2.5px] w-6 bg-gray-800 group-hover:bg-gray-900" />
+          <div className="absolute h-3.5 w-3.5 rotate-[315deg] border-l-[3px] border-t-[3px] border-gray-800 group-hover:border-gray-900" />
+          <div className="h-[2.5px] w-5 bg-gray-800 group-hover:bg-gray-900" />
         </div>
-        <h2 className="text-xl font-medium drop-shadow-md">Invitation</h2>
+        <h2 className="text-xl font-medium drop-shadow-md">
+          Invitation and Notification
+        </h2>
       </div>
       {currentData.length !== 0 ? (
         <RenderInvitation data={currentData} />

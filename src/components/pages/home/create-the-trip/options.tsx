@@ -116,44 +116,46 @@ export const OptionsCreateTheTrip = () => {
   };
 
   return (
-    <div className="h-full">
-      <Input
-        onChangeText={(e) => setTripName({ value: e, error: '' })}
-        title="Trip name"
-        value={tripname.value}
-        error={tripname.error}
-        maxLength={15}
-      />
-      <div className="mt-12">
+    <div className="flex h-[calc(100%-6rem)] flex-col justify-between">
+      <div className="h-[calc(100%-5rem)]">
         <Input
-          onChangeText={(e) => onChangeCompanions(e)}
-          title="Add fellow companions"
-          value={companions.value}
-          error={companions.error}
-          placeholder="name or id"
+          onChangeText={(e) => setTripName({ value: e, error: '' })}
+          title="Trip name"
+          value={tripname.value}
+          error={tripname.error}
+          maxLength={15}
         />
-        <div className="relative mt-2 h-[189px]">
-          {companions.value ? (
-            <RenderSearchUser
-              data={userlist}
-              searchvalue={companions.value}
-              setUserListAdded={setUserListAdded}
-              userlistadded={userlistadded}
-              setInputValue={setCompanions}
-            />
-          ) : null}
-          <div className="h-full">
-            <span className="mb-2 text-sm">
-              The fellow companions on the journey include:
-            </span>
-            <RenderUserListAdded
-              data={userlistadded}
-              setUserListAdded={setUserListAdded}
-            />
+        <div className="mt-12 h-full">
+          <Input
+            onChangeText={(e) => onChangeCompanions(e)}
+            title="Add fellow companions"
+            value={companions.value}
+            error={companions.error}
+            placeholder="name or id"
+          />
+          <div className="relative mt-2 h-2/5">
+            {companions.value ? (
+              <RenderSearchUser
+                data={userlist}
+                searchvalue={companions.value}
+                setUserListAdded={setUserListAdded}
+                userlistadded={userlistadded}
+                setInputValue={setCompanions}
+              />
+            ) : null}
+            <div className="h-full">
+              <span className="mb-2 text-sm">
+                The fellow companions on the journey include:
+              </span>
+              <RenderUserListAdded
+                data={userlistadded}
+                setUserListAdded={setUserListAdded}
+              />
+            </div>
           </div>
         </div>
       </div>
-      <div className="mt-8 h-12 w-full">
+      <div className="mb-5 h-12 w-full">
         <Button title="Create trip" onClick={onSubmitCreateTrip} />
       </div>
     </div>

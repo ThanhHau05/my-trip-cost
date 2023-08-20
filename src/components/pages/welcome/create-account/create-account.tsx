@@ -1,4 +1,5 @@
 import { useContext, useEffect, useMemo, useState } from 'react';
+import { Toaster } from 'react-hot-toast';
 import { GrLinkPrevious } from 'react-icons/gr';
 
 import { Wrapper } from '@/components/layout';
@@ -38,6 +39,7 @@ export const CreateAccount = ({
   return (
     <Wrapper>
       <div className="relative h-full">
+        <Toaster />
         <div className="relative">
           <img src={ImagesWelcomePage.Background2.src} alt="" />
           <GrLinkPrevious

@@ -62,13 +62,24 @@ export const RenderSearchUser = ({
     const users = data.filter(
       (item) =>
         (item.displayName.toLowerCase().includes(searchvalue) ||
+          item.id?.toString().includes(searchvalue) ||
+          item.displayName.includes(searchvalue) ||
           item.id?.toString().includes(searchvalue)) &&
-        currentUserInformation.displayName !== item.displayName &&
-        currentUserInformation.id !== item.id &&
         currentUserInformation.uid !== item.uid,
     );
-    setUserList(users);
-  }, [searchvalue, data]);
+
+    const filterUsers = users.map((item) => {
+      if (userlistadded.find((item1) => item1.uid === item.uid))
+        return undefined;
+      return item;
+    });
+
+    const newUsers = filterUsers.filter(
+      (item) => item !== undefined,
+    ) as UserInformation[];
+
+    setUserList(newUsers);
+  }, [searchvalue, data, userlistadded]);
 
   return (
     <div className="scroll_invitation absolute z-10 flex max-h-full w-full flex-col gap-2 overflow-auto rounded-xl bg-white p-2 shadow-md">
