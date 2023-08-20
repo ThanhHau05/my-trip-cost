@@ -83,6 +83,7 @@ export interface UserInformation {
   status: boolean;
   email?: string;
   totalmoney?: number;
+  reload?: boolean;
 }
 
 export interface SelectOptionsObject {

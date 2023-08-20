@@ -47,7 +47,6 @@ export const RenderUserAddInvoice = ({
       setQuantity('1');
     }
   };
-  console.log(data);
 
   return (
     <div>

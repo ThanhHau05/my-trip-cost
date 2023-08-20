@@ -1,4 +1,4 @@
-import { doc, onSnapshot } from 'firebase/firestore';
+import { doc, onSnapshot, setDoc } from 'firebase/firestore';
 import Head from 'next/head';
 import { useRouter } from 'next/router';
 import { useContext, useEffect, useState } from 'react';
@@ -35,7 +35,7 @@ const TripDetail = () => {
   useEffect(() => {
     if (id && currentIdJoinTrip === +id && status && reload) {
       setReload(false);
-      window.location.reload();
+      // window.location.reload();
     }
   }, [reload, id, currentIdJoinTrip, status]);
 
@@ -64,6 +64,7 @@ const ContainerTripDetail = ({
     showaddinvoice,
     setShowAddInvoice,
     setFinishTheTrip,
+    setReload,
   } = useContext(MainContext);
 
   const dispatch = useDispatch();
@@ -108,6 +109,24 @@ const ContainerTripDetail = ({
             });
           setValueUserInVMenu(newvalue);
           setReserveMoney(valueTrip.reservemoney || 0);
+          const checkReload = valueTrip.userlist.find(
+            (item) => item.uid === currentUserInformation.uid,
+          );
+          if (checkReload?.reload) {
+            setReload(true);
+            const newUserList = valueTrip.userlist.map((item) => {
+              if (item.uid === currentUserInformation.uid) {
+                return {
+                  ...item,
+                  reload: false,
+                };
+              }
+              return item;
+            });
+            await setDoc(docRef, {
+              trip: { ...valueTrip, userlist: newUserList },
+            });
+          }
         } else {
           dispatch(TripActions.setCurrentIdJoinTrip(0));
           setStatus(false);
@@ -115,7 +134,7 @@ const ContainerTripDetail = ({
       });
     };
     handle(currentIdJoinTrip);
-  }, [currentIdJoinTrip]);
+  }, [currentIdJoinTrip, currentUserInformation]);
 
   const FinishTheTrip = async () => {
     const trip = await DataFirebase.useGetTrip(currentIdJoinTrip);

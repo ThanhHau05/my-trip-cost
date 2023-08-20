@@ -96,6 +96,7 @@ export const OptionsCreateTheTrip = () => {
           id: currentUserInformation.id,
           photoURL,
           status: true,
+          reload: false,
           uid,
         };
         const updatedUserList = [datauser, ...userlistadded];

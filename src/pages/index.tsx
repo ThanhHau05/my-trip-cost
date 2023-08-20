@@ -28,10 +28,6 @@ import { Welcome } from './welcome';
 
 const HomePage = () => {
   const { currentUserInformation } = useSelector(selector.user);
-  console.log(
-    '🚀 ~ file: index.tsx:31 ~ HomePage ~ currentUserInformation:',
-    currentUserInformation.uid,
-  );
   return currentUserInformation?.uid ? <ContainerHome /> : <Welcome />;
 };
 
@@ -44,7 +40,6 @@ const ContainerHome = () => {
     useContext(MainContext);
 
   const router = useRouter();
-  const { id } = router.query;
 
   const dispatch = useDispatch();
 
@@ -86,9 +81,8 @@ const ContainerHome = () => {
             setMasterUid(trip.tripmaster);
             setCheckReserveMoney(valueTrip.reservemoney || 0);
             if (valueTrip.status) {
-              if (!(id && +id !== currentIdJoinTrip)) {
-                router.push(`mytrip/${currentIdJoinTrip}`);
-              }
+              await router.push(`mytrip/${currentIdJoinTrip}`);
+              window.location.reload();
             } else {
               const checkData = valueTrip.userlist.find(
                 (item) => item.uid === currentUserInformation.uid,

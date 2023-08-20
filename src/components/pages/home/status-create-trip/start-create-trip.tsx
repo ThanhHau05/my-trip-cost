@@ -26,28 +26,11 @@ export const StatusCreateTrip = ({
 }) => {
   const { currentIdJoinTrip } = useSelector(selector.trip);
 
-  const { setConentConfirm, setReload } = useContext(MainContext);
+  const { setConentConfirm } = useContext(MainContext);
 
   const [data, setData] = useState<SelectOptionsTrip>();
   const [userlist, setUserList] = useState<UserInformation[]>([]);
   const [reservemoney, setReserveMoney] = useState({ value: '', error: '' });
-
-  useEffect(() => {
-    const handle = async () => {
-      if (checkReserveMoney !== 0 && !reservemoney.value) {
-        const trip = await DataFirebase.useGetTrip(currentIdJoinTrip);
-        const docRef = doc(db, 'Trips', currentIdJoinTrip.toString());
-        setReserveMoney({ value: '', error: '' });
-        await setDoc(docRef, {
-          trip: {
-            ...trip,
-            reservemoney: 0,
-          },
-        });
-      }
-    };
-    handle();
-  }, [checkReserveMoney, reservemoney.value]);
 
   useEffect(() => {
     const handle = async (id: number) => {
@@ -63,13 +46,15 @@ export const StatusCreateTrip = ({
     const handle = async () => {
       const trip = await DataFirebase.useGetTrip(currentIdJoinTrip);
       const docRef = doc(db, 'Trips', currentIdJoinTrip.toString());
-      if (+reservemoney.value >= 10) {
-        await setDoc(docRef, {
-          trip: {
-            ...trip,
-            reservemoney: +reservemoney.value,
-          },
-        });
+      if (+reservemoney.value >= 100000) {
+        if (+reservemoney.value >= 100000) {
+          await setDoc(docRef, {
+            trip: {
+              ...trip,
+              reservemoney: +reservemoney.value,
+            },
+          });
+        }
       } else {
         await setDoc(docRef, {
           trip: {
@@ -79,12 +64,8 @@ export const StatusCreateTrip = ({
         });
       }
     };
-    if (reservemoney.value) {
-      setTimeout(() => {
-        handle();
-      }, 1000);
-    }
-  }, [reservemoney.value, currentIdJoinTrip]);
+    handle();
+  }, [reservemoney.value]);
 
   const onStartTrip = async () => {
     if (checkReserveMoney !== 0 && checkReserveMoney < 100000) {
@@ -95,6 +76,7 @@ export const StatusCreateTrip = ({
     } else {
       const userlists: UserInformation[] =
         await DataFirebase.useGetUserListInTrip(currentIdJoinTrip);
+
       const status = userlists.find((item) => item.status === false);
       if (status === undefined) {
         const trip = await DataFirebase.useGetTrip(currentIdJoinTrip);
@@ -108,7 +90,7 @@ export const StatusCreateTrip = ({
               starttime: valueStartTime,
             },
           });
-          setReload(true);
+          // setReload(true);
         }
       }
     }
