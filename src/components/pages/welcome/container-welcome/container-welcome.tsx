@@ -79,7 +79,7 @@ export const ContainerWelcome = ({
 
   return (
     <Wrapper>
-      <div className="relative h-full">
+      <div className="relative h-full bg-white shadow-md">
         <img src={ImagesWelcomePage.Background.src} alt="" />
         <div className="absolute bottom-0 z-10 flex h-[357px] w-full flex-col rounded-t-[40px] bg-gradient-to-b from-teal-500 to-teal-400 px-5 pt-5 shadow-xl drop-shadow-md">
           <div>
