@@ -1,5 +1,6 @@
 import { useContext, useEffect, useState } from 'react';
 import { useSignInWithEmailAndPassword } from 'react-firebase-hooks/auth';
+import toast, { Toaster } from 'react-hot-toast';
 import { GrLinkPrevious } from 'react-icons/gr';
 
 import { Button, Input } from '@/components/base';
@@ -36,9 +37,9 @@ export const LoginByAccount = ({
               value.photoURL.url || '',
               value.photoURL.color || '',
               value.photoURL.text || '',
-              user.user.displayName || '',
+              value.displayName || '',
               user.user.email || '',
-              value.uid,
+              user.user.uid,
             );
           }
         }
@@ -65,6 +66,7 @@ export const LoginByAccount = ({
 
   const onSubmit = async () => {
     if (await isCheck()) {
+      toast.success('Logged in successfully!');
       signInWithEmailAndPassword(email.value, password.value);
     }
   };
@@ -72,6 +74,7 @@ export const LoginByAccount = ({
   return (
     <Wrapper>
       <div className="h-full w-full">
+        <Toaster />
         <div className="relative h-full w-full bg-slate-50">
           <GrLinkPrevious
             onClick={() => setBackToMainPage(false)}
@@ -98,6 +101,7 @@ export const LoginByAccount = ({
                 title="Password"
                 value={password.value}
                 error={password.error}
+                type="password"
               />
             </div>
             <div className="h-12 w-full">

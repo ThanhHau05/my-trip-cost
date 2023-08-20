@@ -42,7 +42,7 @@ border-radius: 38% 62% 100% 0% / 4% 52% 48% 96%
 }
 
 .border_welcome_bottom {
-  border-radius: 33% 67% 100% 0% / 6% 37% 63% 94% 
+  border-radius: 35% 65% 45% 55% / 46% 42% 58% 54% 
 }
 
 .loader, .loader:before, .loader:after {

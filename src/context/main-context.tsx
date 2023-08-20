@@ -5,7 +5,11 @@ import type {
   SetStateAction,
 } from 'react';
 import { createContext, useEffect, useRef, useState } from 'react';
-import { useCreateUserWithEmailAndPassword } from 'react-firebase-hooks/auth';
+import {
+  useAuthState,
+  useCreateUserWithEmailAndPassword,
+} from 'react-firebase-hooks/auth';
+import toast from 'react-hot-toast';
 import { useDispatch, useSelector } from 'react-redux';
 
 import { isCheckEmailFormat } from '@/components/pages';
@@ -82,8 +86,10 @@ interface MainProps {
 export const MainContext = createContext({} as MainProps);
 
 export const MainProvider = ({ children }: { children: ReactNode }) => {
-  const [createUserWithEmailAndPassword, userEmailAndPassword] =
+  const [createUserWithEmailAndPassword] =
     useCreateUserWithEmailAndPassword(auth);
+
+  const [user] = useAuthState(auth);
 
   const { currentUserInformation } = useSelector(selector.user);
   const { currentIdJoinTrip } = useSelector(selector.trip);
@@ -104,21 +110,21 @@ export const MainProvider = ({ children }: { children: ReactNode }) => {
 
   useEffect(() => {
     const handle = async () => {
-      if (userEmailAndPassword && id !== 0 && currentUserInformation) {
+      if (user?.uid && id !== 0 && currentUserInformation.uid) {
         DataFirebase.useAddUserInformationIntoData(
           name.value,
           id,
-          userEmailAndPassword.user.email || '',
+          user.email || '',
           currentUserInformation.photoURL?.url || '',
           currentUserInformation.photoURL?.color || '',
           currentUserInformation.photoURL?.text || '',
-          userEmailAndPassword.user.uid,
+          user.uid,
           [],
         );
       }
     };
     handle();
-  }, [userEmailAndPassword, id, currentUserInformation]);
+  }, [user, id, currentUserInformation]);
 
   const isCheckSubmitStartNow = async (
     namevalue: string,
@@ -208,6 +214,7 @@ export const MainProvider = ({ children }: { children: ReactNode }) => {
         setPassword,
       )
     ) {
+      toast.success('Account successfully created!');
       await DataFirebase.useAddEmailCheck(email);
       createUserWithEmailAndPassword(email, password);
       const newid = await DataFirebase.useRandomID();
@@ -217,7 +224,8 @@ export const MainProvider = ({ children }: { children: ReactNode }) => {
         color,
         text,
         namevalue,
-        userEmailAndPassword?.user.uid || '',
+        email,
+        user?.uid || '',
       );
       setId(newid);
     }
@@ -229,6 +237,7 @@ export const MainProvider = ({ children }: { children: ReactNode }) => {
     color: string,
     text: string,
     nameValue: string,
+    email: string,
     uid: string,
   ) => {
     setTimeout(async () => {
@@ -237,16 +246,17 @@ export const MainProvider = ({ children }: { children: ReactNode }) => {
           id: idValue,
           photoURL: {
             url,
-            color: url ? '' : color,
-            text: url ? '' : text,
+            color,
+            text,
           },
           displayName: nameValue,
           uid,
           status: false,
+          email,
         }),
       );
       setLoadingStartNow(false);
-    }, 2700);
+    }, 2400);
     setLoadingStartNow(true);
   };
 

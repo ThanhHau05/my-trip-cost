@@ -36,7 +36,7 @@ export const MainPage = ({
         </div>
       </div>
       <div className="flex h-[calc(100%-40px)] flex-col justify-between">
-        <img src={ImagesHome.BackgroundHome.src} alt="" />
+        <img className="mt-10" src={ImagesHome.BackgroundHome.src} alt="" />
         <div className="mb-16 h-12 px-5">
           <Button
             title="Create a new trip"

@@ -28,7 +28,11 @@ import { Welcome } from './welcome';
 
 const HomePage = () => {
   const { currentUserInformation } = useSelector(selector.user);
-  return currentUserInformation?.displayName ? <ContainerHome /> : <Welcome />;
+  console.log(
+    '🚀 ~ file: index.tsx:31 ~ HomePage ~ currentUserInformation:',
+    currentUserInformation.uid,
+  );
+  return currentUserInformation?.uid ? <ContainerHome /> : <Welcome />;
 };
 
 const ContainerHome = () => {

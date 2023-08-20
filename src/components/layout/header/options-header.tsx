@@ -36,12 +36,20 @@ export const ImageUser = ({
           cursorPointer
         />
       </div>
-      {showinfouser ? <HandleInfoUserOnAvatar id={id} name={name} /> : null}
+      <HandleInfoUserOnAvatar show={showinfouser} id={id} name={name} />
     </div>
   );
 };
 
-const HandleInfoUserOnAvatar = ({ id, name }: { id: number; name: string }) => {
+const HandleInfoUserOnAvatar = ({
+  id,
+  name,
+  show,
+}: {
+  id: number;
+  name: string;
+  show: boolean;
+}) => {
   const [checkcopyid, setCheckCopyID] = useState(false);
   const [checkcopyname, setCheckCopyName] = useState(false);
 
@@ -58,8 +66,18 @@ const HandleInfoUserOnAvatar = ({ id, name }: { id: number; name: string }) => {
     });
   };
   return (
-    <div className="absolute right-0 z-20 mt-2 select-none rounded-xl border-2 bg-white px-3 py-1 shadow-md">
-      <span className="flex text-sm font-normal">
+    <div
+      className={clsx(
+        'absolute right-0 z-20 mt-2 select-none rounded-xl border-2 bg-white px-3 shadow-md transition-all duration-200',
+        show ? 'visible h-full py-1' : 'invisible h-0',
+      )}
+    >
+      <span
+        className={clsx(
+          'flex text-sm font-normal delay-100',
+          show ? 'visible' : 'invisible',
+        )}
+      >
         Name:
         <span className="ml-1 flex items-center font-medium">
           {name}
@@ -77,7 +95,12 @@ const HandleInfoUserOnAvatar = ({ id, name }: { id: number; name: string }) => {
           </div>
         </span>
       </span>
-      <span className="flex text-sm font-normal">
+      <span
+        className={clsx(
+          'flex text-sm font-normal delay-100',
+          show ? 'visible' : 'invisible',
+        )}
+      >
         Id:
         <span className="ml-1 flex items-center font-medium">
           {id}
