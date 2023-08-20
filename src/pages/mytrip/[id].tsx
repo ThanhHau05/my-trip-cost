@@ -77,6 +77,7 @@ const ContainerTripDetail = ({
     SelectOptionsPeopleInVerticalMenu[]
   >([]);
   const [reservemoney, setReserveMoney] = useState(0);
+  const [uidmaster, setUidMaster] = useState('');
 
   useEffect(() => {
     const handle = async (id: number) => {
@@ -86,6 +87,7 @@ const ContainerTripDetail = ({
           const { trip } = data.data();
           const valueTrip: SelectOptionsTrip = trip;
           setStatus(valueTrip.status);
+          setUidMaster(valueTrip.tripmaster);
 
           const value = await useTotalMoneyTheTrip(id);
           const valueStartTime = valueTrip?.starttime;
@@ -163,7 +165,11 @@ const ContainerTripDetail = ({
             <h2 className="pb-2 font-medium">People</h2>
             <RenderValueInVerticalMenu data={valueuserinvmenu} />
             <div className="mt-2 h-12 w-full">
-              <Button title="Finish the trip" onClick={FinishTheTrip} />
+              <Button
+                disabled={uidmaster !== currentUserInformation.uid}
+                title="Finish the trip"
+                onClick={FinishTheTrip}
+              />
             </div>
           </VerticalMenu>
         ) : null}
@@ -186,7 +192,7 @@ const ContainerTripDetail = ({
             </div>
             <button
               onClick={() => setShowAddInvoice(true)}
-              className="group relative mx-auto flex h-12 w-12 select-none items-center justify-center rounded-full bg-blue-600 drop-shadow-md transition-all hover:w-40 hover:shadow-xl"
+              className="group relative mx-auto mt-2 flex h-12 w-12 select-none items-center justify-center rounded-full bg-blue-600 drop-shadow-md transition-all hover:w-40 hover:shadow-xl"
             >
               <IoIosAdd className="flex h-8 w-8 items-center justify-center text-sm font-bold text-white group-hover:invisible" />
               <h2 className="invisible absolute text-sm font-bold text-white group-hover:visible group-hover:delay-150">
