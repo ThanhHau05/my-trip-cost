@@ -1,5 +1,4 @@
 import clsx from 'clsx';
-import Link from 'next/link';
 import React from 'react';
 import type { IconType } from 'react-icons/lib';
 
@@ -7,7 +6,6 @@ export const Button = ({
   title,
   onClick,
   disabled,
-  to,
   bgWhite,
   icon,
   textSmall,
@@ -16,25 +14,12 @@ export const Button = ({
   title: string;
   onClick?: () => void;
   disabled?: boolean;
-  to?: string;
   bgWhite?: boolean;
   icon?: IconType;
   textSmall?: boolean;
   height?: number;
 }) => {
-  return to ? (
-    <Link href={to}>
-      <ContainerButton
-        title={title}
-        onClick={onClick}
-        disabled={disabled}
-        bgWhite={bgWhite}
-        Icon={icon}
-        textSmall={textSmall}
-        height={height}
-      />
-    </Link>
-  ) : (
+  return (
     <ContainerButton
       title={title}
       onClick={onClick}

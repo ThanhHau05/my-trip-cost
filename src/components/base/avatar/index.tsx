@@ -16,15 +16,13 @@ export const Avatar = ({
   cursorPointer?: boolean;
   size?: string;
 }) => {
-  return img.url?.length !== 0 ||
-    img.color?.length !== 0 ||
-    img.text?.length !== 0 ? (
+  return img?.url || img?.color || img?.text ? (
     <ReactAvatar
       onClick={onClick}
-      src={img.url ? img.url : ''}
+      src={img?.url || ''}
       size={size || '48'}
-      value={img.text ? img.text : ''}
-      color={img.color ? img.color : ''}
+      value={img?.text || ''}
+      color={img?.color || ''}
       round
     />
   ) : (

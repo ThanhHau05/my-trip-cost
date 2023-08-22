@@ -4,6 +4,8 @@ import { AiFillCamera } from 'react-icons/ai';
 
 import { Avatar } from '@/components/base';
 
+import { handleOpenFileChangeAvt } from '../handler';
+
 export const AvatarCreateAccount = ({
   image,
   setImage,
@@ -19,19 +21,6 @@ export const AvatarCreateAccount = ({
 }) => {
   const uploadavtRef = useRef<HTMLInputElement>(null);
 
-  const handleOpenFileChangeAvt = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files && e.target.files[0];
-    if (file) {
-      if (file.type.startsWith('image/')) {
-        const reader = new FileReader();
-        reader.onload = () => {
-          const result = reader.result as string;
-          setImage({ ...image, url: result });
-        };
-        reader.readAsDataURL(file);
-      }
-    }
-  };
   return (
     <div className="relative">
       <Avatar
@@ -44,7 +33,7 @@ export const AvatarCreateAccount = ({
           className="hidden"
           ref={uploadavtRef}
           accept="image/*"
-          onChange={handleOpenFileChangeAvt}
+          onChange={(e) => handleOpenFileChangeAvt(e, setImage, image)}
         />
         <AiFillCamera
           onClick={() => {

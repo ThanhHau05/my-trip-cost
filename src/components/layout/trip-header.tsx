@@ -1,9 +1,10 @@
 import clsx from 'clsx';
 import { useMemo, useState } from 'react';
 
-import { useFormatCurrentcy } from '@/hooks';
+import { handleFormatCurrentcy } from '@/components/pages/handler';
 
-import { MenuBarsBox } from '../header';
+import { onClickMoney } from './handler';
+import { MenuBarsBox } from './header';
 
 export const TripHeader = ({
   money,
@@ -16,23 +17,17 @@ export const TripHeader = ({
 
   const valueMoney = useMemo(() => {
     if (money) {
-      return useFormatCurrentcy(money);
+      return handleFormatCurrentcy(money);
     }
     return '0';
   }, [money]);
 
   const valueReserveMoney = useMemo(() => {
     if (reservemoney) {
-      return useFormatCurrentcy(reservemoney);
+      return handleFormatCurrentcy(reservemoney);
     }
     return '0';
   }, [reservemoney]);
-
-  const onClickMoney = () => {
-    if (reservemoney) {
-      setClickMoney(!clickmoney);
-    }
-  };
 
   return (
     <div className="flex h-full items-center justify-between px-3 py-2">
@@ -43,7 +38,7 @@ export const TripHeader = ({
             'flex h-full w-72 flex-col justify-center gap-1',
             reservemoney ? 'cursor-pointer' : null,
           )}
-          onClick={onClickMoney}
+          onClick={() => onClickMoney(setClickMoney, clickmoney, reservemoney)}
         >
           <div className="flex items-center justify-center">
             <span

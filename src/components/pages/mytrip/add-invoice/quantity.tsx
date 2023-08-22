@@ -1,5 +1,7 @@
 import { useEffect, useRef } from 'react';
 
+import { handleClickOutSideQuantity, handleOnChangeQuantity } from '../handler';
+
 export const Quantity = ({
   valueQuantity,
   onChange,
@@ -10,24 +12,8 @@ export const Quantity = ({
   const inputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
-    const handleClickOutside = (event: any) => {
-      if (inputRef.current && !inputRef.current.contains(event.target)) {
-        if (valueQuantity === '') {
-          onChange('1');
-        }
-      }
-    };
-
-    document.addEventListener('mousedown', handleClickOutside);
-    return () => {
-      document.removeEventListener('mousedown', handleClickOutside);
-    };
+    handleClickOutSideQuantity(inputRef, valueQuantity, onChange);
   }, [valueQuantity]);
-  const _handleOnChange = (e: string) => {
-    if (e.length <= 2 && +e <= 50) {
-      onChange(e);
-    }
-  };
   return (
     <div className="h-8">
       <div className="flex h-full items-center justify-between">
@@ -38,7 +24,7 @@ export const Quantity = ({
             className="h-8 w-20 rounded-lg pl-2 outline-none drop-shadow-md"
             max={100}
             maxLength={3}
-            onChange={(e) => _handleOnChange(e.target.value)}
+            onChange={(e) => handleOnChangeQuantity(e.target.value, onChange)}
             value={valueQuantity}
           />
         </div>

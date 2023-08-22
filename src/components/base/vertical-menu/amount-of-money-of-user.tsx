@@ -1,6 +1,6 @@
 import { useMemo } from 'react';
 
-import { useFormatCurrentcy } from '@/hooks';
+import { handleFormatCurrentcy } from '@/components/pages/handler';
 
 import { Avatar } from '../avatar';
 
@@ -18,7 +18,7 @@ export const AmountOfMoneyOfUser = ({
   money: number;
 }) => {
   const valueMoney = useMemo(() => {
-    return useFormatCurrentcy(money);
+    return handleFormatCurrentcy(money);
   }, [money]);
   return (
     <div className="mx-1 flex items-center justify-between gap-1 rounded-xl border bg-white px-2 py-1 drop-shadow-md">

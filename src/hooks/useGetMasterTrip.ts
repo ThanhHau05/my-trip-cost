@@ -9,7 +9,7 @@ export const useGetMasterTrip = () => {
 
   const valueMaster = useMemo(() => {
     const handle = async (id: number) => {
-      const user = await DataFirebase.useGetTripMaster(id);
+      const user = await DataFirebase.GetTripMaster(id);
       if (user) {
         return user;
       }

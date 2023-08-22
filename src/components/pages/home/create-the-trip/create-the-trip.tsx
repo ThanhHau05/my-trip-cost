@@ -5,10 +5,10 @@ import { MainContext } from '@/context/main-context';
 
 import { OptionsCreateTheTrip } from './options';
 
-export const CreateTheTrip = () => {
+export const CreateTheTrip = ({ show }: { show: boolean }) => {
   const { setShowCreateTheTrip } = useContext(MainContext);
 
-  return (
+  return show ? (
     <div className="fixed z-10 h-full w-full p-2 sm:w-[400px]">
       <div className="h-full w-full rounded-t-[40px] border bg-slate-50 p-3 shadow-md">
         <div className="flex w-full justify-end">
@@ -20,5 +20,5 @@ export const CreateTheTrip = () => {
         <OptionsCreateTheTrip />
       </div>
     </div>
-  );
+  ) : null;
 };

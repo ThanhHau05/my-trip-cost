@@ -25,11 +25,12 @@ h2, span, p {
   color: rgb(26 32 44 / var(--tw-text-opacity));
 }
 
-.dropdown::-webkit-scrollbar {
+.scrollbarstyle::-webkit-scrollbar {
     width: 6px;
+    height: 8px;
 }
 
-.dropdown::-webkit-scrollbar-thumb {
+.scrollbarstyle::-webkit-scrollbar-thumb {
   background: #CFD8DC;
   border-radius: 9999px;
 }

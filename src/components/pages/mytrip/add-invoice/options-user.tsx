@@ -4,14 +4,12 @@ import { Toaster } from 'react-hot-toast';
 import { useSelector } from 'react-redux';
 
 import { Button, Dropdown, Input } from '@/components/base';
-import type { SelectOptionsInvoice } from '@/constants/select-options';
 import { ACTIVITES } from '@/constants/select-options';
 import { MainContext } from '@/context/main-context';
 import { MyTripContext } from '@/context/mytrip-context';
-import { DataFirebase } from '@/firebase';
-import { useGetTimeAndDate, useRandomIdInvoice } from '@/hooks';
 import { selector } from '@/redux';
 
+import { onSubmitAddInvoice } from '../handler';
 import { Quantity } from './quantity';
 import { RenderSuggest } from './render-suggest';
 
@@ -38,69 +36,10 @@ export const OptionsUser = () => {
 
   const { setShowAddInvoice } = useContext(MainContext);
 
-  const onSubmitAddInvoice = async () => {
-    const dataInvoice: SelectOptionsInvoice[] = [];
-    const value = onSaveUserInfoToData(true);
-    const trip = await DataFirebase.useGetTrip(currentIdJoinTrip);
-    if (value) {
-      if (trip) {
-        const { userlist } = trip;
-        const newuserlist = userlist.map((item1) => {
-          const valueFind = value?.find((item2) => item2.uid === item1.uid);
-          if (valueFind) {
-            return {
-              ...item1,
-              totalmoney:
-                (item1.totalmoney || 0) +
-                (valueFind.money + valueFind.moneySuggest) * valueFind.qty,
-            };
-          }
-          return item1;
-        });
-        await DataFirebase.useAddTotalForUser(currentIdJoinTrip, newuserlist);
-      }
-    }
-    if (value && value.length !== 0) {
-      const promises = value.map(async (item) => {
-        const userinfo = await DataFirebase.useGetUserInfoInTrip(
-          item.uid,
-          currentIdJoinTrip,
-        );
-        const { moneySuggest, qty, uid, other } = item;
-        const id = useRandomIdInvoice();
-        const data: SelectOptionsInvoice = {
-          activity: item.activity,
-          money: item.money,
-          moneySuggest,
-          payerImage: {
-            url: userinfo?.photoURL.url || '',
-            color: userinfo?.photoURL.color || '',
-            text: userinfo?.photoURL.text || '',
-          },
-          payerName: userinfo?.displayName || '',
-          time: useGetTimeAndDate(),
-          qty,
-          uid,
-          other,
-          id,
-        };
-        dataInvoice.push(data);
-      });
-      await Promise.all(promises).then(async () => {
-        await DataFirebase.useUpdateInvoiceIntoTripData(
-          currentIdJoinTrip,
-          dataInvoice,
-        );
-        setSelectedPayerList([]);
-      });
-      setShowAddInvoice(false);
-    }
-  };
-
   return (
     <div className="h-5/6 px-3">
       <Toaster />
-      <div className="dropdown mb-5 mt-3 flex h-full flex-col items-center justify-between overflow-auto pr-1">
+      <div className="scrollbarstyle mb-5 mt-3 flex h-full flex-col items-center justify-between overflow-auto pr-1">
         <div>
           <div className="mt-2">
             <h2 className="mb-2 font-medium">Activities</h2>
@@ -149,7 +88,18 @@ export const OptionsUser = () => {
           </div>
         </div>
         <div className=" my-5 mb-8 h-12 w-full px-3">
-          <Button title="Add" onClick={onSubmitAddInvoice} height={3} />
+          <Button
+            title="Add"
+            onClick={() =>
+              onSubmitAddInvoice({
+                id: currentIdJoinTrip,
+                onSaveUserInfoToData,
+                setSelectedPayerList,
+                setShowAddInvoice,
+              })
+            }
+            height={3}
+          />
         </div>
       </div>
     </div>

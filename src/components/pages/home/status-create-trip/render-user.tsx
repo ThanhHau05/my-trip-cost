@@ -1,16 +1,14 @@
 import clsx from 'clsx';
-import { doc, onSnapshot } from 'firebase/firestore';
 import { useEffect } from 'react';
 import { GrClose } from 'react-icons/gr';
 import { useSelector } from 'react-redux';
 
 import { Avatar } from '@/components/base';
-import type {
-  SelectOptionsTrip,
-  UserInformation,
-} from '@/constants/select-options';
-import { DataFirebase, db } from '@/firebase';
+import type { UserInformation } from '@/constants/select-options';
+import { DataFirebase } from '@/firebase';
 import { selector } from '@/redux';
+
+import { handleDataFirebaseRenderUser } from './handler';
 
 export const RenderUser = ({
   userlist,
@@ -23,17 +21,8 @@ export const RenderUser = ({
   const { currentUserInformation } = useSelector(selector.user);
 
   useEffect(() => {
-    const handle = async (id: number) => {
-      const docRef = doc(db, 'Trips', id.toString());
-      onSnapshot(docRef, (data) => {
-        if (data.exists()) {
-          const invitationData: SelectOptionsTrip = data.data().trip;
-          setUserList(invitationData.userlist);
-        }
-      });
-    };
     if (currentIdJoinTrip) {
-      handle(currentIdJoinTrip);
+      handleDataFirebaseRenderUser(currentIdJoinTrip, setUserList);
     }
   }, [currentIdJoinTrip]);
   return (
@@ -73,10 +62,7 @@ export const RenderUser = ({
                 <GrClose
                   className="cursor-pointer rounded-full bg-slate-600 p-1 text-lg drop-shadow-md"
                   onClick={() =>
-                    DataFirebase.useRefuseInvitation(
-                      item.uid,
-                      currentIdJoinTrip,
-                    )
+                    DataFirebase.RefuseInvitation(item.uid, currentIdJoinTrip)
                   }
                 />
               </div>

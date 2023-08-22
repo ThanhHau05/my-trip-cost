@@ -7,7 +7,7 @@ export const RenderValueInVerticalMenu = ({
   data: SelectOptionsPeopleInVerticalMenu[];
 }) => {
   return (
-    <div className="dropdown flex h-[calc(100%-160px)] flex-col gap-2 overflow-auto">
+    <div className="scrollbarstyle flex h-[calc(100%-160px)] flex-col gap-2 overflow-auto">
       {data ? (
         data.map((item) => (
           <AmountOfMoneyOfUser

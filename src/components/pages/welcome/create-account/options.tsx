@@ -3,7 +3,8 @@ import { useContext, useState } from 'react';
 
 import { Button, Input } from '@/components/base';
 import { MainContext } from '@/context/main-context';
-import { useChangeNameStyle } from '@/hooks/useChangeNameStyle';
+
+import { handleChangeNameStyle } from '../../handler';
 
 export const Options = ({
   name,
@@ -35,7 +36,7 @@ export const Options = ({
         <div className="h-[118px]">
           <Input
             onChangeText={(e) =>
-              setName({ value: useChangeNameStyle(e), error: '' })
+              setName({ value: handleChangeNameStyle(e), error: '' })
             }
             title="Your name"
             value={name}

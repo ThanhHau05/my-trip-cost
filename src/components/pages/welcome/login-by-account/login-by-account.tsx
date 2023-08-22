@@ -1,76 +1,15 @@
-import { useContext, useEffect, useState } from 'react';
-import { useSignInWithEmailAndPassword } from 'react-firebase-hooks/auth';
-import toast, { Toaster } from 'react-hot-toast';
+import { Toaster } from 'react-hot-toast';
 import { GrLinkPrevious } from 'react-icons/gr';
 
-import { Button, Input } from '@/components/base';
 import { Wrapper } from '@/components/layout';
-import { MainContext } from '@/context/main-context';
-import { auth, DataFirebase } from '@/firebase';
+
+import { OptionsLoginByAccount } from './options';
 
 export const LoginByAccount = ({
   setBackToMainPage,
 }: {
   setBackToMainPage: (value: boolean) => void;
 }) => {
-  const { AddUserInformationIntoRedux } = useContext(MainContext);
-  const [signInWithEmailAndPassword, user, , error] =
-    useSignInWithEmailAndPassword(auth);
-  const [email, setEmail] = useState({ value: '', error: '' });
-  const [password, setPassword] = useState({ value: '', error: '' });
-
-  useEffect(() => {
-    if (error?.code.includes('user-not-found')) {
-      setPassword({ ...email, error: 'Wrong password' });
-    }
-  }, [error]);
-
-  useEffect(() => {
-    if (user?.user) {
-      const handle = async () => {
-        const userlist = await DataFirebase.useGetUserList();
-        if (userlist) {
-          const value = userlist.find((item) => item.email === email.value);
-          if (value) {
-            AddUserInformationIntoRedux(
-              value.id || 0,
-              value.photoURL.url || '',
-              value.photoURL.color || '',
-              value.photoURL.text || '',
-              value.displayName || '',
-              user.user.email || '',
-              user.user.uid,
-            );
-          }
-        }
-      };
-      handle();
-    }
-  }, [user]);
-
-  const isCheck = async () => {
-    let isError = false;
-    if (!email.value) {
-      isError = true;
-      setEmail({ value: '', error: 'Please enter your email' });
-    } else if (email && !(await DataFirebase.useCheckEmail(email.value))) {
-      isError = true;
-      setEmail({ ...email, error: "This email dosen't exist" });
-    }
-    if (!password.value) {
-      isError = true;
-      setPassword({ value: '', error: 'Please enter your password' });
-    }
-    return !isError;
-  };
-
-  const onSubmit = async () => {
-    if (await isCheck()) {
-      toast.success('Logged in successfully!');
-      signInWithEmailAndPassword(email.value, password.value);
-    }
-  };
-
   return (
     <Wrapper>
       <div className="h-full w-full">
@@ -82,32 +21,7 @@ export const LoginByAccount = ({
           />
           <div className="border_welcome_top absolute right-0 top-9 h-56 w-40 bg-teal-500" />
           <div className="border_welcome_bottom absolute bottom-8 left-0 h-56 w-44 bg-teal-500" />
-          <div className="flex h-full w-full flex-col items-center justify-center gap-3 px-5">
-            <h2 className="text-3xl font-bold text-cyan-800 drop-shadow-md">
-              Sign In
-            </h2>
-            <div className="h-[118px] w-full">
-              <Input
-                onChangeText={(e) => setEmail({ value: e, error: '' })}
-                title="Email"
-                value={email.value}
-                error={email.error}
-                placeholder="example@email.com"
-              />
-            </div>
-            <div className="h-[118px] w-full">
-              <Input
-                onChangeText={(e) => setPassword({ value: e, error: '' })}
-                title="Password"
-                value={password.value}
-                error={password.error}
-                type="password"
-              />
-            </div>
-            <div className="h-12 w-full">
-              <Button onClick={onSubmit} title="Sign In" />
-            </div>
-          </div>
+          <OptionsLoginByAccount />
         </div>
       </div>
     </Wrapper>

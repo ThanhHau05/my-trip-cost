@@ -148,7 +148,7 @@ const ContainerOptionsRenderDropDown = ({
   ) => void;
 }) => {
   return (
-    <div className="dropdown absolute z-30 mt-3 max-h-44 w-full overflow-auto rounded-lg border-2 border-gray-200 bg-white p-1 shadow-md drop-shadow-md transition-all hover:shadow-lg">
+    <div className="scrollbarstyle absolute z-30 mt-3 max-h-44 w-full overflow-auto rounded-lg border-2 border-gray-200 bg-white p-1 shadow-md drop-shadow-md transition-all hover:shadow-lg">
       {option.length !== 0 ? (
         option.map((item) => (
           <OptionsRenderDropdown

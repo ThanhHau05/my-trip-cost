@@ -6,7 +6,7 @@ import { Wrapper } from '@/components/layout';
 import { MainContext } from '@/context/main-context';
 import { ImagesWelcomePage } from '@/public/images';
 
-import { getRandomColor } from '../hook';
+import { getRandomColor } from '../handler';
 import { AvatarCreateAccount } from './avatar';
 import { Options } from './options';
 

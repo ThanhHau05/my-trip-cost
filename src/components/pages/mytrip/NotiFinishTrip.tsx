@@ -6,8 +6,9 @@ import { useDispatch, useSelector } from 'react-redux';
 import { Button } from '@/components/base';
 import { MainContext } from '@/context/main-context';
 import { DataFirebase, db } from '@/firebase';
-import { useGetTimeAndDate, useTotalMoneyTheTrip } from '@/hooks';
 import { selector, TripActions } from '@/redux';
+
+import { handleGetTimeAndDate, handleTotalMoneyTheTrip } from '../handler';
 
 export const NotiFinishTheTrip = ({ value }: { value: string }) => {
   const { setFinishTheTrip, setShowVerticalMenu } = useContext(MainContext);
@@ -17,27 +18,24 @@ export const NotiFinishTheTrip = ({ value }: { value: string }) => {
     setFinishTheTrip('');
     setShowVerticalMenu(false);
     const docRef = doc(db, 'Trips', currentIdJoinTrip.toString());
-    const valueTrip = await DataFirebase.useGetTrip(currentIdJoinTrip);
+    const valueTrip = await DataFirebase.GetTrip(currentIdJoinTrip);
     await setDoc(docRef, {
       trip: {
         ...valueTrip,
         status: false,
-        endtime: useGetTimeAndDate(),
-        totalmoney: await useTotalMoneyTheTrip(currentIdJoinTrip),
+        endtime: handleGetTimeAndDate(),
+        totalmoney: await handleTotalMoneyTheTrip(currentIdJoinTrip),
       },
     });
-    const trip = await DataFirebase.useGetTrip(currentIdJoinTrip);
-    const invoice = await DataFirebase.useGetInvoiceInTripData(
-      currentIdJoinTrip,
-    );
-    invoice?.map(async (item) => {
+    const trip = await DataFirebase.GetTrip(currentIdJoinTrip);
+    trip?.userlist?.map(async (item) => {
       if (trip) {
         if (!item.uid.includes('name-')) {
-          await DataFirebase.useAddTempoaryNotice(item.uid, trip);
+          await DataFirebase.AddTempoaryNotice(item.uid, trip);
         }
       }
     });
-    await DataFirebase.useDeleteTheTrip(currentIdJoinTrip);
+    await DataFirebase.DeleteTheTrip(currentIdJoinTrip);
     dispatch(TripActions.setCurrentIdJoinTrip(0));
   };
   return (

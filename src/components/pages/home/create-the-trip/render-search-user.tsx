@@ -4,11 +4,11 @@ import { useSelector } from 'react-redux';
 
 import { Avatar, Button } from '@/components/base';
 import type { UserInformation } from '@/constants/select-options';
-import { useRandomUid } from '@/hooks';
 import { selector } from '@/redux';
 
+import { handleRandomUid } from '../../handler';
 import { getRandomColor } from '../../welcome';
-import { CheckUserInData } from './hook';
+import { handleCheckUserInData } from '../handler';
 
 export const RenderSearchUser = ({
   searchvalue,
@@ -39,7 +39,7 @@ export const RenderSearchUser = ({
     text: string,
     url: string,
   ) => {
-    if (!CheckUserInData(uid, userlistadded)) {
+    if (!handleCheckUserInData(uid, userlistadded)) {
       setInputValue({ value: '', error: '' });
       setUserListAdded((e) => [
         ...e,
@@ -161,7 +161,7 @@ export const RenderUserByName = ({
 
   const color = getRandomColor();
   const text = name[0]?.toUpperCase();
-  const uid = useRandomUid();
+  const uid = handleRandomUid();
   return (
     <div className="flex cursor-pointer items-center justify-between rounded-xl p-2 transition-all hover:bg-slate-50">
       <div className="flex items-center justify-center">
