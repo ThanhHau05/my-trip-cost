@@ -1,27 +1,19 @@
-import { doc, onSnapshot, setDoc } from 'firebase/firestore';
-import Head from 'next/head';
 import { useRouter } from 'next/router';
 import { useContext, useEffect, useState } from 'react';
-import { IoIosAdd } from 'react-icons/io';
-import { useDispatch, useSelector } from 'react-redux';
+import { useSelector } from 'react-redux';
 
-import { Button, VerticalMenu } from '@/components/base';
-import { TripHeader, WrapperHeader } from '@/components/layout';
-import {
-  AddInvoice,
-  RenderInvoice,
-  RenderValueInVerticalMenu,
-} from '@/components/pages';
-import type {
-  SelectOptionsInvoice,
-  SelectOptionsPeopleInVerticalMenu,
-  SelectOptionsTrip,
-} from '@/constants/select-options';
+import { ContainerTripDetail } from '@/components/pages';
 import { MainContext } from '@/context/main-context';
 import { MyTripProvider } from '@/context/mytrip-context';
-import { DataFirebase, db } from '@/firebase';
-import { useTotalMoneyTheTrip } from '@/hooks';
-import { selector, TripActions } from '@/redux';
+import { selector } from '@/redux';
+
+const MyTrip = () => {
+  return (
+    <MyTripProvider>
+      <TripDetail />
+    </MyTripProvider>
+  );
+};
 
 const TripDetail = () => {
   const { currentIdJoinTrip } = useSelector(selector.trip);
@@ -35,7 +27,6 @@ const TripDetail = () => {
   useEffect(() => {
     if (id && currentIdJoinTrip === +id && status && reload) {
       setReload(false);
-      // window.location.reload();
     }
   }, [reload, id, currentIdJoinTrip, status]);
 
@@ -49,169 +40,6 @@ const TripDetail = () => {
     return <ContainerTripDetail setStatus={setStatus} />;
   }
   return null;
-};
-
-const ContainerTripDetail = ({
-  setStatus,
-}: {
-  setStatus: (value: boolean) => void;
-}) => {
-  const { currentIdJoinTrip } = useSelector(selector.trip);
-  const { currentUserInformation } = useSelector(selector.user);
-
-  const {
-    showverticalmenu,
-    showaddinvoice,
-    setShowAddInvoice,
-    setFinishTheTrip,
-    setReload,
-  } = useContext(MainContext);
-
-  const dispatch = useDispatch();
-
-  const [valueInvoice, setValueInvoice] = useState<SelectOptionsInvoice[]>([]);
-  const [totalmoney, setTotalMoney] = useState(0);
-  const [starttime, setStartTime] = useState('');
-  const [tripname, setTripName] = useState('');
-  const [valueuserinvmenu, setValueUserInVMenu] = useState<
-    SelectOptionsPeopleInVerticalMenu[]
-  >([]);
-  const [reservemoney, setReserveMoney] = useState(0);
-  const [uidmaster, setUidMaster] = useState('');
-
-  useEffect(() => {
-    const handle = async (id: number) => {
-      const docRef = doc(db, 'Trips', id.toString());
-      onSnapshot(docRef, async (data) => {
-        if (data.exists()) {
-          const { trip } = data.data();
-          const valueTrip: SelectOptionsTrip = trip;
-          setStatus(valueTrip.status);
-          setUidMaster(valueTrip.tripmaster);
-
-          const value = await useTotalMoneyTheTrip(id);
-          const valueStartTime = valueTrip?.starttime;
-          setTotalMoney(value);
-          setStartTime(valueStartTime || '');
-          setTripName(valueTrip?.tripname || '');
-          setValueInvoice(valueTrip?.invoice || []);
-
-          const newvalue: SelectOptionsPeopleInVerticalMenu[] =
-            valueTrip?.userlist.map((item) => {
-              return {
-                uid: item.uid,
-                money: item.totalmoney || 0,
-                img: {
-                  color: item.photoURL.color || '',
-                  text: item.photoURL.text || '',
-                  url: item.photoURL.url || '',
-                },
-                name: item.displayName,
-              };
-            });
-          setValueUserInVMenu(newvalue);
-          setReserveMoney(valueTrip.reservemoney || 0);
-          const checkReload = valueTrip.userlist.find(
-            (item) => item.uid === currentUserInformation.uid,
-          );
-          if (checkReload?.reload) {
-            setReload(true);
-            const newUserList = valueTrip.userlist.map((item) => {
-              if (item.uid === currentUserInformation.uid) {
-                return {
-                  ...item,
-                  reload: false,
-                };
-              }
-              return item;
-            });
-            await setDoc(docRef, {
-              trip: { ...valueTrip, userlist: newUserList },
-            });
-          }
-        } else {
-          dispatch(TripActions.setCurrentIdJoinTrip(0));
-          setStatus(false);
-        }
-      });
-    };
-    handle(currentIdJoinTrip);
-  }, [currentIdJoinTrip, currentUserInformation]);
-
-  const FinishTheTrip = async () => {
-    const trip = await DataFirebase.useGetTrip(currentIdJoinTrip);
-    if (trip?.tripmaster === currentUserInformation.uid) {
-      setFinishTheTrip('You want to end the trip with the members');
-    }
-  };
-
-  return (
-    <>
-      <Head>
-        <title>My Trip</title>
-      </Head>
-      <WrapperHeader
-        bgWhite
-        header={<TripHeader money={totalmoney} reservemoney={reservemoney} />}
-      >
-        {showverticalmenu ? (
-          <VerticalMenu>
-            <div className="flex flex-col">
-              <h2 className="font-medium">Trip name:</h2>
-              <h2 className="mb-2 text-2xl font-bold leading-7 drop-shadow-md">
-                {tripname}
-              </h2>
-            </div>
-            <h2 className="pb-2 font-medium">People</h2>
-            <RenderValueInVerticalMenu data={valueuserinvmenu} />
-            <div className="mt-2 h-12 w-full">
-              <Button
-                disabled={uidmaster !== currentUserInformation.uid}
-                title="Finish the trip"
-                onClick={FinishTheTrip}
-              />
-            </div>
-          </VerticalMenu>
-        ) : null}
-        {showaddinvoice ? <AddInvoice /> : null}
-        <div className="relative h-full w-full pr-1 pt-5">
-          <div className="border_welcome_top absolute bottom-14 right-0 h-56 w-40 bg-teal-500" />
-          <div className="relative z-10 h-full w-full">
-            <div className="border_welcome_bottom_status_trip absolute left-0 top-4 z-0 h-56 w-40 bg-teal-500" />
-            <div className="dropdown flex h-[calc(100%-73px)] w-full flex-col overflow-auto pb-5 pl-3 pr-2">
-              <div className="z-10 flex items-center">
-                <div className="ml-6 mr-3 inline-block h-3 w-3 rounded-full bg-gray-800" />
-                <div className="flex flex-col">
-                  <span className="text-lg">Start the trip</span>
-                  <span>{starttime}</span>
-                </div>
-              </div>
-              {valueInvoice.length !== 0 ? (
-                <RenderInvoice showClose data={valueInvoice} />
-              ) : null}
-            </div>
-            <button
-              onClick={() => setShowAddInvoice(true)}
-              className="group relative mx-auto mt-2 flex h-12 w-12 select-none items-center justify-center rounded-full bg-blue-600 drop-shadow-md transition-all hover:w-40 hover:shadow-xl"
-            >
-              <IoIosAdd className="flex h-8 w-8 items-center justify-center text-sm font-bold text-white group-hover:invisible" />
-              <h2 className="invisible absolute text-sm font-bold text-white group-hover:visible group-hover:delay-150">
-                Add Invoice
-              </h2>
-            </button>
-          </div>
-        </div>
-      </WrapperHeader>
-    </>
-  );
-};
-
-const MyTrip = () => {
-  return (
-    <MyTripProvider>
-      <TripDetail />
-    </MyTripProvider>
-  );
 };
 
 export default MyTrip;

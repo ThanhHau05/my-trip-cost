@@ -5,10 +5,10 @@ import { MainContext } from '@/context/main-context';
 
 import { OptionsAddInvoice } from './options';
 
-export const AddInvoice = () => {
+export const AddInvoice = ({ show }: { show: boolean }) => {
   const { setShowAddInvoice } = useContext(MainContext);
 
-  return (
+  return show ? (
     <div className="fixed z-30 h-[calc(100%-80px)] w-full rounded-t-[40px] bg-gray-800/50 px-1 pt-1 sm:w-[400px]">
       <div className="h-full w-full rounded-t-[40px] bg-slate-50">
         <GrClose
@@ -18,5 +18,5 @@ export const AddInvoice = () => {
         <OptionsAddInvoice />
       </div>
     </div>
-  );
+  ) : null;
 };

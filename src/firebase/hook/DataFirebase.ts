@@ -11,7 +11,7 @@ import type {
 import { db, myFirebase } from '../firebase';
 
 export const DataFirebase = {
-  useRandomID: async () => {
+  RandomID: async () => {
     const docRef = doc(db, 'MyTrips', 'id');
     const isCheck = await getDoc(docRef);
     let id = Math.floor(Math.random() * 900000) + 100000;
@@ -28,7 +28,7 @@ export const DataFirebase = {
     }
     return id;
   },
-  useAddUserInformationIntoData: async (
+  AddUserInformationIntoData: async (
     name: string,
     id: number,
     email: string,
@@ -70,7 +70,7 @@ export const DataFirebase = {
       });
     }
   },
-  useGetUserList: async () => {
+  GetUserList: async () => {
     const docRef = doc(db, 'MyTrips', 'user list');
     const isCheck = await getDoc(docRef);
     if (isCheck.exists()) {
@@ -79,7 +79,7 @@ export const DataFirebase = {
     }
     return [];
   },
-  useCheckEmail: async (email: string) => {
+  CheckEmail: async (email: string) => {
     const docRef = doc(db, 'MyTrips', 'email');
     const isCheck = await getDoc(docRef);
     if (isCheck.exists()) {
@@ -88,7 +88,7 @@ export const DataFirebase = {
     }
     return false;
   },
-  useAddEmailCheck: async (email: string) => {
+  AddEmailCheck: async (email: string) => {
     const docRef = doc(db, 'MyTrips', 'email');
     const isCheck = await getDoc(docRef);
     if (isCheck.exists()) {
@@ -99,10 +99,7 @@ export const DataFirebase = {
       await setDoc(docRef, { emaillist: [email] }, { merge: true });
     }
   },
-  useAcceptTheInvitation: async (
-    uid: string,
-    data: SelectOptionsInvitation,
-  ) => {
+  AcceptTheInvitation: async (uid: string, data: SelectOptionsInvitation) => {
     const docRef = doc(db, 'UserInvitations', uid);
     const isCheck = await getDoc(docRef);
     if (isCheck.exists()) {
@@ -111,7 +108,7 @@ export const DataFirebase = {
       });
     }
   },
-  useDeleteInvitationTheTripInUserData: async (uid: string, id: number) => {
+  DeleteInvitationTheTripInUserData: async (uid: string, id: number) => {
     const docRef = doc(db, 'UserInvitations', uid);
     const isCheck = await getDoc(docRef);
     if (isCheck.exists()) {
@@ -122,7 +119,7 @@ export const DataFirebase = {
       });
     }
   },
-  useJoinTrip: async (id: number, uid: string) => {
+  JoinTrip: async (id: number, uid: string) => {
     const docRef = doc(db, 'Trips', id.toString());
     const isCheck = await getDoc(docRef);
     if (isCheck.exists()) {
@@ -137,7 +134,7 @@ export const DataFirebase = {
       await setDoc(docRef, { trip: { ...data, userlist: updatedData } });
     }
   },
-  useRefuseInvitation: async (uid: string, id: number) => {
+  RefuseInvitation: async (uid: string, id: number) => {
     const docRef = doc(db, 'UserInvitations', uid);
     const docTripRef = doc(db, 'Trips', id.toString());
     const isCheck = await getDoc(docRef);
@@ -153,7 +150,7 @@ export const DataFirebase = {
       await setDoc(docTripRef, { trip: { ...data, userlist: newuserlist } });
     }
   },
-  useRandomIdCreateTrip: async () => {
+  RandomIdCreateTrip: async () => {
     const docRef = doc(db, 'Trips', 'id');
     const isCheck = await getDoc(docRef);
     let id = Math.floor(Math.random() * 900000) + 100000;
@@ -170,14 +167,14 @@ export const DataFirebase = {
     }
     return id;
   },
-  useCreateTrip: async (id: number, data: SelectOptionsTrip) => {
+  CreateTrip: async (id: number, data: SelectOptionsTrip) => {
     const docRef = doc(db, 'Trips', id.toString());
     const isCheck = await getDoc(docRef);
     if (!isCheck.exists()) {
       await setDoc(docRef, { trip: data }, { merge: true });
     }
   },
-  useGetTrip: async (id: number) => {
+  GetTrip: async (id: number) => {
     const docRef = doc(db, 'Trips', id.toString());
     const isCheck = await getDoc(docRef);
     if (isCheck.exists()) {
@@ -186,19 +183,19 @@ export const DataFirebase = {
     }
     return undefined;
   },
-  useGetTripMaster: async (id: number) => {
-    const trip = await DataFirebase.useGetTrip(id);
+  GetTripMaster: async (id: number) => {
+    const trip = await DataFirebase.GetTrip(id);
     if (trip) {
       const master = trip.tripmaster;
       if (master) {
-        const userlist = await DataFirebase.useGetUserList();
+        const userlist = await DataFirebase.GetUserList();
         const user = userlist.find((item) => item.uid === master);
         return user;
       }
     }
     return undefined;
   },
-  useDeleteTheTrip: async (id: number) => {
+  DeleteTheTrip: async (id: number) => {
     const docRef = doc(db, 'Trips', id.toString());
     const docIdListRef = doc(db, 'Trips', 'id');
     await deleteDoc(docRef);
@@ -211,7 +208,7 @@ export const DataFirebase = {
       await setDoc(docIdListRef, { id: newidlist });
     }
   },
-  useGetUserListInTrip: async (id: number) => {
+  GetUserListInTrip: async (id: number) => {
     const docRef = doc(db, 'Trips', id.toString());
     const isCheck = await getDoc(docRef);
     if (isCheck.exists()) {
@@ -220,12 +217,12 @@ export const DataFirebase = {
     }
     return [];
   },
-  useUpdateInvoiceIntoTripData: async (
+  UpdateInvoiceIntoTripData: async (
     id: number,
     data: SelectOptionsInvoice[],
   ) => {
     const docRef = doc(db, 'Trips', id.toString());
-    const trip = await DataFirebase.useGetTrip(id);
+    const trip = await DataFirebase.GetTrip(id);
     if (trip) {
       const cleanedData = data.filter(
         (item) => item.money !== 0 || item.moneySuggest !== 0,
@@ -241,15 +238,15 @@ export const DataFirebase = {
       });
     }
   },
-  useGetInvoiceInTripData: async (id: number) => {
-    const trip = await DataFirebase.useGetTrip(id);
+  GetInvoiceInTripData: async (id: number) => {
+    const trip = await DataFirebase.GetTrip(id);
     if (trip) {
       return trip.invoice;
     }
     return [];
   },
-  useGetUserInfoInTrip: async (uid: string, id: number) => {
-    const trip = await DataFirebase.useGetTrip(id);
+  GetUserInfoInTrip: async (uid: string, id: number) => {
+    const trip = await DataFirebase.GetTrip(id);
     if (trip) {
       const { userlist } = trip;
       if (userlist) {
@@ -259,8 +256,8 @@ export const DataFirebase = {
     }
     return undefined;
   },
-  useDeleteInvoice: async (id: number, idInvoice: string) => {
-    const invoice = await DataFirebase.useGetInvoiceInTripData(id);
+  DeleteInvoice: async (id: number, idInvoice: string) => {
+    const invoice = await DataFirebase.GetInvoiceInTripData(id);
     if (invoice) {
       const newListMoney: VerticalMenuUserInfo[] = [];
       const newInvoice = invoice.filter((item) => {
@@ -274,7 +271,7 @@ export const DataFirebase = {
         return true;
       });
       const docRef = doc(db, 'Trips', id.toString());
-      const trip = await DataFirebase.useGetTrip(id);
+      const trip = await DataFirebase.GetTrip(id);
       if (trip) {
         const { userlist } = trip;
         const newuserlist = userlist.map((item1) => {
@@ -295,16 +292,16 @@ export const DataFirebase = {
       }
     }
   },
-  useAddTempoaryNotice: async (uid: string, trip: SelectOptionsTrip) => {
+  AddTempoaryNotice: async (uid: string, trip: SelectOptionsTrip) => {
     const docRef = doc(db, 'UserInvitations', uid);
     const isCheck = await getDoc(docRef);
     if (isCheck.exists()) {
       await setDoc(docRef, { ...isCheck.data(), temporaryNotice: trip });
     }
   },
-  useAddTotalForUser: async (id: number, valueUserList: UserInformation[]) => {
+  AddTotalForUser: async (id: number, valueUserList: UserInformation[]) => {
     const docRef = doc(db, 'Trips', id.toString());
-    const trip = await DataFirebase.useGetTrip(id);
+    const trip = await DataFirebase.GetTrip(id);
     if (trip) {
       await setDoc(docRef, { trip: { ...trip, userlist: valueUserList } });
     }

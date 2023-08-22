@@ -21,16 +21,16 @@ export const Invitation = ({
   const dispatch = useDispatch();
 
   const onJoinTrip = async (id: number) => {
-    await DataFirebase.useJoinTrip(id, currentUserInformation.uid);
+    await DataFirebase.JoinTrip(id, currentUserInformation.uid);
     dispatch(TripActions.setCurrentIdJoinTrip(id));
-    await DataFirebase.useDeleteInvitationTheTripInUserData(
+    await DataFirebase.DeleteInvitationTheTripInUserData(
       currentUserInformation.uid,
       id,
     );
   };
 
   const onCancelJoin = async (id: number) => {
-    await DataFirebase.useRefuseInvitation(currentUserInformation.uid, id);
+    await DataFirebase.RefuseInvitation(currentUserInformation.uid, id);
   };
 
   return (

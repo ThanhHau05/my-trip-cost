@@ -4,6 +4,8 @@ import { useContext } from 'react';
 import { PRICEOPTIONS } from '@/constants/select-options';
 import { MyTripContext } from '@/context/mytrip-context';
 
+import { handleOnChangeMoneySuggest } from '../handler';
+
 export const RenderSuggest = ({
   valueMoneySuggest,
   onChange,
@@ -12,15 +14,7 @@ export const RenderSuggest = ({
   onChange: (value: number) => void;
 }) => {
   const { setDeleteMoney } = useContext(MyTripContext);
-  const _handleOnChangeMoneySuggest = (e: number) => {
-    if (valueMoneySuggest === 0 || e !== valueMoneySuggest) {
-      onChange(+e);
-      setDeleteMoney(false);
-    } else {
-      onChange(0);
-      setDeleteMoney(true);
-    }
-  };
+
   return (
     <div className="grid grid-cols-3 gap-2">
       {PRICEOPTIONS.map((item) => (
@@ -32,7 +26,14 @@ export const RenderSuggest = ({
               ? 'bg-blue-500 text-white'
               : 'bg-white text-gray-800',
           )}
-          onClick={() => _handleOnChangeMoneySuggest(+item.value)}
+          onClick={() =>
+            handleOnChangeMoneySuggest({
+              e: +item.value,
+              onChange,
+              setDeleteMoney,
+              valueMoneySuggest,
+            })
+          }
         >
           {item.title}
         </h2>

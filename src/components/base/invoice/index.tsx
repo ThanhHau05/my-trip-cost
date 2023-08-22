@@ -3,8 +3,8 @@ import { useMemo } from 'react';
 import { GrClose } from 'react-icons/gr';
 import { useSelector } from 'react-redux';
 
+import { handleFormatCurrentcy } from '@/components/pages/handler';
 import { DataFirebase } from '@/firebase';
-import { useFormatCurrentcy } from '@/hooks';
 import { selector } from '@/redux';
 
 import { Avatar } from '../avatar';
@@ -37,18 +37,18 @@ export const Invoice = ({
   const { currentIdJoinTrip } = useSelector(selector.trip);
 
   const valueMoney = useMemo(() => {
-    return useFormatCurrentcy(money);
+    return handleFormatCurrentcy(money);
   }, [money]);
 
   const valueMoneyQty = useMemo(() => {
     if (qty >= 2) {
-      return useFormatCurrentcy(money * qty);
+      return handleFormatCurrentcy(money * qty);
     }
     return undefined;
   }, [money, qty]);
 
   const onDeleteInvoice = async (idInvoice: string) => {
-    await DataFirebase.useDeleteInvoice(currentIdJoinTrip, idInvoice);
+    await DataFirebase.DeleteInvoice(currentIdJoinTrip, idInvoice);
   };
 
   return (

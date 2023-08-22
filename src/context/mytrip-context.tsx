@@ -2,8 +2,11 @@ import type { Dispatch, ReactNode, SetStateAction } from 'react';
 import { createContext, useEffect, useMemo, useState } from 'react';
 import toast from 'react-hot-toast';
 
+import {
+  handleConvertNumberTotextinVND,
+  handleFormatCurrentcy,
+} from '@/components/pages/handler';
 import type { SelectOptionsInvoice } from '@/constants/select-options';
-import { useConvertNumberTotextinVND, useFormatCurrentcy } from '@/hooks';
 
 interface MytripProps {
   activity: string;
@@ -66,10 +69,10 @@ export const MyTripProvider = ({ children }: { children: ReactNode }) => {
   };
 
   const valueMoney = useMemo(() => {
-    return useFormatCurrentcy(+money.value || moneysuggest);
+    return handleFormatCurrentcy(+money.value || moneysuggest);
   }, [money.value, moneysuggest]);
   const valueMoneyText = useMemo(() => {
-    return useConvertNumberTotextinVND(+money.value || moneysuggest);
+    return handleConvertNumberTotextinVND(+money.value || moneysuggest);
   }, [money.value, moneysuggest]);
 
   const isCheck = () => {

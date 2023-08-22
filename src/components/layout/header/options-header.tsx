@@ -7,6 +7,8 @@ import { Avatar } from '@/components/base';
 import { MainContext } from '@/context/main-context';
 import { useClickOutSide } from '@/hooks/useClickOutSide';
 
+import { handleCopyInfo } from '../handler';
+
 export const ImageUser = ({
   image,
   id,
@@ -53,18 +55,6 @@ const HandleInfoUserOnAvatar = ({
   const [checkcopyid, setCheckCopyID] = useState(false);
   const [checkcopyname, setCheckCopyName] = useState(false);
 
-  const _handleCopyInfo = (
-    value: string,
-    setCopy: (value: boolean) => void,
-  ) => {
-    navigator.clipboard.writeText(value).then(() => {
-      setCopy(true);
-      const timer = setTimeout(() => {
-        setCopy(false);
-      }, 1500);
-      return () => clearTimeout(timer);
-    });
-  };
   return (
     <div
       className={clsx(
@@ -88,7 +78,7 @@ const HandleInfoUserOnAvatar = ({
               <MdOutlineContentCopy
                 className="inline cursor-pointer drop-shadow-md"
                 onClick={() =>
-                  _handleCopyInfo(name.toString(), setCheckCopyName)
+                  handleCopyInfo(name.toString(), setCheckCopyName)
                 }
               />
             )}
@@ -110,7 +100,7 @@ const HandleInfoUserOnAvatar = ({
             ) : (
               <MdOutlineContentCopy
                 className="inline cursor-pointer drop-shadow-md"
-                onClick={() => _handleCopyInfo(id.toString(), setCheckCopyID)}
+                onClick={() => handleCopyInfo(id.toString(), setCheckCopyID)}
               />
             )}
           </div>

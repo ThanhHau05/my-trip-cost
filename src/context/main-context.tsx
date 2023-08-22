@@ -111,7 +111,7 @@ export const MainProvider = ({ children }: { children: ReactNode }) => {
   useEffect(() => {
     const handle = async () => {
       if (user?.uid && id !== 0 && currentUserInformation.uid) {
-        DataFirebase.useAddUserInformationIntoData(
+        DataFirebase.AddUserInformationIntoData(
           name.value,
           id,
           user.email || '',
@@ -157,7 +157,7 @@ export const MainProvider = ({ children }: { children: ReactNode }) => {
     } else if (email && valueEmail) {
       isError = true;
       setEmail({ value: email, error: valueEmail });
-    } else if (email && (await DataFirebase.useCheckEmail(email))) {
+    } else if (email && (await DataFirebase.CheckEmail(email))) {
       isError = true;
       setEmail({ value: email, error: 'This email is already in use' });
     }
@@ -215,9 +215,9 @@ export const MainProvider = ({ children }: { children: ReactNode }) => {
       )
     ) {
       toast.success('Account successfully created!');
-      await DataFirebase.useAddEmailCheck(email);
+      await DataFirebase.AddEmailCheck(email);
       createUserWithEmailAndPassword(email, password);
-      const newid = await DataFirebase.useRandomID();
+      const newid = await DataFirebase.RandomID();
       AddUserInformationIntoRedux(
         newid,
         url,
@@ -261,16 +261,16 @@ export const MainProvider = ({ children }: { children: ReactNode }) => {
   };
 
   const onSubmitEcceptToCancelTheTrip = async () => {
-    const trip = await DataFirebase.useGetTrip(currentIdJoinTrip);
+    const trip = await DataFirebase.GetTrip(currentIdJoinTrip);
     const userlists = trip?.userlist;
     if (userlists) {
       const value: UserInformation[] = userlists?.filter((item) => item.id);
-      DataFirebase.useRefuseInvitation(
+      DataFirebase.RefuseInvitation(
         currentUserInformation.uid,
         currentIdJoinTrip,
       );
       if (value.length === 1) {
-        await DataFirebase.useDeleteTheTrip(currentIdJoinTrip);
+        await DataFirebase.DeleteTheTrip(currentIdJoinTrip);
       }
     }
     dispatch(TripActions.setCurrentIdJoinTrip(0));
