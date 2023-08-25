@@ -17,6 +17,7 @@ export const RenderValueInVerticalMenu = ({
             color={item.img.color}
             text={item.img.text}
             money={item.money}
+            id={item.id}
           />
         ))
       ) : (

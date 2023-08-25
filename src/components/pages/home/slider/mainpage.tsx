@@ -1,48 +1,34 @@
-import clsx from 'clsx';
 import { useContext } from 'react';
-import { IoNotifications } from 'react-icons/io5';
 
-import { Button } from '@/components/base';
 import { MainContext } from '@/context/main-context';
-import { ImagesHome } from '@/public/images';
 
-export const MainPage = ({
-  currentNumberOfNoti,
-}: {
-  currentNumberOfNoti: number;
-}) => {
-  const { sliderRef, setShowCreateTheTrip } = useContext(MainContext);
+import { NearestTrip } from './NearestTrip';
+import { RecentFriends } from './RecentFriends';
+
+export const MainPage = () => {
+  const { recenttrip, recentfriends, setShowFormTripHistory } =
+    useContext(MainContext);
+  console.log(recenttrip);
 
   return (
-    <div className="h-full w-full rounded-t-[40px] bg-white">
-      <div className="w-full pr-6 pt-4">
-        <div className="flex w-full justify-end">
-          <div
-            className="relative inline-block"
-            onClick={() => sliderRef.current.slickGoTo(1)}
-          >
-            {currentNumberOfNoti ? (
-              <span
-                className={clsx(
-                  'absolute -top-1 z-10 rounded-full bg-red-500 px-1 text-[10px]',
-                  currentNumberOfNoti >= 10 ? '-right-1.5' : '-right-1',
-                )}
-              >
-                {currentNumberOfNoti >= 10 ? '9+' : currentNumberOfNoti}
-              </span>
-            ) : null}
-            <IoNotifications className="ml-auto cursor-pointer text-2xl text-gray-900 drop-shadow-md transition-all hover:text-gray-950" />
-          </div>
+    <div className="h-full w-full rounded-t-[40px] bg-purple-200 pt-5">
+      <div className="scrollbarstyle flex h-[calc(100%-100px)] flex-col justify-start gap-4 overflow-auto">
+        <div className="w-full px-5 pb-1">
+          <h2 className="ml-2 text-sm font-medium uppercase text-gray-600 drop-shadow-md">
+            Nearest Trip
+          </h2>
+          {recenttrip && recenttrip.tripname ? (
+            <NearestTrip
+              data={recenttrip}
+              onClick={() => setShowFormTripHistory(recenttrip)}
+            />
+          ) : (
+            <h2 className="mt-2 text-xl font-medium text-gray-700">
+              You haven&apos;t had any recent trips
+            </h2>
+          )}
         </div>
-      </div>
-      <div className="flex h-[calc(100%-40px)] flex-col justify-between">
-        <img className="mt-10" src={ImagesHome.BackgroundHome.src} alt="" />
-        <div className="mb-16 h-12 px-5">
-          <Button
-            title="Create a new trip"
-            onClick={() => setShowCreateTheTrip(true)}
-          />
-        </div>
+        <RecentFriends data={recentfriends} />
       </div>
     </div>
   );

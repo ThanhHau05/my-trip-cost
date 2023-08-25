@@ -1,31 +1,15 @@
-import { useContext } from 'react';
 import { BsCardList } from 'react-icons/bs';
 
 import { Invitation } from '@/components/base/invitation';
 import type { SelectOptionsInvitation } from '@/constants/select-options';
-import { MainContext } from '@/context/main-context';
 
 export const NotificationPage = ({
   currentData,
 }: {
   currentData: SelectOptionsInvitation[];
 }) => {
-  const { sliderRef } = useContext(MainContext);
-
   return (
-    <div className="h-full w-full rounded-t-[40px] bg-white">
-      <div className="flex items-center justify-between px-6 pt-4">
-        <div
-          className="group relative flex h-4 w-6 cursor-pointer flex-col justify-center drop-shadow-md"
-          onClick={() => sliderRef.current.slickGoTo(0)}
-        >
-          <div className="absolute h-3.5 w-3.5 rotate-[315deg] border-l-[3px] border-t-[3px] border-gray-800 group-hover:border-gray-900" />
-          <div className="h-[2.5px] w-5 bg-gray-800 group-hover:bg-gray-900" />
-        </div>
-        <h2 className="text-xl font-medium drop-shadow-md">
-          Invitation and Notification
-        </h2>
-      </div>
+    <div className="h-full w-full rounded-t-[40px] bg-purple-200">
       {currentData.length !== 0 ? (
         <RenderInvitation data={currentData} />
       ) : (
@@ -46,8 +30,8 @@ export const RenderInvitation = ({
   data: SelectOptionsInvitation[];
 }) => {
   return (
-    <div className="h-[calc(100%-46px)] w-full py-2">
-      <div className="scroll_invitation flex h-full flex-col items-center justify-start gap-2 overflow-auto rounded-3xl px-2">
+    <div className="h-[calc(100%-46px)] w-full py-3">
+      <div className="scroll_invitation flex h-full flex-col items-center justify-start gap-2 overflow-auto rounded-3xl px-3">
         {data.map((item) => (
           <Invitation
             key={item.tripid}
@@ -55,6 +39,7 @@ export const RenderInvitation = ({
             tripid={item.tripid}
             tripname={item.tripname}
             dateandtime={item.dateandtime}
+            avtmaster={item.avtmaster}
           />
         ))}
       </div>

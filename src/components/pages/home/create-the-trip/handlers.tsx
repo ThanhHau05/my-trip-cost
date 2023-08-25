@@ -94,6 +94,11 @@ export const onSubmitCreateTrip = async ({
         if (item.id) {
           const time = handleGetTimeAndDate();
           const data: SelectOptionsInvitation = {
+            avtmaster: {
+              url: photoURL.url || '',
+              color: photoURL.color || '',
+              text: photoURL.text || '',
+            },
             name: user.displayName || displayName,
             tripid: id,
             tripname: tripname.value,

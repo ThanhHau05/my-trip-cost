@@ -13,9 +13,11 @@ import { handleDataFirebaseRenderUser } from './handler';
 export const RenderUser = ({
   userlist,
   setUserList,
+  masterUid,
 }: {
   userlist: UserInformation[];
   setUserList: (value: UserInformation[]) => void;
+  masterUid: string;
 }) => {
   const { currentIdJoinTrip } = useSelector(selector.trip);
   const { currentUserInformation } = useSelector(selector.user);
@@ -25,6 +27,7 @@ export const RenderUser = ({
       handleDataFirebaseRenderUser(currentIdJoinTrip, setUserList);
     }
   }, [currentIdJoinTrip]);
+
   return (
     // eslint-disable-next-line react/jsx-no-useless-fragment
     <>
@@ -32,15 +35,12 @@ export const RenderUser = ({
         userlist.map((item) => (
           <div
             key={item.uid}
-            className="relative z-20 inline-block drop-shadow-md"
+            className="relative z-20 flex flex-col items-center drop-shadow-md"
           >
             <div className="group relative inline-block">
-              <span className="absolute -top-7 z-10 ml-0 hidden rounded-2xl border bg-white px-2 py-0.5 text-xs font-medium group-hover:block">
-                {item.displayName}
-              </span>
               <Avatar
                 img={{
-                  url: item.photoURL.url,
+                  url: item.photoURL.url || '',
                   color: item.photoURL.color || '',
                   text: item.displayName[0]?.toUpperCase() || '',
                 }}
@@ -54,7 +54,8 @@ export const RenderUser = ({
               <div
                 className={clsx(
                   'invisible absolute bottom-0 flex w-full justify-center transition-all duration-100',
-                  item.uid !== currentUserInformation.uid
+                  masterUid === currentUserInformation.uid &&
+                    item.uid !== masterUid
                     ? 'group-hover:visible group-hover:-translate-y-3'
                     : null,
                 )}
@@ -67,6 +68,11 @@ export const RenderUser = ({
                 />
               </div>
             </div>
+            <span className=" -top-7 z-10 ml-0 mt-1 rounded-2xl border bg-white px-2 text-xs font-medium">
+              {currentUserInformation.displayName !== item.displayName
+                ? item.displayName.slice(0, 5)
+                : 'You'}
+            </span>
           </div>
         ))}
     </>

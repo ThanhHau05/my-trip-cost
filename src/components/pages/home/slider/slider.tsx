@@ -8,7 +8,7 @@ import { MainPage } from './mainpage';
 import { NotificationPage } from './notificationpage';
 
 export const SliderPage = ({ data }: { data: SelectOptionsInvitation[] }) => {
-  const { sliderRef } = useContext(MainContext);
+  const { sliderRef, setValueCheckPage } = useContext(MainContext);
 
   const settings = {
     infinite: false,
@@ -17,11 +17,18 @@ export const SliderPage = ({ data }: { data: SelectOptionsInvitation[] }) => {
     slidesToScroll: 1,
     nextArrow: <NextandPrev />,
     prevArrow: <NextandPrev />,
+    afterChange: (e: any) => {
+      if (e === 0) {
+        setValueCheckPage('home');
+      } else {
+        setValueCheckPage('invitation');
+      }
+    },
   };
 
   return (
     <Slider ref={sliderRef} {...settings}>
-      <MainPage currentNumberOfNoti={data.length} />
+      <MainPage />
       <NotificationPage currentData={data} />
     </Slider>
   );

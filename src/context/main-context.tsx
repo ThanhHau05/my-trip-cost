@@ -13,7 +13,10 @@ import toast from 'react-hot-toast';
 import { useDispatch, useSelector } from 'react-redux';
 
 import { isCheckEmailFormat } from '@/components/pages';
-import type { UserInformation } from '@/constants/select-options';
+import type {
+  SelectOptionsTrip,
+  UserInformation,
+} from '@/constants/select-options';
 import { auth, DataFirebase } from '@/firebase';
 import { selector, TripActions, UserActions } from '@/redux';
 
@@ -81,6 +84,18 @@ interface MainProps {
   setShowTripHistory: Dispatch<SetStateAction<boolean>>;
   reload: boolean;
   setReload: Dispatch<SetStateAction<boolean>>;
+  temporarynotice: SelectOptionsTrip | undefined;
+  setTemporaryNotice: Dispatch<SetStateAction<SelectOptionsTrip | undefined>>;
+  recenttrip: SelectOptionsTrip | undefined;
+  setRecentTrip: Dispatch<SetStateAction<SelectOptionsTrip | undefined>>;
+  valuecheckpage: string;
+  setValueCheckPage: Dispatch<SetStateAction<string>>;
+  recentfriends: UserInformation[];
+  setRecentFriends: Dispatch<SetStateAction<UserInformation[]>>;
+  setShowFormTripHistory: Dispatch<
+    SetStateAction<SelectOptionsTrip | undefined>
+  >;
+  showformtriphistory: SelectOptionsTrip | undefined;
 }
 
 export const MainContext = createContext({} as MainProps);
@@ -105,6 +120,12 @@ export const MainProvider = ({ children }: { children: ReactNode }) => {
   const [finishthetrip, setFinishTheTrip] = useState('');
   const [showtriphistory, setShowTripHistory] = useState(false);
   const [reload, setReload] = useState(false);
+  const [temporarynotice, setTemporaryNotice] = useState<SelectOptionsTrip>();
+  const [recenttrip, setRecentTrip] = useState<SelectOptionsTrip>();
+  const [valuecheckpage, setValueCheckPage] = useState('home');
+  const [recentfriends, setRecentFriends] = useState<UserInformation[]>([]);
+  const [showformtriphistory, setShowFormTripHistory] =
+    useState<SelectOptionsTrip>();
 
   const sliderRef = useRef<any>();
 
@@ -265,10 +286,16 @@ export const MainProvider = ({ children }: { children: ReactNode }) => {
     const userlists = trip?.userlist;
     if (userlists) {
       const value: UserInformation[] = userlists?.filter((item) => item.id);
-      DataFirebase.RefuseInvitation(
-        currentUserInformation.uid,
-        currentIdJoinTrip,
-      );
+      if (currentUserInformation.uid === trip?.tripmaster) {
+        userlists?.forEach(async (item) => {
+          await DataFirebase.RefuseInvitation(item.uid, currentIdJoinTrip);
+        });
+      } else {
+        await DataFirebase.RefuseInvitation(
+          currentUserInformation.uid,
+          currentIdJoinTrip,
+        );
+      }
       if (value.length === 1) {
         await DataFirebase.DeleteTheTrip(currentIdJoinTrip);
       }
@@ -299,6 +326,16 @@ export const MainProvider = ({ children }: { children: ReactNode }) => {
     setShowTripHistory,
     reload,
     setReload,
+    temporarynotice,
+    setTemporaryNotice,
+    valuecheckpage,
+    setValueCheckPage,
+    recenttrip,
+    setRecentTrip,
+    recentfriends,
+    setRecentFriends,
+    setShowFormTripHistory,
+    showformtriphistory,
   };
   return <MainContext.Provider value={value}>{children}</MainContext.Provider>;
 };

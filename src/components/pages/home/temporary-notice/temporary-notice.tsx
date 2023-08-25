@@ -20,7 +20,7 @@ export const TemporaryNotice = ({
 
   return (
     <div className="fixed z-40 h-full w-full rounded-[40px] bg-slate-300/40 p-4 sm:w-[400px]">
-      <div className="scrollbarstyle relative flex h-full w-full flex-col justify-between rounded-3xl bg-slate-100 pl-3 pr-1">
+      <div className="scrollbarstyle relative flex h-full w-full flex-col justify-between rounded-3xl bg-slate-50 pl-3 pr-1">
         <RenderInfoTemporaryNotice data={data} showTitle={showTitle} />
         <div className="absolute bottom-20 left-0 z-10 h-12 w-full px-3">
           <Button

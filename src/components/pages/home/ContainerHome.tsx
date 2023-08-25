@@ -13,6 +13,7 @@ import { selector } from '@/redux';
 
 import { CreateTheTrip } from './create-the-trip';
 import { useHome } from './handler';
+import { NavigationBarMenu } from './NavigationbarMenu/NavigationBarMenu';
 import { RenderItemVerticalMenuHome } from './RenderItemVerticalMenuHome';
 import { SliderPage } from './slider';
 import { StatusCreateTrip } from './status-create-trip';
@@ -24,19 +25,25 @@ export const ContainerHome = () => {
   const { currentUserInformation } = useSelector(selector.user);
   const { photoURL, displayName } = currentUserInformation || {};
 
-  const { showverticalmenu, showcreatethetrip, showtriphistory } =
-    useContext(MainContext);
+  const {
+    showverticalmenu,
+    showcreatethetrip,
+    showtriphistory,
+    temporarynotice,
+    setTemporaryNotice,
+    setRecentTrip,
+    setRecentFriends,
+    showformtriphistory,
+    setShowFormTripHistory,
+  } = useContext(MainContext);
 
   const router = useRouter();
   const dispatch = useDispatch();
 
-  const [temporarynotice, setTemporaryNotice] = useState<SelectOptionsTrip>();
   const [triphistory, setTripHistory] = useState<SelectOptionsTrip[]>([]);
   const [masteruid, setMasterUid] = useState('');
   const [disabledstarttrip, setDisabledStartTrip] = useState(true);
   const [invitation, setInvitation] = useState<SelectOptionsInvitation[]>([]);
-  const [showformtriphistory, setShowFormTripHistory] =
-    useState<SelectOptionsTrip>();
   const [checkreservemoney, setCheckReserveMoney] = useState(0);
 
   useEffect(() => {
@@ -51,19 +58,13 @@ export const ContainerHome = () => {
       setTemporaryNotice,
       router,
       setTripHistory,
+      setRecentTrip,
+      setRecentFriends,
     });
   }, [currentIdJoinTrip, currentUserInformation.uid, router]);
 
   return (
-    <WrapperHeader
-      header={
-        <Header
-          id={currentUserInformation.id || 0}
-          image={photoURL}
-          name={displayName}
-        />
-      }
-    >
+    <WrapperHeader header={<Header name={displayName} />}>
       <div className="h-full w-full">
         {temporarynotice?.id ? (
           <TemporaryNotice showTitle data={temporarynotice} />
@@ -93,7 +94,15 @@ export const ContainerHome = () => {
             checkReserveMoney={checkreservemoney}
           />
         ) : (
-          <SliderPage data={invitation} />
+          <div className="h-full">
+            <NavigationBarMenu
+              id={currentUserInformation.id || 0}
+              image={photoURL}
+              name={displayName}
+              currentNumberOfNoti={invitation.length}
+            />
+            <SliderPage data={invitation} />
+          </div>
         )}
       </div>
     </WrapperHeader>

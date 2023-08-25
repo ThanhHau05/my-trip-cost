@@ -16,6 +16,7 @@ export const RenderAmountSpentOfUser = ({
           name={item.displayName}
           text={item.photoURL.text || ''}
           url={item.photoURL.url || ''}
+          id={item.id || 0}
         />
       ))}
     </>
