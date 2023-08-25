@@ -56,11 +56,15 @@ export const RenderoptionStartCreateTrip = ({
           </div>
         </div>
         <div className="scrollbarstyle h-60 overflow-auto">
-          <div className="grid grid-cols-5 gap-2 pt-8">
+          <div className="grid grid-cols-5 justify-items-center gap-2 pt-3">
             {!userlist ? (
               <span className="h-12 w-12 rounded-full bg-slate-300 drop-shadow-md" />
             ) : (
-              <RenderUser setUserList={setUserList} userlist={userlist} />
+              <RenderUser
+                masterUid={masterUid}
+                setUserList={setUserList}
+                userlist={userlist}
+              />
             )}
             <div className="flex h-12 w-12 cursor-pointer items-center justify-center rounded-full border bg-white drop-shadow-md">
               +

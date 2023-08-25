@@ -89,6 +89,7 @@ export const useMyTrip = ({
                 url: item.photoURL.url || '',
               },
               name: item.displayName,
+              id: item.id || 0,
             };
           });
         setValueUserInVMenu(newvalue);

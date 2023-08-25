@@ -32,7 +32,7 @@ export const ImageUser = ({
     <div ref={showInfoUserRef} className="relative">
       <div className="cursor-pointer rounded-full">
         <Avatar
-          size="50"
+          size="45"
           onClick={() => setShowInfoUser(!showinfouser)}
           img={{ url: image.url, color: image.color, text: image.text }}
           cursorPointer
@@ -43,7 +43,7 @@ export const ImageUser = ({
   );
 };
 
-const HandleInfoUserOnAvatar = ({
+export const HandleInfoUserOnAvatar = ({
   id,
   name,
   show,
@@ -58,13 +58,13 @@ const HandleInfoUserOnAvatar = ({
   return (
     <div
       className={clsx(
-        'absolute right-0 z-20 mt-2 select-none rounded-xl border-2 bg-white px-3 shadow-md transition-all duration-200',
-        show ? 'visible h-full py-1' : 'invisible h-0',
+        'absolute bottom-[70px] right-3 z-20 flex select-none flex-col justify-center rounded-xl border-2 bg-white px-2 shadow-md transition-all duration-200',
+        show ? 'visible h-[54px]' : 'invisible h-0',
       )}
     >
       <span
         className={clsx(
-          'flex text-sm font-normal delay-100',
+          'flex text-sm font-normal delay-75',
           show ? 'visible' : 'invisible',
         )}
       >
@@ -87,7 +87,7 @@ const HandleInfoUserOnAvatar = ({
       </span>
       <span
         className={clsx(
-          'flex text-sm font-normal delay-100',
+          'flex text-sm font-normal delay-75',
           show ? 'visible' : 'invisible',
         )}
       >

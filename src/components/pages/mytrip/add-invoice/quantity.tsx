@@ -17,7 +17,7 @@ export const Quantity = ({
   return (
     <div className="h-8">
       <div className="flex h-full items-center justify-between">
-        <h2 className="ml-2 select-none font-medium">Quantity</h2>
+        <h2 className="select-none font-medium drop-shadow-md">Quantity</h2>
         <div ref={inputRef}>
           <input
             type="number"

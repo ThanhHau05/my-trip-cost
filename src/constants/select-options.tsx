@@ -1,12 +1,16 @@
 // import { BiLogOut } from 'react-icons/bi';
 import { BiLogOut } from 'react-icons/bi';
+import { IoNotifications, IoNotificationsOutline } from 'react-icons/io5';
 import type { IconType } from 'react-icons/lib';
 import { LuHistory } from 'react-icons/lu';
+import { RiHome3Fill, RiHome3Line } from 'react-icons/ri';
 
 export interface SelectOptionsUserInvitations {
   temporaryNotice?: SelectOptionsTrip;
   invitation?: SelectOptionsInvitation[];
   tripHistory?: SelectOptionsTrip[];
+  recentFriends?: UserInformation[];
+  recentTrip?: SelectOptionsTrip;
 }
 
 export interface VerticalMenuUserInfo {
@@ -25,6 +29,7 @@ export interface SelectOptionsPeopleInVerticalMenu {
   img: SelectOptionsAvatar;
   money: number;
   uid: string;
+  id: number;
 }
 
 export interface SelectOptionsInvoice {
@@ -54,6 +59,11 @@ export interface SelectOptionsTrip {
 }
 
 export interface SelectOptionsInvitation {
+  avtmaster: {
+    url?: string;
+    color?: string;
+    text?: string;
+  };
   tripid: number;
   tripname: string;
   name: string;
@@ -90,6 +100,7 @@ export interface UserInformation {
 export interface SelectOptionsObject {
   title: string;
   icon?: IconType;
+  atIcon?: IconType;
   value: string | number;
 }
 
@@ -104,6 +115,36 @@ export const VERTICAL_MENU: SelectOptionsObject[] = [
     icon: BiLogOut,
     value: 'sign out',
   },
+];
+
+export const NAVIGATION_BAR_MENU: SelectOptionsObject[] = [
+  {
+    title: 'Home',
+    icon: RiHome3Line,
+    atIcon: RiHome3Fill,
+    value: 'home',
+  },
+  {
+    title: 'Invitation',
+    icon: IoNotificationsOutline,
+    atIcon: IoNotifications,
+    value: 'invitation',
+  },
+  {
+    title: 'Space',
+    value: 'space',
+  },
+  {
+    title: 'History of trips',
+    icon: LuHistory,
+    value: 'trip history',
+  },
+  // {
+  //   title: 'Profile',
+  //   icon: RiUserLine,
+  //   atIcon: RiUserFill,
+  //   value: 'profile',
+  // },
 ];
 
 export const ACTIVITES: SelectOptionsRenderDropDown[] = [
@@ -130,11 +171,11 @@ export const ACTIVITES: SelectOptionsRenderDropDown[] = [
 ];
 
 export const PRICEOPTIONS: SelectOptionsObject[] = [
-  { title: '10.000 VND', value: 10000 },
-  { title: '20.000 VND', value: 20000 },
-  { title: '40.000 VND', value: 40000 },
-  { title: '50.000 VND', value: 50000 },
-  { title: '100.000 VND', value: 100000 },
-  { title: '200.000 VND', value: 200000 },
-  { title: '500.000 VND', value: 500000 },
+  { title: '10.000', value: 10000 },
+  { title: '20.000', value: 20000 },
+  { title: '40.000', value: 40000 },
+  { title: '50.000', value: 50000 },
+  { title: '100.000', value: 100000 },
+  { title: '200.000', value: 200000 },
+  { title: '500.000', value: 500000 },
 ];

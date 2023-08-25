@@ -1,32 +1,33 @@
-import { ImageUser, MenuBarsBox } from './options-header';
+import { useSignOut } from 'react-firebase-hooks/auth';
+import { FaSignOutAlt } from 'react-icons/fa';
+import { useDispatch } from 'react-redux';
 
-export const Header = ({
-  name,
-  image,
-  id,
-}: {
-  name: string;
-  image: {
-    url?: string;
-    color?: string;
-    text?: string;
-  };
-  id: number;
-}) => {
+import { auth } from '@/firebase';
+
+import { handleSignOut } from '../handler';
+
+export const Header = ({ name }: { name: string }) => {
+  const [signOut] = useSignOut(auth);
+  const dispatch = useDispatch();
   return (
     <div className="flex h-20 w-full items-center justify-between px-3 py-2">
       <div className="flex items-center justify-center">
-        <MenuBarsBox />
         <div className="pl-3">
-          <h2 className="text-2xl font-bold leading-5 text-white drop-shadow-md">
+          <h2 className="text-2xl font-bold leading-5 text-gray-900 drop-shadow-md">
             Hello {name}
           </h2>
-          <span className="break-words text-sm text-white">
+          <span className="break-words text-sm text-gray-900 drop-shadow-md ">
             Wish you have a pleasant trip!
           </span>
         </div>
       </div>
-      <ImageUser image={image} id={id} name={name} />
+      <FaSignOutAlt
+        onClick={() => {
+          handleSignOut({ signOut, dispatch });
+        }}
+        className="cursor-pointer text-2xl text-gray-700 transition-all hover:text-[28px] hover:text-gray-800"
+      />
+      {/* <ImageUser image={image} id={id} name={name} /> */}
     </div>
   );
 };

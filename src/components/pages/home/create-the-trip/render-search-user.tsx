@@ -118,7 +118,15 @@ export const RenderSearchUser = ({
                   text,
                 }}
               />
-              <h2 className="ml-3">{item.displayName}</h2>
+              <div className="ml-3">
+                <h2>{item.displayName}</h2>
+                <h2 className="text-sm">
+                  Id:{' '}
+                  <span className=" text-gray-800">
+                    {item.id ? item.id : "The user doesn't have an ID"}
+                  </span>
+                </h2>
+              </div>
             </div>
           );
         })

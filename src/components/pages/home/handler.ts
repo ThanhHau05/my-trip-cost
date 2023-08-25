@@ -1,6 +1,6 @@
 import { doc, getDoc, onSnapshot, updateDoc } from 'firebase/firestore';
 import type { NextRouter } from 'next/router';
-import type { Dispatch, SetStateAction } from 'react';
+import type { Dispatch, MutableRefObject, SetStateAction } from 'react';
 import type { AnyAction } from 'redux';
 
 import type {
@@ -23,10 +23,13 @@ export const useHome = ({
   dispatch,
   setDisabledStartTrip,
   setTripHistory,
+  setRecentTrip,
+  setRecentFriends,
 }: {
   uid: string;
   id: number;
   setTemporaryNotice: Dispatch<SetStateAction<SelectOptionsTrip | undefined>>;
+  setRecentTrip: Dispatch<SetStateAction<SelectOptionsTrip | undefined>>;
   setInvitation: Dispatch<SetStateAction<SelectOptionsInvitation[]>>;
   setMasterUid: (value: string) => void;
   setCheckReserveMoney: (value: number) => void;
@@ -34,6 +37,7 @@ export const useHome = ({
   setDisabledStartTrip: (value: boolean) => void;
   router: NextRouter;
   setTripHistory: Dispatch<SetStateAction<SelectOptionsTrip[]>>;
+  setRecentFriends: Dispatch<SetStateAction<UserInformation[]>>;
 }) => {
   const handle = () => {
     const docRef = doc(db, 'UserInvitations', uid);
@@ -48,6 +52,12 @@ export const useHome = ({
         }
         if (valueData.tripHistory) {
           setTripHistory(valueData.tripHistory);
+        }
+        if (valueData.recentTrip) {
+          setRecentTrip(valueData.recentTrip);
+        }
+        if (valueData.recentFriends) {
+          setRecentFriends(valueData.recentFriends);
         }
       }
     });
@@ -138,10 +148,36 @@ export const onSubmitTemporaryNotice = async ({
     const docRef = doc(db, 'UserInvitations', uid);
     const isCheck = await getDoc(docRef);
     if (isCheck.exists()) {
+      const { recentFriends } = isCheck.data() as SelectOptionsUserInvitations;
+      let valueRecentFriends: UserInformation[] = [];
+      if (!recentFriends) {
+        const value = data.userlist.filter((item) => item.uid !== uid);
+        if (value.length > 5) {
+          valueRecentFriends = value.slice(0, 5);
+        } else {
+          valueRecentFriends = value;
+        }
+      } else {
+        valueRecentFriends = recentFriends;
+        data.userlist.forEach((item) => {
+          if (
+            recentFriends.some(
+              (item1) => uid !== item.uid && item1.uid !== item.uid,
+            )
+          ) {
+            if (valueRecentFriends.length === 5) {
+              valueRecentFriends.shift();
+            }
+            valueRecentFriends.push(item);
+          }
+        });
+      }
       await updateDoc(docRef, {
         ...isCheck.data(),
         temporaryNotice: [],
         tripHistory: myFirebase.firestore.FieldValue.arrayUnion(data),
+        recentFriends: valueRecentFriends,
+        recentTrip: data,
       });
     }
   }
@@ -157,4 +193,29 @@ export const handleRemoveUserInUserListAdded = (
 export const handleCheckUserInData = (uid: string, data: UserInformation[]) => {
   const value = data.find((item) => item.uid === uid);
   return !!value;
+};
+
+export const handleOnSubmitNavagitionBar = ({
+  value,
+  sliderRef,
+  setShowTripHistory,
+  showtriphistory,
+}: {
+  value: string;
+  sliderRef: MutableRefObject<any>;
+  setShowTripHistory: (value: boolean) => void;
+  showtriphistory: boolean;
+}) => {
+  if (value !== 'trip history' && showtriphistory) {
+    setShowTripHistory(false);
+  }
+  if (value === 'home') {
+    sliderRef.current.slickGoTo(0);
+  } else if (value === 'invitation') {
+    sliderRef.current.slickGoTo(1);
+  } else if (value === 'trip history') {
+    setShowTripHistory(true);
+  } else if (value === 'profile') {
+    //
+  }
 };

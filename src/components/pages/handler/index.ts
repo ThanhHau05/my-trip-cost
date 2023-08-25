@@ -39,13 +39,18 @@ export const handleRandomIdInvoice = () => {
 
 export const handleGetTimeAndDate = () => {
   const currentTimeAndDate = new Date();
-  const hour = currentTimeAndDate.getHours();
+  let hour = currentTimeAndDate.getHours();
   const minutes = currentTimeAndDate.getMinutes();
+  const newMinutes = minutes < 10 ? `0${minutes}` : minutes;
   const period = hour >= 12 ? 'PM' : 'AM';
+  if (hour > 12) {
+    hour -= 12;
+  }
   const day = currentTimeAndDate.getDate();
   const month = currentTimeAndDate.getMonth() + 1;
+  const newMonth = month < 10 ? `0${month}` : month;
   const year = currentTimeAndDate.getFullYear();
-  return `${hour}:${minutes} ${period} - ${month}/${day}/${year}`;
+  return `${hour}:${newMinutes} ${period} - ${newMonth}/${day}/${year}`;
 };
 
 export const handleFormatCurrentcy = (money: number) => {
