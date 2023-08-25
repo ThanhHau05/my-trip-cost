@@ -18,7 +18,7 @@ export const NearestTrip = ({
       onClick={() => (onClick ? onClick(data) : null)}
       className="mt-2 cursor-pointer rounded-xl bg-slate-50 px-3 py-2 drop-shadow-md transition-all hover:shadow-md"
     >
-      <h2 className="mb-3 text-2xl font-bold">Trip 1</h2>
+      <h2 className="mb-3 text-2xl font-bold">{data.tripname}</h2>
       <div className="flex flex-col gap-3">
         <TripValue title="Total cost:">
           <span className="rounded-lg border-2 border-slate-500 bg-gray-50 px-2 py-1 text-lg font-bold text-gray-900/90">
