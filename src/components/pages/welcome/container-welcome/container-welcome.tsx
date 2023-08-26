@@ -24,7 +24,7 @@ export const ContainerWelcome = ({
           alt=""
         />
 
-        <div className="absolute bottom-0 z-10 h-52 w-full">
+        <div className="fixed bottom-0 z-10 h-52 w-full sm:w-[400px]">
           <div className="relative h-full">
             <svg
               xmlns="http://www.w3.org/2000/svg"

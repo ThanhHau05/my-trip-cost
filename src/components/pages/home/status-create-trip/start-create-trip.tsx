@@ -23,7 +23,7 @@ export const StatusCreateTrip = ({
 }) => {
   const { currentIdJoinTrip } = useSelector(selector.trip);
 
-  const { setConentConfirm } = useContext(MainContext);
+  const { setConentConfirm, setLoadingStartNow } = useContext(MainContext);
 
   const [data, setData] = useState<SelectOptionsTrip>();
   const [userlist, setUserList] = useState<UserInformation[]>([]);
@@ -62,6 +62,7 @@ export const StatusCreateTrip = ({
                   reservemoney,
                   setReserveMoney,
                   currentIdJoinTrip,
+                  setLoadingStartNow,
                 )
               }
               disabled={disabledStartTrip}

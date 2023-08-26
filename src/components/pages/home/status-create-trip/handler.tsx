@@ -80,6 +80,7 @@ export const onStartTrip = async (
     }>
   >,
   id: number,
+  setLoading: (value: boolean) => void,
 ) => {
   if (checkReserveMoney !== 0 && checkReserveMoney < 100000) {
     setReserveMoney({
@@ -90,7 +91,7 @@ export const onStartTrip = async (
     const userlists: UserInformation[] = await DataFirebase.GetUserListInTrip(
       id,
     );
-
+    setLoading(true);
     const status = userlists.find((item) => item.status === false);
     if (status === undefined) {
       const trip = await DataFirebase.GetTrip(id);

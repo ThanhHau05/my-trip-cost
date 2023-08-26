@@ -1,7 +1,9 @@
+import { useContext } from 'react';
 import { useSignOut } from 'react-firebase-hooks/auth';
 import { FaSignOutAlt } from 'react-icons/fa';
 import { useDispatch } from 'react-redux';
 
+import { MainContext } from '@/context/main-context';
 import { auth } from '@/firebase';
 
 import { handleSignOut } from '../handler';
@@ -9,6 +11,7 @@ import { handleSignOut } from '../handler';
 export const Header = ({ name }: { name: string }) => {
   const [signOut] = useSignOut(auth);
   const dispatch = useDispatch();
+  const { setLoadingStartNow } = useContext(MainContext);
   return (
     <div className="flex h-20 w-full items-center justify-between px-3 py-2">
       <div className="flex items-center justify-center">
@@ -23,7 +26,7 @@ export const Header = ({ name }: { name: string }) => {
       </div>
       <FaSignOutAlt
         onClick={() => {
-          handleSignOut({ signOut, dispatch });
+          handleSignOut({ signOut, dispatch, setLoading: setLoadingStartNow });
         }}
         className="cursor-pointer text-2xl text-gray-700 transition-all hover:text-[28px] hover:text-gray-800"
       />

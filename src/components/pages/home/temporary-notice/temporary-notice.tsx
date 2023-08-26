@@ -25,7 +25,7 @@ export const TemporaryNotice = ({
         <div className="absolute bottom-20 left-0 z-10 h-12 w-full px-3">
           <Button
             title="OK"
-            onClick={() =>
+            onClick={async () =>
               onSubmitTemporaryNotice({
                 data,
                 onSubmitValue,

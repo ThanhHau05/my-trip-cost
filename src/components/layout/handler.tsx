@@ -29,15 +29,19 @@ export const handleCopyInfo = (
 export const handleSignOut = ({
   signOut,
   dispatch,
+  setLoading,
 }: {
   signOut: () => Promise<boolean>;
   dispatch: Dispatch<AnyAction>;
+  setLoading: (value: boolean) => void;
 }) => {
   window.location.reload();
   setTimeout(async () => {
     //
     await signOut();
-  }, 1000);
+    setLoading(false);
+  }, 2000);
+  setLoading(true);
   dispatch(
     UserActions.setCurrentUserInformation({
       displayName: '',

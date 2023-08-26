@@ -11,7 +11,7 @@ export const RenderInvoiceHistory = ({
   valueInvoice: SelectOptionsInvoice[];
 }) => {
   return (
-    <div className="relative h-full w-full pr-1 pt-5">
+    <div className="relative h-full w-full rounded-t-[40px] pr-1 pt-5 shadow">
       <div className="border_welcome_top absolute bottom-14 right-0 h-56 w-40 bg-teal-500" />
       <div className="relative z-10 h-full w-full">
         <div className="border_welcome_bottom_status_trip absolute left-0 top-4 z-0 h-56 w-40 bg-teal-500" />

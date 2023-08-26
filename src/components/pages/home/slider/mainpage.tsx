@@ -8,7 +8,6 @@ import { RecentFriends } from './RecentFriends';
 export const MainPage = () => {
   const { recenttrip, recentfriends, setShowFormTripHistory } =
     useContext(MainContext);
-  console.log(recenttrip);
 
   return (
     <div className="h-full w-full rounded-t-[40px] bg-purple-200 pt-5">
