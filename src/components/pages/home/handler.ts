@@ -10,7 +10,7 @@ import type {
   UserInformation,
 } from '@/constants/select-options';
 import { db, myFirebase } from '@/firebase';
-import { TripActions, UserActions } from '@/redux';
+import { TripActions } from '@/redux';
 
 export const useHome = ({
   uid,
@@ -25,6 +25,7 @@ export const useHome = ({
   setTripHistory,
   setRecentTrip,
   setRecentFriends,
+  setLoading,
 }: {
   uid: string;
   id: number;
@@ -38,6 +39,7 @@ export const useHome = ({
   router: NextRouter;
   setTripHistory: Dispatch<SetStateAction<SelectOptionsTrip[]>>;
   setRecentFriends: Dispatch<SetStateAction<UserInformation[]>>;
+  setLoading: (value: boolean) => void;
 }) => {
   const handle = () => {
     const docRef = doc(db, 'UserInvitations', uid);
@@ -74,6 +76,7 @@ export const useHome = ({
           setMasterUid(trip.tripmaster);
           setCheckReserveMoney(valueTrip.reservemoney || 0);
           if (valueTrip.status) {
+            setLoading(true);
             await router.push(`mytrip/${id}`);
             window.location.reload();
           } else {
@@ -92,44 +95,6 @@ export const useHome = ({
         }
       }
     });
-  }
-};
-
-export const onSubmit = async ({
-  value,
-  dispatch,
-  signOut,
-  setShowVerticalMenu,
-  setShowTripHistory,
-}: {
-  value: string;
-  dispatch: Dispatch<AnyAction>;
-  signOut: () => Promise<boolean>;
-  setShowVerticalMenu: (value: boolean) => void;
-  setShowTripHistory: (value: boolean) => void;
-}) => {
-  if (value === 'sign out') {
-    window.location.reload();
-    setTimeout(async () => {
-      //
-      await signOut();
-    }, 1000);
-    dispatch(
-      UserActions.setCurrentUserInformation({
-        displayName: '',
-        id: 0,
-        photoURL: {
-          url: undefined,
-          color: undefined,
-          text: undefined,
-        },
-        uid: '',
-        status: false,
-      }),
-    );
-  } else if (value === 'trip history') {
-    setShowVerticalMenu(false);
-    setShowTripHistory(true);
   }
 };
 
@@ -159,18 +124,17 @@ export const onSubmitTemporaryNotice = async ({
         }
       } else {
         valueRecentFriends = recentFriends;
-        data.userlist.forEach((item) => {
-          if (
-            recentFriends.some(
-              (item1) => uid !== item.uid && item1.uid !== item.uid,
-            )
-          ) {
-            if (valueRecentFriends.length === 5) {
-              valueRecentFriends.shift();
+        const promises = data.userlist.map(async (item) => {
+          if (uid !== item.uid) {
+            if (!recentFriends.find((item1) => item1.uid === item.uid)) {
+              if (valueRecentFriends.length === 5) {
+                valueRecentFriends.shift();
+              }
+              valueRecentFriends.push(item);
             }
-            valueRecentFriends.push(item);
           }
         });
+        await Promise.all(promises);
       }
       await updateDoc(docRef, {
         ...isCheck.data(),

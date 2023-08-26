@@ -1,3 +1,4 @@
+/* eslint-disable react/no-array-index-key */
 import type { User } from 'firebase/auth';
 import type { Dispatch, SetStateAction } from 'react';
 import type { AnyAction } from 'redux';

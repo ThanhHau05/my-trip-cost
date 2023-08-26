@@ -115,6 +115,7 @@ export const DataFirebase = {
       const value: SelectOptionsInvitation[] = isCheck.data().invitation;
       const newArray = value.filter((item) => item.tripid !== id);
       await setDoc(docRef, {
+        ...isCheck.data(),
         invitation: newArray,
       });
     }

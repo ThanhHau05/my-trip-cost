@@ -2,7 +2,6 @@ import { useRouter } from 'next/router';
 import { useContext, useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
-import { VerticalMenu } from '@/components/base';
 import { Header, WrapperHeader } from '@/components/layout';
 import type {
   SelectOptionsInvitation,
@@ -14,7 +13,6 @@ import { selector } from '@/redux';
 import { CreateTheTrip } from './create-the-trip';
 import { useHome } from './handler';
 import { NavigationBarMenu } from './NavigationbarMenu/NavigationBarMenu';
-import { RenderItemVerticalMenuHome } from './RenderItemVerticalMenuHome';
 import { SliderPage } from './slider';
 import { StatusCreateTrip } from './status-create-trip';
 import { TemporaryNotice } from './temporary-notice';
@@ -26,7 +24,6 @@ export const ContainerHome = () => {
   const { photoURL, displayName } = currentUserInformation || {};
 
   const {
-    showverticalmenu,
     showcreatethetrip,
     showtriphistory,
     temporarynotice,
@@ -35,6 +32,7 @@ export const ContainerHome = () => {
     setRecentFriends,
     showformtriphistory,
     setShowFormTripHistory,
+    setLoadingStartNow,
   } = useContext(MainContext);
 
   const router = useRouter();
@@ -60,6 +58,7 @@ export const ContainerHome = () => {
       setTripHistory,
       setRecentTrip,
       setRecentFriends,
+      setLoading: setLoadingStartNow,
     });
   }, [currentIdJoinTrip, currentUserInformation.uid, router]);
 
@@ -68,11 +67,6 @@ export const ContainerHome = () => {
       <div className="h-full w-full">
         {temporarynotice?.id ? (
           <TemporaryNotice showTitle data={temporarynotice} />
-        ) : null}
-        {showverticalmenu ? (
-          <VerticalMenu>
-            <RenderItemVerticalMenuHome />
-          </VerticalMenu>
         ) : null}
         {showformtriphistory ? (
           <TemporaryNotice
