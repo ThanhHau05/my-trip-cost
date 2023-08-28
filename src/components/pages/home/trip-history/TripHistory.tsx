@@ -21,7 +21,7 @@ export const TripHistory = ({
           {data.length !== 0 ? (
             data.map((item) => (
               <div key={item.id} className="pl-5 pr-4">
-                <NearestTrip data={item} onClick={setTripHistory} />
+                <NearestTrip data={item} onClick={setTripHistory} btnClose />
               </div>
             ))
           ) : (

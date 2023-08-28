@@ -183,3 +183,18 @@ export const handleOnSubmitNavagitionBar = ({
     //
   }
 };
+
+export const handleDeleteTripHistory = async (uid: string, id: number) => {
+  const docRef = doc(db, 'UserInvitations', uid);
+  const isCheck = await getDoc(docRef);
+  if (isCheck.exists()) {
+    const data: SelectOptionsUserInvitations = isCheck.data();
+    if (data.tripHistory) {
+      const newValue = data.tripHistory.filter((item) => item.id !== id);
+      await updateDoc(docRef, {
+        ...isCheck.data(),
+        tripHistory: newValue,
+      });
+    }
+  }
+};
