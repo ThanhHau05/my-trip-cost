@@ -24,21 +24,21 @@ const Meta = (props: IMetaProps) => {
         />
         <link
           rel="apple-touch-icon"
-          href={`${router.basePath}/apple-touch-icon.png`}
+          href={`${router.basePath}/icon-192x192.png`}
           key="apple"
         />
         <link
           rel="icon"
           type="image/png"
           sizes="32x32"
-          href={`${router.basePath}/favicon-32x32.png`}
+          href={`${router.basePath}/icon-192x192.png`}
           key="icon32"
         />
         <link
           rel="icon"
           type="image/png"
           sizes="16x16"
-          href={`${router.basePath}/favicon-16x16.png`}
+          href={`${router.basePath}/icon-192x192.png`}
           key="icon16"
         />
         <link
@@ -46,6 +46,7 @@ const Meta = (props: IMetaProps) => {
           href={`${router.basePath}/favicon.ico`}
           key="favicon"
         />
+        <link rel="manifest" href="/manifest.json" />
       </Head>
       <NextSeo
         title={props.title}

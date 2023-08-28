@@ -15,3 +15,11 @@ module.exports = withBundleAnalyzer({
   // You can remove `basePath` if you don't need it.
   reactStrictMode: true,
 });
+
+const withPWA = require('next-pwa')({
+  dest: 'public',
+});
+
+module.exports = withPWA({
+  // next.js config
+});

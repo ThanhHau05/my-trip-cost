@@ -6,7 +6,7 @@ import {
   LoginByAccount,
 } from '@/components/pages';
 
-export const Welcome = () => {
+const Welcome = () => {
   const [ischeckcreatenow, setIsCheckCreateNow] = useState(false);
   const [ischecklogin, setischecklogin] = useState(false);
 
@@ -36,3 +36,5 @@ export const Welcome = () => {
     />
   );
 };
+
+export default Welcome;
