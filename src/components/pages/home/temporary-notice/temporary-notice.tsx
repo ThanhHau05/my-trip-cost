@@ -19,20 +19,22 @@ export const TemporaryNotice = ({
   const { currentUserInformation } = useSelector(selector.user);
 
   return (
-    <div className="fixed z-40 h-full w-full rounded-[40px] bg-slate-300/40 p-4 sm:w-[400px]">
-      <div className="scrollbarstyle relative flex h-full w-full flex-col justify-between rounded-3xl bg-slate-50 pl-3 pr-1 pt-3">
-        <RenderInfoTemporaryNotice data={data} showTitle={showTitle} />
-        <div className="absolute bottom-20 left-0 z-10 h-12 w-full px-3">
-          <Button
-            title="OK"
-            onClick={async () =>
-              onSubmitTemporaryNotice({
-                data,
-                onSubmitValue,
-                uid: currentUserInformation.uid,
-              })
-            }
-          />
+    <div className="fixed top-0 z-40 h-full w-full bg-slate-700/20 pt-20 sm:w-[400px]">
+      <div className=" h-full w-full rounded-t-[40px] bg-slate-300/40 p-4 pb-0">
+        <div className="scrollbarstyle relative flex h-full w-full flex-col justify-between rounded-t-3xl bg-slate-50 pl-3 pr-1 pt-3">
+          <RenderInfoTemporaryNotice data={data} showTitle={showTitle} />
+          <div className="absolute bottom-4 left-0 z-10 h-12 w-full px-3">
+            <Button
+              title="OK"
+              onClick={async () =>
+                onSubmitTemporaryNotice({
+                  data,
+                  onSubmitValue,
+                  uid: currentUserInformation.uid,
+                })
+              }
+            />
+          </div>
         </div>
       </div>
     </div>

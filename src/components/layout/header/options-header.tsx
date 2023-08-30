@@ -118,7 +118,7 @@ export const MenuBarsBox = () => {
   };
   return (
     <button
-      className="w-12 cursor-pointer flex-col gap-2 outline-none"
+      className="w-12 cursor-pointer outline-none"
       onClick={_handleOnClick}
     >
       <div
