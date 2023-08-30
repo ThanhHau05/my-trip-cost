@@ -27,10 +27,10 @@ export const OptionsUser = () => {
   } = useContext(MyTripContext);
 
   return (
-    <div className="relative flex h-full flex-col items-center justify-between px-3">
+    <div className="relative flex h-full flex-col items-center justify-between">
       <Toaster />
       <div className="mb-5 mt-3 h-full w-full">
-        <div className="scrollbarstyle h-[calc(100%-200px)] overflow-auto">
+        <div className="scrollbarstyle h-[calc(100%-200px)] overflow-auto  pl-3 pr-2">
           <div className="mt-2">
             <h2 className="mb-2 font-medium">Activities</h2>
             <Dropdown

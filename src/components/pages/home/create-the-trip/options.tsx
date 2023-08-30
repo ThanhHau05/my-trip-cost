@@ -32,7 +32,7 @@ export const OptionsCreateTheTrip = () => {
   }, []);
 
   return (
-    <div className="flex h-[calc(100%-6rem)] flex-col justify-between">
+    <div className="flex h-full flex-col justify-between">
       <RenderOptionsInput
         companions={companions}
         setCompanions={setCompanions}
@@ -42,7 +42,7 @@ export const OptionsCreateTheTrip = () => {
         userlist={userlist}
         userlistadded={userlistadded}
       />
-      <div className="mb-5 h-12 w-full">
+      <div className="mb-8 h-12 w-full">
         <Button
           title="Create trip"
           onClick={() =>

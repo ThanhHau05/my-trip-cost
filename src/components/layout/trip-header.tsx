@@ -30,12 +30,12 @@ export const TripHeader = ({
   }, [reservemoney]);
 
   return (
-    <div className="flex h-full items-center justify-between px-3 py-2">
+    <div className="flex h-full items-center justify-between gap-2 px-3 py-2">
       <MenuBarsBox />
       <div className="flex w-full items-center justify-center">
         <div
           className={clsx(
-            'flex h-full w-72 flex-col justify-center gap-1',
+            'flex h-full w-64 flex-col justify-center gap-1',
             reservemoney ? 'cursor-pointer' : null,
           )}
           onClick={() => onClickMoney(setClickMoney, clickmoney, reservemoney)}

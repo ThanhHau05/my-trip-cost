@@ -206,7 +206,9 @@ const OptionsRenderDropdown = ({
         ) : null}
         <span className="block w-full pl-2 ">{title}</span>
       </div>
-      <GoPersonAdd className="hidden text-xl font-medium group-hover:block" />
+      {image ? (
+        <GoPersonAdd className="hidden text-xl font-medium group-hover:block" />
+      ) : null}
     </button>
   );
 };
