@@ -1,5 +1,6 @@
 import { useRouter } from 'next/router';
 import { useContext, useEffect, useState } from 'react';
+import { Toaster } from 'react-hot-toast';
 import { useDispatch, useSelector } from 'react-redux';
 
 import { Header, WrapperHeader } from '@/components/layout';
@@ -64,6 +65,7 @@ export const ContainerHome = () => {
 
   return (
     <WrapperHeader header={<Header name={displayName} />}>
+      <Toaster />
       <div className="h-full w-full">
         {temporarynotice?.id ? (
           <TemporaryNotice showTitle data={temporarynotice} />

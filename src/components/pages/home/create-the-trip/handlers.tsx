@@ -90,6 +90,8 @@ export const onSubmitCreateTrip = async ({
   if (isCheck({ setCompanions, setTripName, tripname, userlistadded })) {
     if (user) {
       const id = await DataFirebase.RandomIdCreateTrip();
+      dispatch(TripActions.setCurrentIdJoinTrip(id));
+      setShowCreateTheTrip(false);
       const { displayName, photoURL, uid } = currentUserInformation;
       const promises = userlistadded.map(async (item) => {
         if (item.id) {
@@ -113,28 +115,27 @@ export const onSubmitCreateTrip = async ({
           }
         }
       });
-      await Promise.all(promises);
-      const datauser: UserInformation = {
-        displayName,
-        id: currentUserInformation.id,
-        photoURL,
-        status: true,
-        reload: false,
-        uid,
-      };
-      const updatedUserList = [datauser, ...userlistadded];
-      const data: SelectOptionsTrip = {
-        tripname: tripname.value,
-        userlist: updatedUserList,
-        id,
-        status: false,
-        tripmaster: uid || '',
-        endtime: '',
-        starttime: '',
-      };
-      await DataFirebase.CreateTrip(id, data);
-      dispatch(TripActions.setCurrentIdJoinTrip(id));
-      setShowCreateTheTrip(false);
+      await Promise.all(promises).then(async () => {
+        const datauser: UserInformation = {
+          displayName,
+          id: currentUserInformation.id,
+          photoURL,
+          status: true,
+          reload: false,
+          uid,
+        };
+        const updatedUserList = [datauser, ...userlistadded];
+        const data: SelectOptionsTrip = {
+          tripname: tripname.value,
+          userlist: updatedUserList,
+          id,
+          status: false,
+          tripmaster: uid || '',
+          endtime: '',
+          starttime: '',
+        };
+        await DataFirebase.CreateTrip(id, data);
+      });
     }
   }
 };

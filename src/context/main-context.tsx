@@ -110,7 +110,7 @@ export const MainProvider = ({ children }: { children: ReactNode }) => {
   const { currentIdJoinTrip } = useSelector(selector.trip);
   const dispatch = useDispatch();
 
-  const [loadingstartnow, setLoadingStartNow] = useState(false);
+  const [loadingstartnow, setLoadingStartNow] = useState(true);
   const [showverticalmenu, setShowVerticalMenu] = useState(false);
   const [showcreatethetrip, setShowCreateTheTrip] = useState(false);
   const [name, setName] = useState({ value: '', error: '' });
@@ -285,10 +285,14 @@ export const MainProvider = ({ children }: { children: ReactNode }) => {
     const trip = await DataFirebase.GetTrip(currentIdJoinTrip);
     const userlists = trip?.userlist;
     if (userlists) {
-      const value: UserInformation[] = userlists?.filter((item) => item.id);
+      const value: UserInformation[] = userlists?.filter(
+        (item) => item.id && item.status === true,
+      );
       if (currentUserInformation.uid === trip?.tripmaster) {
         userlists?.forEach(async (item) => {
-          await DataFirebase.RefuseInvitation(item.uid, currentIdJoinTrip);
+          if (!item.uid.includes('name-')) {
+            await DataFirebase.RefuseInvitation(item.uid, currentIdJoinTrip);
+          }
         });
       } else {
         await DataFirebase.RefuseInvitation(

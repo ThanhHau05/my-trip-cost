@@ -11,10 +11,12 @@ import { selector, TripActions } from '@/redux';
 import { handleGetTimeAndDate, handleTotalMoneyTheTrip } from '../handler';
 
 export const NotiFinishTheTrip = ({ value }: { value: string }) => {
-  const { setFinishTheTrip, setShowVerticalMenu } = useContext(MainContext);
+  const { setFinishTheTrip, setShowVerticalMenu, setLoadingStartNow } =
+    useContext(MainContext);
   const { currentIdJoinTrip } = useSelector(selector.trip);
   const dispatch = useDispatch();
   const onSubmit = async () => {
+    setLoadingStartNow(true);
     setFinishTheTrip('');
     setShowVerticalMenu(false);
     const docRef = doc(db, 'Trips', currentIdJoinTrip.toString());
@@ -37,6 +39,7 @@ export const NotiFinishTheTrip = ({ value }: { value: string }) => {
     });
     await DataFirebase.DeleteTheTrip(currentIdJoinTrip);
     dispatch(TripActions.setCurrentIdJoinTrip(0));
+    setLoadingStartNow(false);
   };
   return (
     <div className="fixed z-40 flex h-full w-full items-center justify-center bg-gray-600/40">

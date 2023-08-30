@@ -15,17 +15,13 @@ import { useMyTrip } from './handler';
 import { RenderInvoiceHistory } from './RenderInvoiceHistory';
 import { RenderVerticalMenu } from './RenderVerticalMenu';
 
-export const ContainerTripDetail = ({
-  setStatus,
-}: {
-  setStatus: (value: boolean) => void;
-}) => {
+export const ContainerTripDetail = () => {
   const { currentIdJoinTrip } = useSelector(selector.trip);
   const { currentUserInformation } = useSelector(selector.user);
 
   const dispatch = useDispatch();
 
-  const { showverticalmenu, showaddinvoice, setReload } =
+  const { showverticalmenu, showaddinvoice, setReload, setLoadingStartNow } =
     useContext(MainContext);
 
   const [valueInvoice, setValueInvoice] = useState<SelectOptionsInvoice[]>([]);
@@ -43,7 +39,6 @@ export const ContainerTripDetail = ({
       setReload,
       setReserveMoney,
       setStartTime,
-      setStatus,
       setTotalMoney,
       setTripName,
       setUidMaster,
@@ -52,6 +47,7 @@ export const ContainerTripDetail = ({
       dispatch,
       id: currentIdJoinTrip,
       infoUser: currentUserInformation,
+      setLoading: setLoadingStartNow,
     });
   }, [currentIdJoinTrip, currentUserInformation]);
 

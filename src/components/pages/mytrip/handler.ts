@@ -34,7 +34,6 @@ export const handleFinishTheTrip = async ({
 };
 
 export const useMyTrip = ({
-  setStatus,
   setUidMaster,
   setTotalMoney,
   setStartTime,
@@ -46,8 +45,8 @@ export const useMyTrip = ({
   dispatch,
   id,
   infoUser,
+  setLoading,
 }: {
-  setStatus: (value: boolean) => void;
   setUidMaster: (value: string) => void;
   setTotalMoney: (value: number) => void;
   setStartTime: (value: string) => void;
@@ -61,6 +60,7 @@ export const useMyTrip = ({
   dispatch: Dispatch<AnyAction>;
   id: number;
   infoUser: UserInformation;
+  setLoading: (value: boolean) => void;
 }) => {
   const handle = async () => {
     const docRef = doc(db, 'Trips', id.toString());
@@ -68,53 +68,55 @@ export const useMyTrip = ({
       if (data.exists()) {
         const { trip } = data.data();
         const valueTrip: SelectOptionsTrip = trip;
-        setStatus(valueTrip.status);
-        setUidMaster(valueTrip.tripmaster);
+        if (valueTrip.status) {
+          setUidMaster(valueTrip.tripmaster);
 
-        const value = await handleTotalMoneyTheTrip(id);
-        const valueStartTime = valueTrip?.starttime;
-        setTotalMoney(value);
-        setStartTime(valueStartTime || '');
-        setTripName(valueTrip?.tripname || '');
-        setValueInvoice(valueTrip?.invoice || []);
+          const value = await handleTotalMoneyTheTrip(id);
+          const valueStartTime = valueTrip?.starttime;
+          setTotalMoney(value);
+          setStartTime(valueStartTime || '');
+          setTripName(valueTrip?.tripname || '');
+          setValueInvoice(valueTrip?.invoice || []);
 
-        const newvalue: SelectOptionsPeopleInVerticalMenu[] =
-          valueTrip?.userlist.map((item) => {
-            return {
-              uid: item.uid,
-              money: item.totalmoney || 0,
-              img: {
-                color: item.photoURL.color || '',
-                text: item.photoURL.text || '',
-                url: item.photoURL.url || '',
-              },
-              name: item.displayName,
-              id: item.id || 0,
-            };
-          });
-        setValueUserInVMenu(newvalue);
-        setReserveMoney(valueTrip.reservemoney || 0);
-        const checkReload = valueTrip.userlist.find(
-          (item) => item.uid === infoUser.uid,
-        );
-        if (checkReload?.reload) {
-          setReload(true);
-          const newUserList = valueTrip.userlist.map((item) => {
-            if (item.uid === infoUser.uid) {
+          const newvalue: SelectOptionsPeopleInVerticalMenu[] =
+            valueTrip?.userlist.map((item) => {
               return {
-                ...item,
-                reload: false,
+                uid: item.uid,
+                money: item.totalmoney || 0,
+                img: {
+                  color: item.photoURL.color || '',
+                  text: item.photoURL.text || '',
+                  url: item.photoURL.url || '',
+                },
+                name: item.displayName,
+                id: item.id || 0,
               };
-            }
-            return item;
-          });
-          await setDoc(docRef, {
-            trip: { ...valueTrip, userlist: newUserList },
-          });
+            });
+          setValueUserInVMenu(newvalue);
+          setReserveMoney(valueTrip.reservemoney || 0);
+          const checkReload = valueTrip.userlist.find(
+            (item) => item.uid === infoUser.uid,
+          );
+          if (checkReload?.reload) {
+            setReload(true);
+            const newUserList = valueTrip.userlist.map((item) => {
+              if (item.uid === infoUser.uid) {
+                return {
+                  ...item,
+                  reload: false,
+                };
+              }
+              return item;
+            });
+            await setDoc(docRef, {
+              trip: { ...valueTrip, userlist: newUserList },
+            });
+          }
         }
+        setLoading(false);
       } else {
         dispatch(TripActions.setCurrentIdJoinTrip(0));
-        setStatus(false);
+        setLoading(false);
       }
     });
   };
@@ -306,4 +308,18 @@ export const onSubmitRenderUser = ({
     setMoneySuggest(0);
     setQuantity('1');
   }
+};
+
+export const handleCheckStatusTrip = (
+  id: string | string[],
+  setStatus: (value: boolean) => void,
+) => {
+  const docRef = doc(db, 'Trips', id.toString());
+  onSnapshot(docRef, (data) => {
+    if (data.exists()) {
+      const { trip } = data.data();
+      const valueTrip: SelectOptionsTrip = trip;
+      setStatus(valueTrip.status);
+    }
+  });
 };

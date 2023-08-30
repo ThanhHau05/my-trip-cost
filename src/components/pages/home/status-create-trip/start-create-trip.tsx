@@ -40,7 +40,7 @@ export const StatusCreateTrip = ({
   }, [reservemoney.value]);
 
   return (
-    <div className="h-full">
+    <div className="relative z-10 h-full">
       <div className="relative flex h-full w-full flex-col justify-between rounded-t-[40px] bg-white px-5 pt-5">
         <div className="border_welcome_bottom_status_trip absolute bottom-14 left-0 h-56 w-40 bg-teal-500" />
         <div className="border_welcome_top absolute right-0 top-10 h-56 w-40 bg-teal-500" />
