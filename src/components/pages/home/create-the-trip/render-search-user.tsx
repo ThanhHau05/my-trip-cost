@@ -61,10 +61,8 @@ export const RenderSearchUser = ({
   useEffect(() => {
     const users = data.filter(
       (item) =>
-        (item.displayName.toLowerCase().includes(searchvalue) ||
-          item.id?.toString().includes(searchvalue) ||
-          item.displayName.includes(searchvalue) ||
-          item.id?.toString().includes(searchvalue)) &&
+        (item.id?.toString().includes(searchvalue) ||
+          item.displayName.includes(searchvalue)) &&
         currentUserInformation.uid !== item.uid,
     );
 

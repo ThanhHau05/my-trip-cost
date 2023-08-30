@@ -1,14 +1,20 @@
-import { useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 
 import {
   ContainerWelcome,
   CreateAccount,
   LoginByAccount,
 } from '@/components/pages';
+import { MainContext } from '@/context/main-context';
 
 const Welcome = () => {
   const [ischeckcreatenow, setIsCheckCreateNow] = useState(false);
   const [ischecklogin, setischecklogin] = useState(false);
+  const { setLoadingStartNow } = useContext(MainContext);
+
+  useEffect(() => {
+    setLoadingStartNow(false);
+  }, []);
 
   if (ischeckcreatenow || ischecklogin) {
     if (ischeckcreatenow) {

@@ -19,7 +19,7 @@ export const RenderInfoTemporaryNotice = ({
   const [showtriphistory, setShowTripHistory] = useState(false);
 
   return (
-    <div className="scrollbarstyle flex h-4/5 w-full flex-col gap-2 overflow-y-auto overflow-x-hidden pt-3">
+    <div className="scrollbarstyle flex h-4/5 w-full flex-col gap-2 overflow-y-auto overflow-x-hidden">
       {showTitle ? (
         <h2 className="text-center text-lg font-medium drop-shadow-md">
           Recent trip

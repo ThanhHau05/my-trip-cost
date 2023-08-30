@@ -1,4 +1,5 @@
 import type { Dispatch, ReactNode, SetStateAction } from 'react';
+import toast from 'react-hot-toast';
 import { GrClose } from 'react-icons/gr';
 import { useSelector } from 'react-redux';
 
@@ -25,9 +26,10 @@ export const NearestTrip = ({
       {btnClose ? (
         <GrClose
           className="absolute right-4 top-4 z-10 hidden cursor-pointer group-hover:block"
-          onClick={() =>
-            handleDeleteTripHistory(currentUserInformation.uid, data.id)
-          }
+          onClick={() => {
+            handleDeleteTripHistory(currentUserInformation.uid, data.id);
+            toast.success('Delete successfully!');
+          }}
         />
       ) : null}
       <div

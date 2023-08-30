@@ -40,7 +40,7 @@ export const NavigationBarMenu = ({
         onClick={() => setShowCreateTheTrip(true)}
         onMouseEnter={() => setWidthHover(true)}
         onMouseLeave={() => setWidthHover(false)}
-        className="group absolute -top-8 h-16 w-16 rounded-full border-8 border-purple-200 bg-white transition-all duration-200 hover:w-36"
+        className="group absolute -top-8 h-16 w-16 select-none rounded-full border-8 border-purple-200 bg-white transition-all duration-200 hover:w-36"
       >
         <div className="absolute left-[-21px] top-[17px] h-5 w-5 rounded-full bg-purple-200 before:absolute before:left-[-5px] before:top-[7px] before:h-full before:w-full before:rounded-tr-[14px] before:bg-white before:content-[''] after:absolute after:left-1.5 after:top-[17px] after:h-[9px] after:w-2/4  after:rotate-[336deg] after:bg-white after:content-['']" />
         <div className="absolute right-[-21px] top-[17px] h-5 w-5 rounded-full bg-purple-200 before:absolute before:right-[-5px] before:top-[7px] before:h-full before:w-full before:rounded-tl-[14px] before:bg-white before:content-[''] after:absolute after:right-1.5 after:top-[17px] after:h-[9px] after:w-2/4  after:rotate-[23deg] after:bg-white after:content-['']" />

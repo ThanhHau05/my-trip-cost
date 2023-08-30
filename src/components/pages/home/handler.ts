@@ -62,6 +62,7 @@ export const useHome = ({
           setRecentFriends(valueData.recentFriends);
         }
       }
+      setLoading(false);
     });
   };
   if (id === 0) {
@@ -76,24 +77,25 @@ export const useHome = ({
           setMasterUid(trip.tripmaster);
           setCheckReserveMoney(valueTrip.reservemoney || 0);
           if (valueTrip.status) {
-            setLoading(true);
             await router.push(`mytrip/${id}`);
             window.location.reload();
-          } else {
+          } else if (valueTrip.userlist) {
             const checkData = valueTrip.userlist.find(
               (item) => item.uid === uid,
             );
             if (checkData === undefined) {
               dispatch(TripActions.setCurrentIdJoinTrip(0));
+            } else {
+              const userlists: UserInformation[] = valueTrip.userlist;
+              const status = userlists.find((item) => item.status === false);
+              if (status === undefined) {
+                setDisabledStartTrip(false);
+              }
             }
           }
         }
-        const userlists: UserInformation[] = valueTrip.userlist;
-        const status = userlists.find((item) => item.status === false);
-        if (status === undefined) {
-          setDisabledStartTrip(false);
-        }
       }
+      setLoading(false);
     });
   }
 };
