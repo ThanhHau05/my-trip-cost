@@ -34,7 +34,7 @@ export const NavigationBarMenu = ({
   return (
     <div
       ref={showInfoUserRef}
-      className="absolute bottom-0 z-10 flex w-full items-center justify-around bg-white p-3 transition-all"
+      className="fixed bottom-0 z-10 flex w-full items-center justify-around bg-white p-3 transition-all sm:w-[400px]"
     >
       <button
         onClick={() => setShowCreateTheTrip(true)}
