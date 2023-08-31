@@ -1,4 +1,3 @@
-/* eslint-disable react/no-danger */
 import '../styles/global.css';
 import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
@@ -41,15 +40,11 @@ const ContainerMyApp = ({ Component, pageProps }: any) => {
           async
           src={`https://www.googletagmanager.com/gtag/js?id=${process.env.NEXT_PUBLIC_GOOGLE_ANALYTICS}`}
         />
-        <script
-          dangerouslySetInnerHTML={{
-            __html: `window.dataLayer = window.dataLayer || [];
+        <script>{`window.dataLayer = window.dataLayer || [];
   function gtag(){dataLayer.push(arguments);}
   gtag('js', new Date());
 
-  gtag('config', '${process.env.NEXT_PUBLIC_GOOGLE_ANALYTICS}');`,
-          }}
-        />
+  gtag('config', '${process.env.NEXT_PUBLIC_GOOGLE_ANALYTICS}');`}</script>
       </Head>
       {loadingstartnow ? <Loading /> : null}
       {finishthetrip ? <NotiFinishTheTrip value={finishthetrip} /> : null}
