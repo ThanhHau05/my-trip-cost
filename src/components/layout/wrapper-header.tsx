@@ -15,10 +15,10 @@ export const WrapperHeader = ({
     <div className="flex h-screen flex-col items-center justify-end overflow-y-hidden bg-slate-200">
       <div className="relative flex w-full flex-1 flex-col justify-end overflow-y-hidden sm:w-[400px]">
         <div className="absolute top-0 z-10 flex h-full w-full flex-col overflow-y-hidden bg-white">
-          <div className="relative h-full w-full shadow-xl">
+          <div className="relative h-full w-full overflow-hidden shadow-xl">
             <div className="fixed -top-8 h-20 w-20 rounded-full bg-purple-100 " />
             <div className="fixed left-[44%] top-2.5 h-36 w-36 rounded-full bg-purple-100 " />
-            <div className="absolute h-full w-full">
+            <div className="absolute h-full w-full overflow-hidden">
               <div className="h-20">{header}</div>
               <div
                 className={clsx(
