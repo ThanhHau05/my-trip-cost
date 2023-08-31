@@ -54,7 +54,7 @@ export const NavigationBarMenu = ({
           currentNumberOfNoti={currentNumberOfNoti}
           widthHover={widthhover}
         />
-        <div className="cursor-pointer">
+        <div className="cursor-pointer select-none">
           <Avatar
             cursorPointer
             size="36"
