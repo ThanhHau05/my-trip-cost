@@ -12,7 +12,7 @@ export const WrapperHeader = ({
   bgWhite?: boolean;
 }) => {
   return (
-    <div className="flex h-screen flex-col items-center justify-end bg-slate-200">
+    <div className="flex h-screen flex-col items-center justify-end overflow-y-hidden bg-slate-200">
       <div className="relative flex w-full flex-1 flex-col justify-end overflow-y-hidden sm:w-[400px]">
         <div className="absolute top-0 z-10 flex h-full w-full flex-col overflow-y-hidden bg-white">
           <div className="relative h-full w-full shadow-xl">
