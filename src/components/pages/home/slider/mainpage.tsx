@@ -11,7 +11,7 @@ export const MainPage = () => {
 
   return (
     <div className="h-full w-full rounded-t-[40px] bg-purple-200 pt-5">
-      <div className="scrollbarstyle flex h-[calc(100%-110px)] flex-col justify-start gap-4 overflow-auto">
+      <div className="scrollbarstyle flex h-[calc(100%-100px)] flex-col justify-start gap-3 overflow-auto">
         <div className="w-full px-5 pb-1">
           <h2 className="ml-2 text-sm font-medium uppercase text-gray-600 drop-shadow-md">
             Nearest Trip

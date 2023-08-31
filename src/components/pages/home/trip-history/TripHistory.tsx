@@ -12,7 +12,7 @@ export const TripHistory = ({
   setTripHistory: Dispatch<SetStateAction<SelectOptionsTrip | undefined>>;
 }) => {
   return (
-    <div className="fixed bottom-0 z-10 h-[calc(100%-80px)] w-full cursor-pointer rounded-t-[40px] bg-purple-200 pt-5 sm:w-[400px]">
+    <div className="absolute bottom-0 z-10 h-[calc(100%-80px)] w-full cursor-pointer rounded-t-[40px] bg-purple-200 pt-5 sm:w-[400px]">
       <div className="flex items-center justify-between px-5">
         <h2 className="text-xl font-medium drop-shadow-md">Trip History</h2>
       </div>
