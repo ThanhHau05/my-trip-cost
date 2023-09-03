@@ -103,7 +103,7 @@ export const DataFirebase = {
     const docRef = doc(db, 'UserInvitations', uid);
     const isCheck = await getDoc(docRef);
     if (isCheck.exists()) {
-      updateDoc(docRef, {
+      await updateDoc(docRef, {
         invitation: myFirebase.firestore.FieldValue.arrayUnion(data),
       });
     }
@@ -225,15 +225,11 @@ export const DataFirebase = {
     const docRef = doc(db, 'Trips', id.toString());
     const trip = await DataFirebase.GetTrip(id);
     if (trip) {
-      const cleanedData = data.filter(
-        (item) => item.money !== 0 || item.moneySuggest !== 0,
-      );
       let newValue: SelectOptionsInvoice[] = [];
       if (trip.invoice) {
         newValue = trip.invoice;
       }
-      newValue?.push(...cleanedData);
-
+      newValue?.push(...data);
       await setDoc(docRef, {
         trip: { ...trip, invoice: newValue },
       });
@@ -264,7 +260,7 @@ export const DataFirebase = {
       const newInvoice = invoice.filter((item) => {
         if (item.id === idInvoice) {
           newListMoney.push({
-            money: (item.money || item.moneySuggest) * item.qty,
+            money: item.totalMoney,
             uid: item.uid,
           });
           return false;

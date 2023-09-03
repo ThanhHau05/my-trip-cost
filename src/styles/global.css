@@ -31,8 +31,8 @@ h2, span, p {
 }
 
 .scrollbarstyle::-webkit-scrollbar {
-    width: 6px;
-    height: 8px;
+    width: 5px;
+    height: 5px;
 }
 
 .scrollbarstyle::-webkit-scrollbar-thumb {

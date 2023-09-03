@@ -1,9 +1,10 @@
 import { doc, onSnapshot, setDoc } from 'firebase/firestore';
-import type { Dispatch, RefObject, SetStateAction } from 'react';
+import type { Dispatch, SetStateAction } from 'react';
 import type { AnyAction } from 'redux';
 
 import type {
   SelectOptionsInvoice,
+  SelectOptionsPayees,
   SelectOptionsPeopleInVerticalMenu,
   SelectOptionsRenderDropDown,
   SelectOptionsTrip,
@@ -143,13 +144,16 @@ export const onSubmitAddInvoice = async ({
     if (trip) {
       const { userlist } = trip;
       const newuserlist = userlist.map((item1) => {
-        const valueFind = value?.find((item2) => item2.uid === item1.uid);
+        const valueFind = value.find((item2) => item2.uid === item1.uid);
         if (valueFind) {
           return {
             ...item1,
             totalmoney:
               (item1.totalmoney || 0) +
-              (valueFind.money + valueFind.moneySuggest) * valueFind.qty,
+              valueFind.listPayees.reduce(
+                (a, b) => a + (b.money + b.moneySuggest) * b.qty,
+                0,
+              ),
           };
         }
         return item1;
@@ -160,12 +164,8 @@ export const onSubmitAddInvoice = async ({
   if (value && value.length !== 0) {
     const promises = value.map(async (item) => {
       const userinfo = await DataFirebase.GetUserInfoInTrip(item.uid, id);
-      const { moneySuggest, qty, uid, other } = item;
       const idInvoice = handleRandomIdInvoice();
       const data: SelectOptionsInvoice = {
-        activity: item.activity,
-        money: item.money,
-        moneySuggest,
         payerImage: {
           url: userinfo?.photoURL.url || '',
           color: userinfo?.photoURL.color || '',
@@ -173,10 +173,10 @@ export const onSubmitAddInvoice = async ({
         },
         payerName: userinfo?.displayName || '',
         time: handleGetTimeAndDate(),
-        qty,
-        uid,
-        other,
+        uid: item.uid,
         id: idInvoice,
+        listPayees: item.listPayees,
+        totalMoney: item.totalMoney,
       };
       dataInvoice.push(data);
     });
@@ -217,25 +217,6 @@ export const handleOnChangeQuantity = (
   }
 };
 
-export const handleClickOutSideQuantity = (
-  inputRef: RefObject<HTMLInputElement>,
-  valueQuantity: string,
-  onChange: (value: string) => void,
-) => {
-  const handle = (event: any) => {
-    if (inputRef.current && !inputRef.current.contains(event.target)) {
-      if (valueQuantity === '') {
-        onChange('1');
-      }
-    }
-  };
-
-  document.addEventListener('mousedown', handle);
-  return () => {
-    document.removeEventListener('mousedown', handle);
-  };
-};
-
 export const handleOnChangeMoneySuggest = ({
   e,
   valueMoneySuggest,
@@ -261,12 +242,8 @@ export const onSubmitRenderUser = ({
   onSaveUserInfoToData,
   setUserUidClick,
   selectedpayerlist,
-  setActivity,
-  setMoney,
-  setMoneySuggest,
-  setQuantity,
-  setOthers,
-  activity,
+  useruidpayer,
+  handleChangeInfoRenderUser,
 }: {
   value: string;
   onSaveUserInfoToData: (
@@ -274,40 +251,16 @@ export const onSubmitRenderUser = ({
   ) => SelectOptionsInvoice[] | undefined;
   setUserUidClick: (value: string) => void;
   selectedpayerlist: SelectOptionsInvoice[];
-  setQuantity: (value: string) => void;
-  setMoney: Dispatch<
-    SetStateAction<{
-      value: string;
-      error: string;
-    }>
-  >;
-  setMoneySuggest: (value: number) => void;
-  setOthers: Dispatch<
-    SetStateAction<{
-      value: string;
-      error: string;
-    }>
-  >;
-  activity: string;
-  setActivity: (value: string) => void;
+  useruidpayer: string;
+  handleChangeInfoRenderUser: (value: SelectOptionsPayees | undefined) => void;
 }) => {
   onSaveUserInfoToData();
   setUserUidClick(value);
-  const values = selectedpayerlist.find((item) => item.uid === value);
-  if (values) {
-    setActivity(values.activity);
-    setMoney({ value: values.money.toString(), error: '' });
-    setMoneySuggest(values.moneySuggest);
-    setQuantity(values.qty.toString());
-    if (values.activity === 'others')
-      setOthers({ value: values.other || '', error: '' });
-  } else {
-    setMoney({ value: '', error: '' });
-    setActivity('shopping');
-    if (activity === 'others') setOthers({ value: '', error: '' });
-    setMoneySuggest(0);
-    setQuantity('1');
-  }
+
+  const data = selectedpayerlist
+    .find((item) => item.uid === useruidpayer)
+    ?.listPayees.find((item) => item.uid === value);
+  handleChangeInfoRenderUser(data);
 };
 
 export const handleCheckStatusTrip = (

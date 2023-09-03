@@ -14,9 +14,6 @@ export const Dropdown = ({
   defaultTitle,
   disabled,
   defaultImage,
-  image,
-  onClickImage,
-  title,
 }: {
   option: SelectOptionsRenderDropDown[];
   onClick: (
@@ -34,12 +31,14 @@ export const Dropdown = ({
     color?: string;
     text?: string;
   };
-  image?: boolean;
-  onClickImage?: (url?: string, color?: string, text?: string) => void;
-  title?: boolean;
 }) => {
   const [iconpointdown, setIconPointDown] = useState(false);
   const [valuetitle, setValueTitle] = useState('');
+  const [valueimage, setValueImage] = useState({
+    url: '',
+    color: '',
+    text: '',
+  });
 
   const _handleShowDropDown = () => {
     setIconPointDown(!iconpointdown);
@@ -58,15 +57,15 @@ export const Dropdown = ({
       text?: string;
     },
   ) => {
-    if (title) {
+    if (defaultTitle) {
       setValueTitle(valueTitle);
     }
-    if (onClickImage) {
-      onClickImage(
-        img?.url ? img.url : '',
-        img?.color ? img.color : '',
-        img?.text ? img.text : '',
-      );
+    if (defaultImage) {
+      setValueImage({
+        url: img?.url || '',
+        color: img?.color || '',
+        text: img?.text || '',
+      });
     }
     onClick(value, img);
     _handleShowDropDown();
@@ -77,6 +76,13 @@ export const Dropdown = ({
       const value = option.find((item) => item.value === defaultTitle);
       if (value) {
         setValueTitle(value?.title);
+        if (defaultImage) {
+          setValueImage({
+            url: value.image?.url || '',
+            color: value.image?.color || '',
+            text: value.image?.text || '',
+          });
+        }
       }
     }
   }, [defaultTitle]);
@@ -89,25 +95,25 @@ export const Dropdown = ({
         className={clsx(
           'relative h-12 w-full cursor-pointer rounded-xl bg-white shadow-md transition-all disabled:cursor-not-allowed',
           iconpointdown ? 'border-blue-600' : null,
-          image ? 'h-14' : null,
+          defaultImage ? 'h-14' : null,
         )}
       >
         <div className="flex items-center justify-center">
-          {image ? (
+          {defaultImage ? (
             <div className="ml-3">
               <Avatar
                 img={{
-                  url: defaultImage?.url,
-                  color: defaultImage?.color,
-                  text: defaultImage?.text,
+                  url: valueimage?.url,
+                  color: valueimage?.color,
+                  text: valueimage?.text,
                 }}
               />
             </div>
           ) : null}
           <span
             className={clsx(
-              'block w-full pr-10 text-left font-medium',
-              image ? 'pl-2' : 'pl-5',
+              'block w-full pr-10 text-left font-medium drop-shadow-md',
+              defaultImage ? 'pl-2' : 'pl-5',
             )}
           >
             {valuetitle}

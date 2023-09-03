@@ -20,7 +20,14 @@ export const OptionsCreateTheTrip = () => {
 
   const { setShowCreateTheTrip } = useContext(MainContext);
 
-  const [tripname, setTripName] = useState({ value: '', error: '' });
+  const date = new Date();
+
+  const [tripname, setTripName] = useState({
+    value: `Trip ${
+      date.getMonth() + 1 < 10 ? `0${date.getMonth() + 1}` : date.getMonth() + 1
+    }${date.getDate() < 10 ? `0${date.getDate()}` : date.getDate()}`,
+    error: '',
+  });
   const [companions, setCompanions] = useState({ value: '', error: '' });
   const [userlist, setUserList] = useState<UserInformation[]>([]);
   const [userlistadded, setUserListAdded] = useState<UserInformation[]>([]);

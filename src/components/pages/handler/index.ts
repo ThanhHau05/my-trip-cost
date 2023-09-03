@@ -5,10 +5,7 @@ export const handleTotalMoneyTheTrip = async (id: number) => {
   if (trip) {
     const totalInvoice = trip.invoice;
     if (totalInvoice) {
-      const total = totalInvoice.reduce(
-        (a, item) => a + item.money * item.qty + item.moneySuggest * item.qty,
-        0,
-      );
+      const total = totalInvoice.reduce((a, item) => a + item.totalMoney, 0);
       return total;
     }
   }
@@ -47,10 +44,11 @@ export const handleGetTimeAndDate = () => {
     hour -= 12;
   }
   const day = currentTimeAndDate.getDate();
+  const newDay = day < 10 ? `0${day}` : day;
   const month = currentTimeAndDate.getMonth() + 1;
   const newMonth = month < 10 ? `0${month}` : month;
   const year = currentTimeAndDate.getFullYear();
-  return `${hour}:${newMinutes} ${period} - ${newMonth}/${day}/${year}`;
+  return `${hour}:${newMinutes} ${period} - ${newMonth}/${newDay}/${year}`;
 };
 
 export const handleFormatCurrentcy = (money: number) => {

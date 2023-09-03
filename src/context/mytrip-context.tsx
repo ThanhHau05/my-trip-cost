@@ -6,7 +6,10 @@ import {
   handleConvertNumberTotextinVND,
   handleFormatCurrentcy,
 } from '@/components/pages/handler';
-import type { SelectOptionsInvoice } from '@/constants/select-options';
+import type {
+  SelectOptionsInvoice,
+  SelectOptionsPayees,
+} from '@/constants/select-options';
 
 interface MytripProps {
   activity: string;
@@ -45,6 +48,11 @@ interface MytripProps {
   onSaveUserInfoToData: (add?: boolean) => SelectOptionsInvoice[] | undefined;
   deletemoney: boolean;
   setDeleteMoney: Dispatch<SetStateAction<boolean>>;
+  qtysuggest: number;
+  setQtySuggest: Dispatch<SetStateAction<number>>;
+  useruidpayer: string;
+  setUserUidPayer: Dispatch<SetStateAction<string>>;
+  handleChangeInfoRenderUser: (data: SelectOptionsPayees | undefined) => void;
 }
 
 export const MyTripContext = createContext({} as MytripProps);
@@ -54,12 +62,18 @@ export const MyTripProvider = ({ children }: { children: ReactNode }) => {
   const [others, setOthers] = useState({ value: '', error: '' });
   const [money, setMoney] = useState({ value: '', error: '' });
   const [moneysuggest, setMoneySuggest] = useState(0);
-  const [quantity, setQuantity] = useState('1');
+  const [quantity, setQuantity] = useState('0');
+  const [qtysuggest, setQtySuggest] = useState(1);
   const [selectedpayerlist, setSelectedPayerList] = useState<
     SelectOptionsInvoice[]
   >([]);
   const [useruidclick, setUserUidClick] = useState('');
+  const [useruidpayer, setUserUidPayer] = useState('');
   const [deletemoney, setDeleteMoney] = useState(false);
+
+  useEffect(() => {
+    if (qtysuggest !== 0) setQuantity('');
+  }, [qtysuggest]);
 
   const handleChangeMoney = (e: string) => {
     if (e.length <= 9 && +e >= 0) {
@@ -77,7 +91,7 @@ export const MyTripProvider = ({ children }: { children: ReactNode }) => {
 
   const isCheck = () => {
     let isError = false;
-    if (!money.value && !moneysuggest) {
+    if (!money.value && !moneysuggest && (!quantity || !qtysuggest)) {
       isError = true;
       // setMoney({
       //   value: '',
@@ -112,66 +126,83 @@ export const MyTripProvider = ({ children }: { children: ReactNode }) => {
       toast.error('No information has been saved yet.');
       return undefined;
     }
+
     if (isCheck()) {
-      const value: SelectOptionsInvoice = {
+      const newValueListPayees: SelectOptionsPayees = {
         activity,
         money: +money.value,
-        moneySuggest: +moneysuggest,
+        moneySuggest: moneysuggest,
+        qty: +quantity || qtysuggest,
+        uid: useruidclick,
+        other: others.value,
+      };
+      const valueUser = selectedpayerlist.find(
+        (item) => item.uid === useruidpayer,
+      );
+      if (valueUser) {
+        let listPayees;
+        if (valueUser.listPayees.find((item) => item.uid === useruidclick)) {
+          const newvalue: SelectOptionsPayees[] = valueUser.listPayees.map(
+            (item) => {
+              if (item.uid === useruidclick) {
+                return newValueListPayees;
+              }
+              return item;
+            },
+          );
+          listPayees = newvalue;
+        } else {
+          listPayees = [...valueUser.listPayees, newValueListPayees];
+        }
+        const totalMoney = listPayees.reduce(
+          (a, b) => a + (+b.money + b.moneySuggest) * b.qty,
+          0,
+        );
+        const value: SelectOptionsInvoice = {
+          payerImage: {
+            color: '',
+            text: '',
+            url: '',
+          },
+          payerName: '',
+          time: '',
+          uid: useruidpayer,
+          id: '',
+          listPayees,
+          totalMoney,
+        };
+
+        const newvalue = selectedpayerlist.map((item) => {
+          if (item.uid === useruidpayer) {
+            return value;
+          }
+          return item;
+        });
+        toast.success('Saved!');
+        setSelectedPayerList(newvalue);
+        return newvalue;
+      }
+
+      const value: SelectOptionsInvoice = {
         payerImage: {
           color: '',
           text: '',
           url: '',
         },
         payerName: '',
-        qty: +quantity,
         time: '',
-        uid: useruidclick,
-        other: others.value,
+        uid: useruidpayer,
         id: '',
+        listPayees: [newValueListPayees],
+        totalMoney:
+          (newValueListPayees.money + newValueListPayees.moneySuggest) *
+          newValueListPayees.qty,
       };
-      if (
-        selectedpayerlist &&
-        !selectedpayerlist.find((item) => item.uid === useruidclick)
-      ) {
+
+      if (selectedpayerlist.length !== 0) {
         toast.success('Saved!');
         setSelectedPayerList((e) => [...e, value]);
         return [...selectedpayerlist, value];
-      }
-      if (
-        selectedpayerlist &&
-        selectedpayerlist.find((item) => item.uid === useruidclick)
-      ) {
-        let isCheckValue = false;
-        const values = selectedpayerlist.map((item) => {
-          if (
-            item.uid === useruidclick &&
-            (item.money !== +money.value || item.moneySuggest !== +moneysuggest)
-          ) {
-            isCheckValue = true;
-            return {
-              activity,
-              money: +money.value,
-              moneySuggest: +moneysuggest,
-              payerImage: {
-                color: '',
-                text: '',
-                url: '',
-              },
-              payerName: '',
-              qty: +quantity,
-              time: '',
-              uid: useruidclick,
-              other: others.value,
-              id: '',
-            };
-          }
-          return item;
-        });
-        if (isCheckValue) {
-          toast.success('Saved!');
-        }
-        setSelectedPayerList(values);
-        return values;
       }
       toast.success('Saved!');
       setSelectedPayerList([value]);
@@ -187,40 +218,38 @@ export const MyTripProvider = ({ children }: { children: ReactNode }) => {
   }, [moneysuggest]);
 
   useEffect(() => {
-    const value = selectedpayerlist.find((item) => item.uid === useruidclick);
-    if (value) {
-      setActivity(value.activity);
-      setMoney({ value: value.money.toString(), error: '' });
-      setMoneySuggest(value.moneySuggest);
-      setQuantity(value.qty.toString());
-      if (value.activity === 'others')
-        setOthers({ value: value.other || '', error: '' });
+    const value = selectedpayerlist
+      .find((item) => item.uid === useruidpayer)
+      ?.listPayees.find((item) => item.uid === useruidclick);
+    handleChangeInfoRenderUser(value);
+  }, [selectedpayerlist, useruidclick, useruidpayer]);
+
+  const handleChangeInfoRenderUser = (
+    data: SelectOptionsPayees | undefined,
+  ) => {
+    if (data) {
+      setActivity(data.activity);
+      setMoney({
+        value: data.money === 0 ? '' : data.money.toString(),
+        error: '',
+      });
+      setMoneySuggest(data.moneySuggest);
+      if (data.qty <= 10) {
+        setQtySuggest(data.qty);
+      } else {
+        setQuantity(data.qty.toString());
+      }
+      if (data.activity === 'others')
+        setOthers({ value: data.other || '', error: '' });
     } else {
       setMoney({ value: '', error: '' });
       setActivity('shopping');
       if (activity === 'others') setOthers({ value: '', error: '' });
       setMoneySuggest(0);
-      setQuantity('1');
+      setQuantity('');
+      setQtySuggest(1);
     }
-  }, [selectedpayerlist, useruidclick]);
-
-  useEffect(() => {
-    if (
-      selectedpayerlist.find(
-        (item) =>
-          item.uid === useruidclick &&
-          (item.money !== +money.value || item.moneySuggest !== moneysuggest),
-      )
-    ) {
-      if (money.value === '' || moneysuggest === 0) {
-        const values = selectedpayerlist.filter(
-          (item) => item.uid !== useruidclick,
-        );
-        setSelectedPayerList(values);
-        toast.success('Saved!');
-      }
-    }
-  }, [money.value, moneysuggest, useruidclick, deletemoney]);
+  };
 
   const value = {
     activity,
@@ -243,6 +272,11 @@ export const MyTripProvider = ({ children }: { children: ReactNode }) => {
     onSaveUserInfoToData,
     setDeleteMoney,
     deletemoney,
+    qtysuggest,
+    setQtySuggest,
+    useruidpayer,
+    setUserUidPayer,
+    handleChangeInfoRenderUser,
   };
   return (
     <MyTripContext.Provider value={value}>{children}</MyTripContext.Provider>

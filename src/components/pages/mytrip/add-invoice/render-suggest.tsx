@@ -1,28 +1,30 @@
 import clsx from 'clsx';
 import { useContext } from 'react';
 
-import { PRICEOPTIONS } from '@/constants/select-options';
+import type { SelectOptionsObject } from '@/constants/select-options';
 import { MyTripContext } from '@/context/mytrip-context';
 
 import { handleOnChangeMoneySuggest } from '../handler';
 
 export const RenderSuggest = ({
-  valueMoneySuggest,
+  value,
   onChange,
+  option,
 }: {
-  valueMoneySuggest: number;
+  value: number;
   onChange: (value: number) => void;
+  option: SelectOptionsObject[];
 }) => {
   const { setDeleteMoney } = useContext(MyTripContext);
 
   return (
     <div className="grid grid-cols-3 gap-2">
-      {PRICEOPTIONS.map((item) => (
+      {option.map((item) => (
         <h2
           key={item.value}
           className={clsx(
             'cursor-pointer select-none rounded-md px-2 py-1 text-center font-medium shadow-sm drop-shadow-sm',
-            valueMoneySuggest === item.value
+            value === item.value
               ? 'bg-blue-500 text-white'
               : 'bg-white text-gray-800',
           )}
@@ -31,7 +33,7 @@ export const RenderSuggest = ({
               e: +item.value,
               onChange,
               setDeleteMoney,
-              valueMoneySuggest,
+              valueMoneySuggest: value,
             })
           }
         >

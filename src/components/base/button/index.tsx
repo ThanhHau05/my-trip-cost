@@ -55,7 +55,7 @@ export const ContainerButton = ({
       disabled={disabled}
       onClick={onClick}
       className={clsx(
-        'flex h-full w-full items-center rounded-full font-bold shadow-md drop-shadow-md transition-all hover:shadow-xl disabled:cursor-not-allowed disabled:bg-slate-400 disabled:hover:shadow-md',
+        'flex h-full w-full select-none items-center rounded-full font-bold shadow-md drop-shadow-md transition-all hover:shadow-xl disabled:cursor-not-allowed disabled:bg-slate-400 disabled:hover:shadow-md',
         bgWhite ? 'bg-white text-gray-900' : 'bg-blue-600 text-white',
         Icon ? 'justify-start' : ' justify-center',
         textSmall ? 'text-xs' : 'text-sm',

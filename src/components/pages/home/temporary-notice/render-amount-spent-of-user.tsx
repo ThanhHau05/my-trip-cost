@@ -7,7 +7,7 @@ export const RenderAmountSpentOfUser = ({
   data: UserInformation[];
 }) => {
   return (
-    <>
+    <div className="flex flex-col gap-2">
       {data.map((item) => (
         <AmountOfMoneyOfUser
           key={item.uid}
@@ -19,6 +19,6 @@ export const RenderAmountSpentOfUser = ({
           id={item.id || 0}
         />
       ))}
-    </>
+    </div>
   );
 };
