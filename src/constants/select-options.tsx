@@ -32,17 +32,23 @@ export interface SelectOptionsPeopleInVerticalMenu {
   id: number;
 }
 
-export interface SelectOptionsInvoice {
-  id: string;
-  payerName: string;
-  payerImage: SelectOptionsAvatar;
+export interface SelectOptionsPayees {
   activity: string;
   other?: string;
   qty: number;
   money: number;
   moneySuggest: number;
+  uid: string;
+}
+
+export interface SelectOptionsInvoice {
+  id: string;
+  payerName: string;
+  payerImage: SelectOptionsAvatar;
   time: string;
   uid: string;
+  totalMoney: number;
+  listPayees: SelectOptionsPayees[];
 }
 
 export interface SelectOptionsTrip {
@@ -173,9 +179,24 @@ export const ACTIVITES: SelectOptionsRenderDropDown[] = [
 export const PRICEOPTIONS: SelectOptionsObject[] = [
   { title: '10.000', value: 10000 },
   { title: '20.000', value: 20000 },
+  { title: '30.000', value: 30000 },
   { title: '40.000', value: 40000 },
   { title: '50.000', value: 50000 },
+  { title: '60.000', value: 60000 },
   { title: '100.000', value: 100000 },
   { title: '200.000', value: 200000 },
   { title: '500.000', value: 500000 },
+];
+
+export const QTYOPTIONS: SelectOptionsObject[] = [
+  { title: '1', value: 1 },
+  { title: '2', value: 2 },
+  { title: '3', value: 3 },
+  { title: '4', value: 4 },
+  { title: '5', value: 5 },
+  { title: '6', value: 6 },
+  { title: '7', value: 7 },
+  { title: '8', value: 8 },
+  { title: '9', value: 9 },
+  { title: '10', value: 10 },
 ];

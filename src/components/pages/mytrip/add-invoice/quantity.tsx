@@ -1,24 +1,45 @@
-import { useEffect, useRef } from 'react';
+import { useContext } from 'react';
 
-import { handleClickOutSideQuantity, handleOnChangeQuantity } from '../handler';
+import { Input } from '@/components/base';
+import {
+  QTYOPTIONS,
+  type SelectOptionsRenderDropDown,
+} from '@/constants/select-options';
+import { MyTripContext } from '@/context/mytrip-context';
+
+import { RenderSuggest } from './render-suggest';
+import { RenderUserAddInvoice } from './render-user';
 
 export const Quantity = ({
   valueQuantity,
   onChange,
+  payerlist,
 }: {
   valueQuantity: string;
   onChange: (value: string) => void;
+  payerlist: SelectOptionsRenderDropDown[];
 }) => {
-  const inputRef = useRef<HTMLInputElement>(null);
-
-  useEffect(() => {
-    handleClickOutSideQuantity(inputRef, valueQuantity, onChange);
-  }, [valueQuantity]);
+  const { qtysuggest, setQtySuggest } = useContext(MyTripContext);
   return (
-    <div className="h-8">
-      <div className="flex h-full items-center justify-between">
-        <h2 className="select-none font-medium drop-shadow-md">Quantity</h2>
-        <div ref={inputRef}>
+    <div>
+      <h2 className="select-none font-medium drop-shadow-md">Quantity</h2>
+      <RenderUserAddInvoice data={payerlist} />
+      <Input
+        title="Qty"
+        value={valueQuantity}
+        onChangeText={onChange}
+        otherType="number"
+        disabled={qtysuggest !== 0}
+        placeholder="Ex: 11"
+      />
+      <div className="mt-4">
+        <RenderSuggest
+          option={QTYOPTIONS}
+          onChange={setQtySuggest}
+          value={qtysuggest}
+        />
+      </div>
+      {/* <div>
           <input
             type="number"
             className="h-8 w-20 rounded-lg pl-2 outline-none drop-shadow-md"
@@ -27,8 +48,7 @@ export const Quantity = ({
             onChange={(e) => handleOnChangeQuantity(e.target.value, onChange)}
             value={valueQuantity}
           />
-        </div>
-      </div>
+        </div> */}
     </div>
   );
 };

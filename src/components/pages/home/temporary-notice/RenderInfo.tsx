@@ -19,7 +19,7 @@ export const RenderInfoTemporaryNotice = ({
   const [showtriphistory, setShowTripHistory] = useState(false);
 
   return (
-    <div className="scrollbarstyle flex h-4/5 w-full flex-col gap-2 overflow-y-auto overflow-x-hidden">
+    <div className="scrollbarstyle flex h-[86%] w-full flex-col gap-2 overflow-y-auto overflow-x-hidden px-3">
       {showTitle ? (
         <h2 className="text-center text-lg font-medium drop-shadow-md">
           Recent trip
@@ -43,13 +43,13 @@ export const RenderInfoTemporaryNotice = ({
       </span>
       <span>
         Total amount spent:{' '}
-        <h2 className="inline-block font-bold drop-shadow-md">
+        <h2 className="inline-block text-lg font-bold drop-shadow-md">
           {data.totalmoney ? handleFormatCurrentcy(data.totalmoney) : 0} VND
         </h2>
       </span>
       <span>
         Reserve Money:{' '}
-        <h2 className="inline-block font-bold drop-shadow-md">
+        <h2 className="inline-block text-lg font-bold drop-shadow-md">
           {data.reservemoney ? handleFormatCurrentcy(data.reservemoney) : 0} VND
         </h2>
       </span>
@@ -72,7 +72,7 @@ export const RenderInfoTemporaryNotice = ({
         title="Spending history"
       >
         <div className="pb-3">
-          <RenderInvoice data={data.invoice || []} />
+          <RenderInvoice data={data.invoice || []} userList={data.userlist} />
         </div>
       </RenderShowInfo>
     </div>

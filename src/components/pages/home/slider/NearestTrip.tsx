@@ -39,7 +39,7 @@ export const NearestTrip = ({
         <h2 className="mb-3 text-2xl font-bold">{data.tripname}</h2>
         <div className="flex flex-col gap-3">
           <TripValue title="Total cost:">
-            <span className="rounded-lg border-2 border-slate-500 bg-gray-50 px-2 py-1 text-lg font-bold text-gray-900/90">
+            <span className="rounded-lg border-2 border-slate-500 bg-gray-50 px-2 py-1 text-lg font-bold text-gray-800/90">
               {data.totalmoney ? handleFormatCurrentcy(+data.totalmoney) : 0}{' '}
               VND
             </span>

@@ -49,14 +49,16 @@ export const Input: FC<InputProps> = ({
   };
   return (
     <div>
-      <h2
-        className={clsx(
-          'pb-3 font-medium drop-shadow-md',
-          titleCenter ? 'text-center' : null,
-        )}
-      >
-        {title}
-      </h2>
+      {title ? (
+        <h2
+          className={clsx(
+            'pb-3 font-medium drop-shadow-md',
+            titleCenter ? 'text-center' : null,
+          )}
+        >
+          {title}
+        </h2>
+      ) : null}
       <div className="relative">
         <input
           ref={inputRef}

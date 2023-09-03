@@ -14,15 +14,15 @@ export const RenderShowInfo = ({
   title: string;
 }) => {
   return (
-    <div className="flex flex-col gap-2">
-      <div className="flex items-center">
-        <h2
-          className="inline-block cursor-pointer select-none font-medium hover:underline hover:underline-offset-2"
-          onClick={() => setShow(!show)}
-        >
+    <div>
+      <div
+        className="group mb-2 inline-block cursor-pointer"
+        onClick={() => setShow(!show)}
+      >
+        <h2 className="inline-block select-none font-medium group-hover:underline group-hover:underline-offset-2">
           {title}
         </h2>
-        <div className="ml-1 mt-1 inline-block text-lg font-medium">
+        <div className="ml-1 inline-block text-lg font-medium">
           <BsCaretDown
             className={clsx(
               'inline-block transition-all duration-100',

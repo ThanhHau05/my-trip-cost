@@ -3,13 +3,18 @@ import { useContext } from 'react';
 import { Toaster } from 'react-hot-toast';
 
 import { Dropdown, Input } from '@/components/base';
-import { ACTIVITES } from '@/constants/select-options';
+import type { SelectOptionsRenderDropDown } from '@/constants/select-options';
+import { ACTIVITES, PRICEOPTIONS } from '@/constants/select-options';
 import { MyTripContext } from '@/context/mytrip-context';
 
 import { Quantity } from './quantity';
 import { RenderSuggest } from './render-suggest';
 
-export const OptionsUser = () => {
+export const OptionsUser = ({
+  payerlist,
+}: {
+  payerlist: SelectOptionsRenderDropDown[];
+}) => {
   const {
     activity,
     setActivity,
@@ -24,31 +29,35 @@ export const OptionsUser = () => {
     handleChangeMoney,
     setMoneySuggest,
     setDeleteMoney,
+    qtysuggest,
   } = useContext(MyTripContext);
 
   return (
     <div className="relative flex h-full flex-col items-center justify-between">
       <Toaster />
-      <div className="mb-5 mt-3 h-full w-full">
-        <div className="scrollbarstyle h-[calc(100%-200px)] overflow-auto  pl-3 pr-2">
+      <div className="mb-5 h-full w-full">
+        <div className="scrollbarstyle mt-2 h-[calc(100%-200px)] overflow-auto pb-3 pl-3 pr-2">
+          <Quantity
+            onChange={setQuantity}
+            valueQuantity={quantity}
+            payerlist={payerlist}
+          />
           <div className="mt-2">
             <h2 className="mb-2 font-medium">Activities</h2>
-            <Dropdown
-              defaultTitle={activity}
-              option={ACTIVITES}
-              onClick={setActivity}
-              title
-            />
-            {activity === 'others' ? (
-              <Input
-                onChangeText={(e) => setOthers({ value: e, error: '' })}
-                value={others.value}
-                error={others.error}
-                placeholder="Enter activity"
+            <div className="flex flex-col gap-3">
+              <Dropdown
+                defaultTitle={activity}
+                option={ACTIVITES}
+                onClick={setActivity}
               />
-            ) : null}
-            <div className="mt-3">
-              <Quantity onChange={setQuantity} valueQuantity={quantity} />
+              {activity === 'others' ? (
+                <Input
+                  onChangeText={(e) => setOthers({ value: e, error: '' })}
+                  value={others.value}
+                  error={others.error}
+                  placeholder="Enter activity"
+                />
+              ) : null}
             </div>
           </div>
           <div className="mt-2">
@@ -63,7 +72,7 @@ export const OptionsUser = () => {
               onRemoveText={() => setDeleteMoney(true)}
             />
             <h2 className="ml-2 mt-2 font-medium text-gray-700">
-              {valueMoney} VNĐ {`x ${quantity}`}
+              {valueMoney} VNĐ {`x ${quantity || qtysuggest}`}
             </h2>
             <h2 className="ml-2 text-sm font-medium text-gray-700">
               {valueMoneyText}
@@ -78,8 +87,9 @@ export const OptionsUser = () => {
               </span>
             </h2>
             <RenderSuggest
+              option={PRICEOPTIONS}
               onChange={setMoneySuggest}
-              valueMoneySuggest={moneysuggest}
+              value={moneysuggest}
             />
           </div>
         </div>

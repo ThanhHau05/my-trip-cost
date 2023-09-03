@@ -13,16 +13,12 @@ export const RenderUserAddInvoice = ({
   data: SelectOptionsRenderDropDown[];
 }) => {
   const {
-    activity,
-    setActivity,
-    setOthers,
-    setQuantity,
     selectedpayerlist,
     onSaveUserInfoToData,
     setUserUidClick,
-    setMoneySuggest,
-    setMoney,
     useruidclick,
+    useruidpayer,
+    handleChangeInfoRenderUser,
   } = useContext(MyTripContext);
   useEffect(() => {
     if (data.length !== 0) {
@@ -31,20 +27,32 @@ export const RenderUserAddInvoice = ({
   }, [data]);
 
   return (
-    <div className="px-3">
-      <div className="scrollbarstyle w-full overflow-x-auto pb-3 pt-10">
-        <div className="flex items-center justify-start gap-2">
-          {data.map((item, index) => (
+    <div>
+      <div className="scrollbarstyle w-full overflow-x-auto">
+        <div className="flex items-center justify-start gap-2 pb-3 pt-1">
+          {data.map((item) => (
             <div
               key={item.value}
               className="relative z-20 inline-block cursor-pointer drop-shadow-md"
             >
-              <div className="flex h-[88px] flex-col items-center justify-between">
+              <div
+                onClick={() =>
+                  onSubmitRenderUser({
+                    value: item.value,
+                    onSaveUserInfoToData,
+                    selectedpayerlist,
+                    setUserUidClick,
+                    useruidpayer,
+                    handleChangeInfoRenderUser,
+                  })
+                }
+                className="flex h-[88px] flex-col items-center justify-between"
+              >
                 <div
                   className={clsx(
-                    'relative inline-block rounded-xl',
+                    'relative flex w-14 justify-center rounded-xl',
                     item.value === useruidclick ? ' bg-slate-200 p-1' : 'pt-1',
-                    index === data.length - 1 ? 'pr-1' : null,
+                    // index === data.length - 1 ? 'pr-1' : null,
                   )}
                 >
                   <Avatar
@@ -54,20 +62,6 @@ export const RenderUserAddInvoice = ({
                       color: item.image?.url ? '' : item.image?.color,
                       text: item.image?.url ? '' : item.title[0]?.toUpperCase(),
                     }}
-                    onClick={() =>
-                      onSubmitRenderUser({
-                        value: item.value,
-                        activity,
-                        onSaveUserInfoToData,
-                        selectedpayerlist,
-                        setActivity,
-                        setMoney,
-                        setMoneySuggest,
-                        setOthers,
-                        setQuantity,
-                        setUserUidClick,
-                      })
-                    }
                   />
                 </div>
                 <span

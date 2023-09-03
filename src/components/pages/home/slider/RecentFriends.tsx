@@ -27,7 +27,7 @@ const RenderUser = ({ data }: { data: UserInformation[] }) => {
       {data.map((item) => (
         <div
           key={item.uid}
-          className="flex items-center justify-start gap-3 rounded-lg bg-purple-50 px-3 py-2 shadow"
+          className="flex items-center justify-start gap-3 rounded-lg bg-slate-50 px-3 py-2 shadow"
         >
           <Avatar
             img={{
