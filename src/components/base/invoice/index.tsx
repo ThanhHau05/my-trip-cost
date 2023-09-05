@@ -50,7 +50,7 @@ export const Invoice = ({
   };
 
   return (
-    <div className="group relative z-10 mt-4 flex items-center justify-between rounded-xl border bg-slate-100/20 px-2 pb-3 pt-4 shadow drop-shadow-md">
+    <div className="group relative z-10 mt-4 flex items-center justify-between rounded-xl border bg-slate-100/70 px-2 pb-3 pt-4 shadow drop-shadow-md">
       <div className="absolute -top-3 flex h-3 w-full justify-center">
         <div className="h-full w-0.5 bg-gray-800 shadow" />
       </div>

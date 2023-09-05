@@ -130,7 +130,7 @@ export const handleCheckReserveMoney = async (id: number, value: string) => {
         },
       });
     }
-  } else {
+  } else if (+value > 0 && +value < 100000) {
     await setDoc(docRef, {
       trip: {
         ...trip,

@@ -173,6 +173,12 @@ export const DataFirebase = {
     const isCheck = await getDoc(docRef);
     if (!isCheck.exists()) {
       await setDoc(docRef, { trip: data }, { merge: true });
+    } else {
+      await setDoc(
+        docRef,
+        { trip: { ...isCheck.data(), data } },
+        { merge: true },
+      );
     }
   },
   GetTrip: async (id: number) => {

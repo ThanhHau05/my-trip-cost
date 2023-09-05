@@ -8,6 +8,7 @@ import type {
   SelectOptionsPeopleInVerticalMenu,
 } from '@/constants/select-options';
 import { MainContext } from '@/context/main-context';
+import { ImagesTrip } from '@/public/images/trip';
 import { selector } from '@/redux';
 
 import { AddInvoice } from './add-invoice';
@@ -60,19 +61,26 @@ export const ContainerTripDetail = () => {
         bgWhite
         header={<TripHeader money={totalmoney} reservemoney={reservemoney} />}
       >
-        <RenderVerticalMenu
-          show={showverticalmenu}
-          tripName={tripname}
-          uidMaster={uidmaster}
-          valueUserInvMenu={valueuserinvmenu}
-          id={currentIdJoinTrip}
-          uid={currentUserInformation.uid}
-        />
-        <AddInvoice show={showaddinvoice} />
-        <RenderInvoiceHistory
-          starttime={starttime}
-          valueInvoice={valueInvoice}
-        />
+        <div className="relative h-full w-full rounded-t-[35px]">
+          <img
+            src={ImagesTrip.Background.src}
+            alt=""
+            className="absolute w-full rounded-t-[35px]"
+          />
+          <RenderVerticalMenu
+            show={showverticalmenu}
+            tripName={tripname}
+            uidMaster={uidmaster}
+            valueUserInvMenu={valueuserinvmenu}
+            id={currentIdJoinTrip}
+            uid={currentUserInformation.uid}
+          />
+          <AddInvoice show={showaddinvoice} />
+          <RenderInvoiceHistory
+            starttime={starttime}
+            valueInvoice={valueInvoice}
+          />
+        </div>
       </WrapperHeader>
     </>
   );

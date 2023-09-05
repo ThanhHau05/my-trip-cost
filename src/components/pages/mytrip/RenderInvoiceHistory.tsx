@@ -33,12 +33,12 @@ export const RenderInvoiceHistory = ({
   }, [currentIdJoinTrip]);
 
   return (
-    <div className="relative h-full w-full rounded-t-[40px] pt-5 shadow">
-      <div className="border_welcome_top absolute bottom-14 right-0 h-56 w-40 bg-teal-500" />
+    <div className="relative h-full w-full rounded-t-[35px] pt-5 shadow">
+      {/* <div className="border_welcome_top absolute bottom-14 right-0 h-56 w-40 bg-teal-500" /> */}
       <div className="relative z-10 h-full w-full">
-        <div className="border_welcome_bottom_status_trip absolute left-0 top-4 z-0 h-56 w-40 bg-teal-500" />
+        {/* <div className="border_welcome_bottom_status_trip absolute left-0 top-4 z-0 h-56 w-40 bg-teal-500" /> */}
         <div className="scrollbarstyle flex h-[calc(100%-73px)] w-full flex-col overflow-auto rounded-t-2xl pb-5 pl-3 pr-2">
-          <div className="z-10 flex select-none items-center rounded-2xl bg-slate-200/70 py-2 shadow drop-shadow-md">
+          <div className="z-10 flex select-none items-center rounded-2xl bg-slate-100/70 py-2 shadow drop-shadow-md">
             <div className="ml-6 mr-3 inline-block h-3 w-3 rounded-full bg-gray-800" />
             <div className="flex flex-col">
               <span className="text-lg">Start the trip</span>

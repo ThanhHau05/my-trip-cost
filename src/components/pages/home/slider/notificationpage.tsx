@@ -9,7 +9,7 @@ export const NotificationPage = ({
   currentData: SelectOptionsInvitation[];
 }) => {
   return (
-    <div className="h-full w-full rounded-t-[40px] bg-purple-200">
+    <div className="h-full w-full rounded-t-[35px] bg-purple-200">
       {currentData.length !== 0 ? (
         <RenderInvitation data={currentData} />
       ) : (
@@ -30,8 +30,8 @@ export const RenderInvitation = ({
   data: SelectOptionsInvitation[];
 }) => {
   return (
-    <div className="h-[calc(100%-46px)] w-full py-3">
-      <div className="scroll_invitation flex h-full flex-col items-center justify-start gap-2 overflow-auto rounded-3xl px-3">
+    <div className="h-[calc(100%-96px)] w-full pt-4">
+      <div className="scroll_invitation flex h-full flex-col items-center justify-start gap-2 overflow-auto px-3 pb-3">
         {data.map((item) => (
           <Invitation
             key={item.tripid}
