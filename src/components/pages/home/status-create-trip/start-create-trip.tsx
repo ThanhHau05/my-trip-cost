@@ -2,14 +2,10 @@ import { useContext, useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 
 import { Button } from '@/components/base';
-import type {
-  SelectOptionsTrip,
-  UserInformation,
-} from '@/constants/select-options';
 import { MainContext } from '@/context/main-context';
 import { selector } from '@/redux';
 
-import { handleCheckReserveMoney, handleGetData, onStartTrip } from './handler';
+import { handleCheckReserveMoney, onStartTrip } from './handler';
 import { RenderoptionStartCreateTrip } from './RenderOption';
 
 export const StatusCreateTrip = ({
@@ -25,15 +21,7 @@ export const StatusCreateTrip = ({
 
   const { setConentConfirm, setLoadingStartNow } = useContext(MainContext);
 
-  const [data, setData] = useState<SelectOptionsTrip>();
-  const [userlist, setUserList] = useState<UserInformation[]>([]);
   const [reservemoney, setReserveMoney] = useState({ value: '', error: '' });
-
-  useEffect(() => {
-    if (currentIdJoinTrip) {
-      handleGetData(currentIdJoinTrip, setData);
-    }
-  }, [currentIdJoinTrip]);
 
   useEffect(() => {
     handleCheckReserveMoney(currentIdJoinTrip, reservemoney.value);
@@ -41,16 +29,13 @@ export const StatusCreateTrip = ({
 
   return (
     <div className="relative z-10 h-full">
-      <div className="relative flex h-full w-full flex-col justify-between rounded-t-[40px] bg-white px-5 pt-5">
+      <div className="relative flex h-full w-full flex-col justify-between rounded-t-[35px] bg-white px-5 pt-5">
         <div className="border_welcome_bottom_status_trip absolute bottom-14 left-0 h-56 w-40 bg-teal-500" />
         <div className="border_welcome_top absolute right-0 top-10 h-56 w-40 bg-teal-500" />
         <RenderoptionStartCreateTrip
-          data={data}
           masterUid={masterUid}
           reservemoney={reservemoney}
           setReserveMoney={setReserveMoney}
-          setUserList={setUserList}
-          userlist={userlist}
         />
         <div>
           <div className="mb-9 flex h-12 w-full items-center justify-center gap-3">

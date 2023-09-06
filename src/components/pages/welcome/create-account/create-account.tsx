@@ -50,7 +50,7 @@ export const CreateAccount = ({
             Create Account
           </h2>
         </div>
-        <div className="absolute top-1/4 h-[536px] w-full rounded-t-[40px] bg-slate-100 shadow-md">
+        <div className="absolute top-1/4 h-[536px] w-full rounded-t-[35px] bg-slate-100 shadow-md">
           <div className="border_welcome_bottom absolute bottom-8 left-0 h-56 w-44 bg-teal-500" />
           <div className="border_welcome_top absolute right-0 top-9 h-56 w-40 bg-teal-500" />
           <div className="absolute top-[-70px] z-10 flex h-full w-full flex-col items-center">

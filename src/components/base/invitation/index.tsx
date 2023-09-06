@@ -42,7 +42,7 @@ export const Invitation = ({
   };
 
   return (
-    <div className="w-full rounded-3xl border bg-slate-50 px-5 py-3 shadow-md">
+    <div className="w-full rounded-2xl border bg-slate-50 px-5 py-3 shadow-md">
       <div className="flex flex-col items-start gap-1">
         <h2 className="text-sm font-medium">Invitation to Join the Trip</h2>
         <h2 className="text-gray-800">

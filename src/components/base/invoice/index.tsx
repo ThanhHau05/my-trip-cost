@@ -1,4 +1,5 @@
 /* eslint-disable no-nested-ternary */
+import clsx from 'clsx';
 import { useEffect, useMemo, useState } from 'react';
 import { GrClose } from 'react-icons/gr';
 import { useSelector } from 'react-redux';
@@ -24,7 +25,15 @@ export const Invoice = ({
   userList: UserInformation[];
 }) => {
   const { currentIdJoinTrip } = useSelector(selector.trip);
-  const { listPayees, payerImage, payerName, time, totalMoney, id } = data;
+  const {
+    listPayees,
+    payerImage,
+    payerName,
+    time,
+    totalMoney,
+    id,
+    leaveTheTrip,
+  } = data;
 
   const valueMoney = useMemo(() => {
     return handleFormatCurrentcy(totalMoney);
@@ -33,16 +42,16 @@ export const Invoice = ({
   const [userPayees, setUserPayees] = useState<JSX.Element>();
 
   useEffect(() => {
-    // Thực hiện RenderUserPayees và lưu kết quả vào state
-    async function fetchUserPayees() {
+    async function fetchUserPayees(value: SelectOptionsPayees[]) {
       const userPayeesElement = await RenderUserPayees({
-        data: listPayees,
+        data: value,
         userList,
       });
       setUserPayees(userPayeesElement);
     }
-
-    fetchUserPayees();
+    if (listPayees) {
+      fetchUserPayees(listPayees);
+    }
   }, [listPayees, userList]);
 
   const onDeleteInvoice = async (idInvoice: string) => {
@@ -50,11 +59,11 @@ export const Invoice = ({
   };
 
   return (
-    <div className="group relative z-10 mt-4 flex items-center justify-between rounded-xl border bg-slate-100/20 px-2 pb-3 pt-4 shadow drop-shadow-md">
-      <div className="absolute -top-3 flex h-3 w-full justify-center">
+    <div className="group relative z-10 mt-4 flex items-center justify-between rounded-xl border bg-slate-100/70 px-2 pb-3 pt-4 shadow drop-shadow-md">
+      <div className="absolute -top-3 flex h-3 w-full justify-center pr-4">
         <div className="h-full w-0.5 bg-gray-800 shadow" />
       </div>
-      {showClose ? (
+      {showClose && !leaveTheTrip ? (
         <GrClose
           onClick={() => onDeleteInvoice(id)}
           className="invisible absolute right-0 top-0 mr-2 mt-4 inline-block cursor-pointer group-hover:visible"
@@ -70,18 +79,47 @@ export const Invoice = ({
         />
       </div>
       <div className="flex w-full flex-col items-center justify-center">
-        <div className="flex items-center justify-center">
-          <div className="ml-2 w-full drop-shadow-md sm:w-44">
-            <h2 className="text-lg font-medium">Payer: {payerName}</h2>
-            <h2 className="font-medium">payees:</h2>
-            {userPayees}
+        <div
+          className={clsx(
+            'flex items-center',
+            leaveTheTrip ? 'w-full justify-around' : 'justify-center',
+          )}
+        >
+          <div
+            className={clsx(
+              'ml-2 w-full drop-shadow-md',
+              leaveTheTrip ? null : ' sm:w-44',
+            )}
+          >
+            {leaveTheTrip ? (
+              <>
+                <h2 className="text-lg font-medium text-gray-800">
+                  <span className="font-bold text-gray-800">{payerName}</span>{' '}
+                  has left the trip
+                </h2>
+                <h2 className="mt-1 text-lg font-medium text-gray-800">
+                  Total amount spent:{' '}
+                  <span className="font-bold text-gray-800">
+                    {totalMoney} VND
+                  </span>
+                </h2>
+              </>
+            ) : (
+              <>
+                <h2 className="text-lg font-medium">Payer: {payerName}</h2>
+                <h2 className="font-medium">payees:</h2>
+                {userPayees}
+              </>
+            )}
           </div>
-          <div className="flex h-full flex-col items-end justify-center">
-            <h2 className="text-end text-lg font-bold text-gray-800">
-              {valueMoney}
-              {' VND'}
-            </h2>
-          </div>
+          {!leaveTheTrip ? (
+            <div className="flex h-full flex-col items-end justify-center">
+              <h2 className="text-end text-lg font-bold text-gray-800">
+                {valueMoney}
+                {' VND'}
+              </h2>
+            </div>
+          ) : null}
         </div>
         <span className="mt-3.5 w-full text-end text-sm text-gray-800">
           {time}

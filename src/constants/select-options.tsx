@@ -30,6 +30,7 @@ export interface SelectOptionsPeopleInVerticalMenu {
   money: number;
   uid: string;
   id: number;
+  status: boolean;
 }
 
 export interface SelectOptionsPayees {
@@ -49,6 +50,7 @@ export interface SelectOptionsInvoice {
   uid: string;
   totalMoney: number;
   listPayees: SelectOptionsPayees[];
+  leaveTheTrip?: boolean;
 }
 
 export interface SelectOptionsTrip {
@@ -86,6 +88,7 @@ export interface SelectOptionsRenderDropDown {
     text?: string;
   };
   value: string;
+  status?: boolean;
 }
 
 export interface UserInformation {

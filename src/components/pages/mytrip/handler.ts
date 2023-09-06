@@ -19,18 +19,141 @@ import {
   handleTotalMoneyTheTrip,
 } from '../handler';
 
-export const handleFinishTheTrip = async ({
-  id,
-  uid,
+export const handleNotiFinishTrip = ({
+  value,
   setFinishTheTrip,
 }: {
-  id: number;
-  uid: string;
-  setFinishTheTrip: (value: string) => void;
+  value: string;
+  setFinishTheTrip: Dispatch<
+    SetStateAction<{
+      value: string;
+      isCheckValue: string;
+    }>
+  >;
 }) => {
-  const trip = await DataFirebase.GetTrip(id);
-  if (trip?.tripmaster === uid) {
-    setFinishTheTrip('You want to end the trip with the members');
+  if (value === 'finish') {
+    setFinishTheTrip({
+      value: 'You want to end the trip with the members',
+      isCheckValue: value,
+    });
+  } else if (value === 'leave') {
+    setFinishTheTrip({ value: 'Want to leave the trip?', isCheckValue: value });
+  }
+};
+
+export const onSubmitNotiFinishTrip = async ({
+  finishthetrip,
+  setLoadingStartNow,
+  setFinishTheTrip,
+  setShowVerticalMenu,
+  currentIdJoinTrip,
+  dispatch,
+  uid,
+}: {
+  finishthetrip: {
+    value: string;
+    isCheckValue: string;
+  };
+  setLoadingStartNow: (value: boolean) => void;
+  setFinishTheTrip: Dispatch<
+    SetStateAction<{
+      value: string;
+      isCheckValue: string;
+    }>
+  >;
+  setShowVerticalMenu: (value: boolean) => void;
+  currentIdJoinTrip: number;
+  dispatch: Dispatch<AnyAction>;
+  uid: string;
+}) => {
+  setFinishTheTrip({ value: '', isCheckValue: '' });
+  const docRef = doc(db, 'Trips', currentIdJoinTrip.toString());
+  const valueTrip = await DataFirebase.GetTrip(currentIdJoinTrip);
+  if (valueTrip) {
+    if (finishthetrip.isCheckValue === 'finish') {
+      setLoadingStartNow(true);
+      setShowVerticalMenu(false);
+      await setDoc(docRef, {
+        trip: {
+          ...valueTrip,
+          status: false,
+          endtime: handleGetTimeAndDate(),
+          totalmoney: await handleTotalMoneyTheTrip(currentIdJoinTrip),
+        },
+      });
+      const trip = await DataFirebase.GetTrip(currentIdJoinTrip);
+      trip?.userlist?.map(async (item) => {
+        if (trip) {
+          if (!item.uid.includes('name-') && item.status) {
+            await DataFirebase.AddTempoaryNotice(item.uid, trip);
+          }
+        }
+      });
+      await DataFirebase.DeleteTheTrip(currentIdJoinTrip);
+      dispatch(TripActions.setCurrentIdJoinTrip(0));
+      setLoadingStartNow(false);
+    } else {
+      let totalMoney = 0;
+      const dataInvoice: SelectOptionsInvoice[] = [];
+      const newUserList = valueTrip?.userlist.map((item) => {
+        if (item.uid === uid) {
+          totalMoney = item.totalmoney || 0;
+          return {
+            ...item,
+            status: false,
+          };
+        }
+        return item;
+      });
+      const userinfo = await DataFirebase.GetUserInfoInTrip(
+        uid,
+        currentIdJoinTrip,
+      );
+      const idInvoice = handleRandomIdInvoice();
+      const data: SelectOptionsInvoice = {
+        payerImage: {
+          url: userinfo?.photoURL.url || '',
+          color: userinfo?.photoURL.color || '',
+          text: userinfo?.photoURL.text || '',
+        },
+        payerName: userinfo?.displayName || '',
+        time: handleGetTimeAndDate(),
+        uid,
+        id: idInvoice,
+        totalMoney,
+        leaveTheTrip: true,
+        listPayees: [],
+      };
+      dataInvoice.push(data);
+      await setDoc(docRef, {
+        trip: {
+          ...valueTrip,
+          userlist: newUserList,
+          totalmoney: await handleTotalMoneyTheTrip(currentIdJoinTrip),
+        },
+      })
+        .then(async () => {
+          await DataFirebase.UpdateInvoiceIntoTripData(
+            currentIdJoinTrip,
+            dataInvoice,
+          );
+        })
+        .then(async () => {
+          const newValueDataTrip = await DataFirebase.GetTrip(
+            currentIdJoinTrip,
+          );
+          if (newValueDataTrip) {
+            const newValueTrip: SelectOptionsTrip = {
+              ...newValueDataTrip,
+              endtime: handleGetTimeAndDate(),
+            };
+            await DataFirebase.AddTempoaryNotice(uid, newValueTrip);
+          }
+        });
+      window.location.reload();
+      dispatch(TripActions.setCurrentIdJoinTrip(0));
+      setLoadingStartNow(false);
+    }
   }
 };
 
@@ -91,6 +214,7 @@ export const useMyTrip = ({
                 },
                 name: item.displayName,
                 id: item.id || 0,
+                status: item.status,
               };
             });
           setValueUserInVMenu(newvalue);
@@ -145,7 +269,7 @@ export const onSubmitAddInvoice = async ({
       const { userlist } = trip;
       const newuserlist = userlist.map((item1) => {
         const valueFind = value.find((item2) => item2.uid === item1.uid);
-        if (valueFind) {
+        if (valueFind?.listPayees) {
           return {
             ...item1,
             totalmoney:
@@ -195,17 +319,27 @@ export const handleGetPayerList = async ({
   setPayerList: Dispatch<SetStateAction<SelectOptionsRenderDropDown[]>>;
   id: number;
 }) => {
-  const userlist: UserInformation[] = await DataFirebase.GetUserListInTrip(id);
-  const newArr: SelectOptionsRenderDropDown[] = userlist.map((item) => ({
-    title: item.displayName,
-    image: {
-      url: item.photoURL.url,
-      color: item.photoURL.color,
-      text: item.photoURL.text,
-    },
-    value: item.uid,
-  }));
-  setPayerList(newArr);
+  const docRef = doc(db, 'Trips', id.toString());
+  onSnapshot(docRef, (data) => {
+    if (data.exists()) {
+      const valueTrip: SelectOptionsTrip = data.data().trip;
+      if (valueTrip) {
+        const newArr: SelectOptionsRenderDropDown[] = valueTrip.userlist.map(
+          (item) => ({
+            title: item.displayName,
+            image: {
+              url: item.photoURL.url,
+              color: item.photoURL.color,
+              text: item.photoURL.text,
+            },
+            value: item.uid,
+            status: item.status,
+          }),
+        );
+        setPayerList(newArr);
+      }
+    }
+  });
 };
 
 export const handleOnChangeQuantity = (
@@ -257,10 +391,11 @@ export const onSubmitRenderUser = ({
   onSaveUserInfoToData();
   setUserUidClick(value);
 
-  const data = selectedpayerlist
-    .find((item) => item.uid === useruidpayer)
-    ?.listPayees.find((item) => item.uid === value);
-  handleChangeInfoRenderUser(data);
+  const data = selectedpayerlist.find((item) => item.uid === useruidpayer);
+  if (data?.listPayees) {
+    const result = data.listPayees.find((item) => item.uid === value);
+    handleChangeInfoRenderUser(result);
+  }
 };
 
 export const handleCheckStatusTrip = (

@@ -1,23 +1,21 @@
-import type { Dispatch, SetStateAction } from 'react';
+import { type Dispatch, type SetStateAction, useEffect, useState } from 'react';
+import { useSelector } from 'react-redux';
 
 import type {
   SelectOptionsTrip,
   UserInformation,
 } from '@/constants/select-options';
+import { selector } from '@/redux';
 
-import { onChangeReserveMoney } from './handler';
+import { handleGetData, onChangeReserveMoney } from './handler';
 import { RenderReserveMoney } from './render-reserve-money';
 import { RenderUser } from './render-user';
 
 export const RenderoptionStartCreateTrip = ({
-  data,
   masterUid,
   reservemoney,
   setReserveMoney,
-  userlist,
-  setUserList,
 }: {
-  data: SelectOptionsTrip | undefined;
   masterUid: string;
   reservemoney: {
     value: string;
@@ -29,9 +27,16 @@ export const RenderoptionStartCreateTrip = ({
       error: string;
     }>
   >;
-  userlist: UserInformation[];
-  setUserList: Dispatch<SetStateAction<UserInformation[]>>;
 }) => {
+  const { currentIdJoinTrip } = useSelector(selector.trip);
+  const [data, setData] = useState<SelectOptionsTrip>();
+  const [userlist, setUserList] = useState<UserInformation[]>([]);
+
+  useEffect(() => {
+    if (currentIdJoinTrip) {
+      handleGetData(currentIdJoinTrip, setData);
+    }
+  }, [currentIdJoinTrip]);
   return (
     <div>
       <h2 className="text-lg font-medium drop-shadow-md">
