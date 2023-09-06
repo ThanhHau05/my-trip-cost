@@ -31,6 +31,9 @@ export const OptionsAddInvoice = () => {
       url: '',
     },
   });
+  const [newpayerlist, setNewPayerList] = useState<
+    SelectOptionsRenderDropDown[]
+  >([]);
 
   useEffect(() => {
     handleGetPayerList({ id: currentIdJoinTrip, setPayerList });
@@ -43,15 +46,27 @@ export const OptionsAddInvoice = () => {
   }, [userpayer]);
 
   useEffect(() => {
-    if (payerlist) {
+    if (newpayerlist) {
       setUserPayer({
         img: {
-          color: payerlist[0]?.image?.color || '',
-          text: payerlist[0]?.image?.text || '',
-          url: payerlist[0]?.image?.url || '',
+          color: newpayerlist[0]?.image?.color || '',
+          text: newpayerlist[0]?.image?.text || '',
+          url: newpayerlist[0]?.image?.url || '',
         },
-        value: payerlist[0]?.value || '',
+        value: newpayerlist[0]?.value || '',
       });
+    }
+  }, [newpayerlist]);
+
+  useEffect(() => {
+    if (payerlist) {
+      const newPayerList = payerlist
+        .map((item) => {
+          if (item.status) return item;
+          return undefined;
+        })
+        .filter((item) => item !== undefined) as SelectOptionsRenderDropDown[];
+      setNewPayerList(newPayerList);
     }
   }, [payerlist]);
 
@@ -61,9 +76,9 @@ export const OptionsAddInvoice = () => {
       <div className="px-3 pt-10">
         <h2 className="pb-3 font-medium drop-shadow-md">Payer</h2>
         <Dropdown
-          option={payerlist}
+          option={newpayerlist}
           onClick={(e, i) => {
-            setUserUidClick(payerlist[0]?.value || '');
+            setUserUidClick(newpayerlist[0]?.value || '');
             onSaveUserInfoToData();
             setUserPayer({
               value: e,
@@ -78,7 +93,7 @@ export const OptionsAddInvoice = () => {
           defaultTitle={userpayer.value}
         />
       </div>
-      <OptionsUser payerlist={payerlist} />
+      <OptionsUser />
       <div className="absolute bottom-0 mb-3 h-12 w-full px-3">
         <Button
           title="Add"

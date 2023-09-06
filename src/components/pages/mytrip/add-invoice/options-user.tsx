@@ -3,18 +3,13 @@ import { useContext } from 'react';
 import { Toaster } from 'react-hot-toast';
 
 import { Dropdown, Input } from '@/components/base';
-import type { SelectOptionsRenderDropDown } from '@/constants/select-options';
 import { ACTIVITES, PRICEOPTIONS } from '@/constants/select-options';
 import { MyTripContext } from '@/context/mytrip-context';
 
 import { Quantity } from './quantity';
 import { RenderSuggest } from './render-suggest';
 
-export const OptionsUser = ({
-  payerlist,
-}: {
-  payerlist: SelectOptionsRenderDropDown[];
-}) => {
+export const OptionsUser = () => {
   const {
     activity,
     setActivity,
@@ -37,11 +32,7 @@ export const OptionsUser = ({
       <Toaster />
       <div className="mb-5 h-full w-full">
         <div className="scrollbarstyle mt-2 h-[calc(100%-200px)] overflow-auto pb-3 pl-3 pr-2">
-          <Quantity
-            onChange={setQuantity}
-            valueQuantity={quantity}
-            payerlist={payerlist}
-          />
+          <Quantity onChange={setQuantity} valueQuantity={quantity} />
           <div className="mt-2">
             <h2 className="mb-2 font-medium">Activities</h2>
             <div className="flex flex-col gap-3">

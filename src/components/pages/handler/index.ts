@@ -5,7 +5,12 @@ export const handleTotalMoneyTheTrip = async (id: number) => {
   if (trip) {
     const totalInvoice = trip.invoice;
     if (totalInvoice) {
-      const total = totalInvoice.reduce((a, item) => a + item.totalMoney, 0);
+      const total = totalInvoice.reduce((a, item) => {
+        if (item.listPayees.length !== 0) {
+          return a + item.totalMoney;
+        }
+        return a;
+      }, 0);
       return total;
     }
   }

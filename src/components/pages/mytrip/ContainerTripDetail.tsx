@@ -72,7 +72,6 @@ export const ContainerTripDetail = () => {
             tripName={tripname}
             uidMaster={uidmaster}
             valueUserInvMenu={valueuserinvmenu}
-            id={currentIdJoinTrip}
             uid={currentUserInformation.uid}
           />
           <AddInvoice show={showaddinvoice} />

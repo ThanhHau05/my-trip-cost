@@ -47,7 +47,9 @@ const ContainerMyApp = ({ Component, pageProps }: any) => {
   gtag('config', '${process.env.NEXT_PUBLIC_GOOGLE_ANALYTICS}');`}</script>
       </Head>
       {loadingstartnow ? <Loading /> : null}
-      {finishthetrip ? <NotiFinishTheTrip value={finishthetrip} /> : null}
+      {finishthetrip.value ? (
+        <NotiFinishTheTrip value={finishthetrip.value} />
+      ) : null}
       {contentconfirm.length !== 0 ? <NotificationConfirmOperation /> : null}
       <Component {...pageProps} />
     </>

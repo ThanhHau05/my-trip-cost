@@ -4,22 +4,19 @@ import { Button, VerticalMenu } from '@/components/base';
 import type { SelectOptionsPeopleInVerticalMenu } from '@/constants/select-options';
 import { MainContext } from '@/context/main-context';
 
-import { RenderValueInVerticalMenu } from '.';
-import { handleFinishTheTrip } from './handler';
+import { handleNotiFinishTrip, RenderValueInVerticalMenu } from '.';
 
 export const RenderVerticalMenu = ({
   show,
   tripName,
   valueUserInvMenu,
   uidMaster,
-  id,
   uid,
 }: {
   show: boolean;
   tripName: string;
   valueUserInvMenu: SelectOptionsPeopleInVerticalMenu[];
   uidMaster: string;
-  id: number;
   uid: string;
 }) => {
   const { setFinishTheTrip } = useContext(MainContext);
@@ -33,16 +30,20 @@ export const RenderVerticalMenu = ({
       </div>
       <h2 className="pb-2 font-medium">People</h2>
       <RenderValueInVerticalMenu data={valueUserInvMenu} />
-      <div className="mt-2 h-12 w-full">
+      <div className="mt-2 flex h-12 w-full items-center justify-center gap-2">
+        {uidMaster === uid ? (
+          <Button
+            bgWhite
+            title="Finish the trip"
+            onClick={() =>
+              handleNotiFinishTrip({ value: 'finish', setFinishTheTrip })
+            }
+          />
+        ) : null}
         <Button
-          disabled={uidMaster !== uid}
-          title="Finish the trip"
+          title="Leave the trip"
           onClick={() =>
-            handleFinishTheTrip({
-              id,
-              uid,
-              setFinishTheTrip,
-            })
+            handleNotiFinishTrip({ value: 'leave', setFinishTheTrip })
           }
         />
       </div>

@@ -78,8 +78,16 @@ interface MainProps {
   onSubmitEcceptToCancelTheTrip: () => Promise<void>;
   showaddinvoice: boolean;
   setShowAddInvoice: Dispatch<SetStateAction<boolean>>;
-  finishthetrip: string;
-  setFinishTheTrip: Dispatch<SetStateAction<string>>;
+  finishthetrip: {
+    value: string;
+    isCheckValue: string;
+  };
+  setFinishTheTrip: Dispatch<
+    SetStateAction<{
+      value: string;
+      isCheckValue: string;
+    }>
+  >;
   showtriphistory: boolean;
   setShowTripHistory: Dispatch<SetStateAction<boolean>>;
   reload: boolean;
@@ -117,7 +125,10 @@ export const MainProvider = ({ children }: { children: ReactNode }) => {
   const [id, setId] = useState(0);
   const [contentconfirm, setConentConfirm] = useState('');
   const [showaddinvoice, setShowAddInvoice] = useState(false);
-  const [finishthetrip, setFinishTheTrip] = useState('');
+  const [finishthetrip, setFinishTheTrip] = useState({
+    value: '',
+    isCheckValue: '',
+  });
   const [showtriphistory, setShowTripHistory] = useState(false);
   const [reload, setReload] = useState(false);
   const [temporarynotice, setTemporaryNotice] = useState<SelectOptionsTrip>();
