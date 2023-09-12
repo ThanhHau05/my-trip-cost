@@ -17,7 +17,11 @@ export const RenderInvoice = ({
     <>
       {data.map((item) => (
         <Invoice
-          key={item.id}
+          key={
+            item.invoice?.info.id ||
+            item.leaveTheTrip?.info.id ||
+            item.addUser?.id
+          }
           data={item}
           showClose={showClose}
           userList={userList}

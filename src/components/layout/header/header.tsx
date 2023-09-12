@@ -6,7 +6,7 @@ import { useDispatch } from 'react-redux';
 import { MainContext } from '@/context/main-context';
 import { auth } from '@/firebase';
 
-import { handleSignOut } from '../handler';
+import { handleSignOut } from '../handle-layout';
 
 export const Header = ({ name }: { name: string }) => {
   const [signOut] = useSignOut(auth);

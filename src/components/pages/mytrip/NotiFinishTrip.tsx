@@ -1,3 +1,4 @@
+import { useRouter } from 'next/router';
 import { useContext } from 'react';
 import { GrClose } from 'react-icons/gr';
 import { useDispatch, useSelector } from 'react-redux';
@@ -6,7 +7,7 @@ import { Button } from '@/components/base';
 import { MainContext } from '@/context/main-context';
 import { selector } from '@/redux';
 
-import { onSubmitNotiFinishTrip } from './handler';
+import { onSubmitNotiFinishTrip } from './handle-mytrip';
 
 export const NotiFinishTheTrip = ({ value }: { value: string }) => {
   const {
@@ -18,6 +19,7 @@ export const NotiFinishTheTrip = ({ value }: { value: string }) => {
   const { currentIdJoinTrip } = useSelector(selector.trip);
   const { currentUserInformation } = useSelector(selector.user);
   const dispatch = useDispatch();
+  const router = useRouter();
 
   return (
     <div className="fixed z-40 flex h-full w-full items-center justify-center bg-gray-600/40">
@@ -39,6 +41,7 @@ export const NotiFinishTheTrip = ({ value }: { value: string }) => {
                 setLoadingStartNow,
                 setShowVerticalMenu,
                 uid: currentUserInformation.uid,
+                router,
               })
             }
           />

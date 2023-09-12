@@ -12,7 +12,7 @@ import { MainContext } from '@/context/main-context';
 import { selector } from '@/redux';
 
 import { CreateTheTrip } from './create-the-trip';
-import { useHome } from './handler';
+import { useHome } from './handle-trip-history';
 import { NavigationBarMenu } from './NavigationbarMenu/NavigationBarMenu';
 import { SliderPage } from './slider';
 import { StatusCreateTrip } from './status-create-trip';

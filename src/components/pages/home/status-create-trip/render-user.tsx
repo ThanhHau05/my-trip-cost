@@ -8,7 +8,7 @@ import type { UserInformation } from '@/constants/select-options';
 import { DataFirebase } from '@/firebase';
 import { selector } from '@/redux';
 
-import { handleDataFirebaseRenderUser } from './handler';
+import { handleDataFirebaseRenderUser } from './handle-status-create-trip';
 
 export const RenderUser = ({
   userlist,

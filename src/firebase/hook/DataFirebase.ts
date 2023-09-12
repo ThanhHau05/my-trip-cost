@@ -1,5 +1,9 @@
 import { deleteDoc, doc, getDoc, setDoc, updateDoc } from 'firebase/firestore';
 
+import {
+  handleGetTimeAndDate,
+  handleRandomIdInvoice,
+} from '@/components/pages';
 import type {
   SelectOptionsInvitation,
   SelectOptionsInvoice,
@@ -264,10 +268,11 @@ export const DataFirebase = {
     if (invoice) {
       const newListMoney: VerticalMenuUserInfo[] = [];
       const newInvoice = invoice.filter((item) => {
-        if (item.id === idInvoice) {
+        const { totalMoney, uid } = item.invoice?.info || {};
+        if (item.invoice?.info.id === idInvoice && uid) {
           newListMoney.push({
-            money: item.totalMoney,
-            uid: item.uid,
+            money: totalMoney || 0,
+            uid,
           });
           return false;
         }
@@ -307,6 +312,76 @@ export const DataFirebase = {
     const trip = await DataFirebase.GetTrip(id);
     if (trip) {
       await setDoc(docRef, { trip: { ...trip, userlist: valueUserList } });
+    }
+  },
+  AddUserInTheTrip: async (
+    id: number,
+    newUserList: UserInformation[],
+    user: UserInformation,
+  ) => {
+    const docRef = doc(db, 'Trips', id.toString());
+    const trip = await DataFirebase.GetTrip(id);
+    if (trip) {
+      const { displayName, photoURL, uid } = user;
+      const dataInvoice: SelectOptionsInvoice[] = [];
+      const time = handleGetTimeAndDate();
+      const idAddUser = handleRandomIdInvoice();
+      const data: SelectOptionsInvoice = {
+        addUser: {
+          id: idAddUser,
+          name: displayName,
+          time,
+          personAdded: {
+            avatar: {
+              url: photoURL.url || '',
+              color: photoURL.color || '',
+              text: photoURL.text || '',
+            },
+            uid,
+          },
+          personBeAdded: [],
+        },
+      };
+      newUserList.map(async (item) => {
+        if (item.uid) {
+          if (trip.status) {
+            data.addUser?.personBeAdded.push({
+              avatar: {
+                url: item.photoURL.url || '',
+                color: item.photoURL.color || '',
+                text: item.photoURL.text || '',
+              },
+              name: item.displayName,
+              uid: item.uid,
+            });
+          } else {
+            const dataInvatation: SelectOptionsInvitation = {
+              avtmaster: {
+                url: photoURL.url || '',
+                color: photoURL.color || '',
+                text: photoURL.text || '',
+              },
+              name: displayName,
+              tripid: id,
+              tripname: trip.tripname,
+              dateandtime: time,
+              status: false,
+              uid: item.uid,
+            };
+            await DataFirebase.AcceptTheInvitation(item.uid, dataInvatation);
+          }
+        }
+      });
+      dataInvoice.push(data);
+      await DataFirebase.UpdateInvoiceIntoTripData(id, dataInvoice);
+      const UserList = [...trip.userlist, ...newUserList];
+      const newTrip = await DataFirebase.GetTrip(id);
+      await updateDoc(docRef, {
+        trip: {
+          ...newTrip,
+          userlist: UserList,
+        },
+      });
     }
   },
 };

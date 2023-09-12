@@ -4,7 +4,7 @@ import { IoClose } from 'react-icons/io5';
 import { Avatar } from '@/components/base';
 import type { UserInformation } from '@/constants/select-options';
 
-import { handleRemoveUserInUserListAdded } from '../handler';
+import { handleRemoveUserInUserListAdded } from '../handle-trip-history';
 
 export const RenderUserListAdded = ({
   data,

@@ -12,6 +12,7 @@ import { DataFirebase } from '@/firebase';
 import { TripActions } from '@/redux';
 
 import { handleGetTimeAndDate } from '../../handler';
+import { handleCheckUserInData } from '../handle-trip-history';
 
 const isCheck = ({
   tripname,
@@ -157,4 +158,80 @@ export const onChangeCompanions = (
   if (e.length <= 15) {
     setCompanions({ value: e, error: '' });
   }
+};
+
+export const onSubmit = (
+  uid: string,
+  displayName: string,
+  id: number,
+  color: string,
+  text: string,
+  url: string,
+  setInputValue: (value: string, error: string) => void,
+  setUserListAdded: (value: SetStateAction<UserInformation[]>) => void,
+  userlistadded: UserInformation[],
+) => {
+  if (!handleCheckUserInData(uid, userlistadded)) {
+    setInputValue('', '');
+    setUserListAdded((e) => [
+      ...e,
+      {
+        id,
+        displayName,
+        photoURL: {
+          color,
+          text,
+          url,
+        },
+        uid,
+        status: false,
+      },
+    ]);
+  }
+};
+
+export const handleRenderUserSearch = (
+  valueSearch: string,
+  data: UserInformation[],
+  userlistadded: UserInformation[],
+  user: UserInformation,
+) => {
+  const users = data.filter(
+    (item) =>
+      (item.id?.toString().includes(valueSearch) ||
+        item.displayName.includes(valueSearch)) &&
+      user.uid !== item.uid,
+  );
+
+  return users
+    .map((item) => {
+      if (userlistadded.find((item1) => item1.uid === item.uid))
+        return undefined;
+      return item;
+    })
+    .filter((item) => item !== undefined) as UserInformation[];
+};
+
+export const SplitAndBoldName = ({
+  value,
+  name,
+}: {
+  value: string;
+  name: string;
+}) => {
+  const index = name.indexOf(value);
+  if (index !== -1) {
+    const part1 = name.substring(0, index);
+    const part2 = name.substring(index, index + value.length);
+    const part3 = name.substring(index + value.length);
+
+    return (
+      <h2>
+        {part1}
+        <span className="font-medium">{part2}</span>
+        {part3}
+      </h2>
+    );
+  }
+  return <h2>{name}</h2>;
 };

@@ -4,7 +4,7 @@ import { Button } from '@/components/base';
 import type { SelectOptionsTrip } from '@/constants/select-options';
 import { selector } from '@/redux';
 
-import { onSubmitTemporaryNotice } from '../handler';
+import { onSubmitTemporaryNotice } from '../handle-trip-history';
 import { RenderInfoTemporaryNotice } from './RenderInfo';
 
 export const TemporaryNotice = ({
@@ -17,6 +17,7 @@ export const TemporaryNotice = ({
   showTitle?: boolean;
 }) => {
   const { currentUserInformation } = useSelector(selector.user);
+  const { currentIdJoinTrip } = useSelector(selector.trip);
 
   return (
     <div className="fixed top-0 z-40 h-full w-full bg-slate-700/20 pt-20 sm:w-[400px]">
@@ -31,6 +32,7 @@ export const TemporaryNotice = ({
                   data,
                   onSubmitValue,
                   uid: currentUserInformation.uid,
+                  id: currentIdJoinTrip,
                 })
               }
             />

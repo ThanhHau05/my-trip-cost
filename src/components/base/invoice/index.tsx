@@ -25,18 +25,19 @@ export const Invoice = ({
   userList: UserInformation[];
 }) => {
   const { currentIdJoinTrip } = useSelector(selector.trip);
-  const {
-    listPayees,
-    payerImage,
-    payerName,
-    time,
-    totalMoney,
-    id,
-    leaveTheTrip,
-  } = data;
+  const { currentUserInformation } = useSelector(selector.user);
+  const { invoice, leaveTheTrip, addUser } = data;
+
+  const { id, payerImage, payerName, time, totalMoney } =
+    invoice?.info || leaveTheTrip?.info || {};
+
+  const { personAdded, personBeAdded } = addUser || {};
 
   const valueMoney = useMemo(() => {
-    return handleFormatCurrentcy(totalMoney);
+    if (totalMoney) {
+      return handleFormatCurrentcy(totalMoney);
+    }
+    return 0;
   }, [totalMoney]);
 
   const [userPayees, setUserPayees] = useState<JSX.Element>();
@@ -49,10 +50,10 @@ export const Invoice = ({
       });
       setUserPayees(userPayeesElement);
     }
-    if (listPayees) {
-      fetchUserPayees(listPayees);
+    if (invoice?.listPayees) {
+      fetchUserPayees(invoice.listPayees);
     }
-  }, [listPayees, userList]);
+  }, [invoice?.listPayees, userList]);
 
   const onDeleteInvoice = async (idInvoice: string) => {
     await DataFirebase.DeleteInvoice(currentIdJoinTrip, idInvoice);
@@ -63,66 +64,116 @@ export const Invoice = ({
       <div className="absolute -top-3 flex h-3 w-full justify-center pr-4">
         <div className="h-full w-0.5 bg-gray-800 shadow" />
       </div>
-      {showClose && !leaveTheTrip ? (
+      {showClose && !leaveTheTrip && !addUser ? (
         <GrClose
-          onClick={() => onDeleteInvoice(id)}
+          onClick={() => onDeleteInvoice(id?.toString() || '0')}
           className="invisible absolute right-0 top-0 mr-2 mt-4 inline-block cursor-pointer group-hover:visible"
         />
       ) : null}
       <div>
         <Avatar
           img={{
-            url: payerImage.url,
-            color: payerImage.color,
-            text: payerImage.text,
+            url: payerImage?.url || (addUser && personAdded?.avatar.url) || '',
+            color:
+              payerImage?.color || (addUser && personAdded?.avatar.color) || '',
+            text:
+              payerImage?.text || (addUser && personAdded?.avatar.text) || '',
           }}
         />
       </div>
       <div className="flex w-full flex-col items-center justify-center">
-        <div
-          className={clsx(
-            'flex items-center',
-            leaveTheTrip ? 'w-full justify-around' : 'justify-center',
-          )}
-        >
+        {addUser ? (
+          <div className="w-full">
+            <p className="pl-5">
+              {addUser.personAdded.uid === currentUserInformation.uid
+                ? 'You '
+                : `${addUser.name} `}
+              have added{' '}
+              {personBeAdded?.map((user, index) => {
+                if (index < personBeAdded.length - 1) {
+                  return (
+                    <span key={user.uid} className="inline-block">
+                      <Avatar
+                        img={{
+                          color: user.avatar.color,
+                          text: user.avatar.text,
+                          url: user.avatar.url,
+                        }}
+                        size="24"
+                      />
+                      <span className="px-1 font-medium">
+                        {user.name}
+                        {index >= personBeAdded.length - 2 ? null : (
+                          <span>,</span>
+                        )}
+                      </span>
+                    </span>
+                  );
+                }
+                return (
+                  <span key={user.uid} className="inline-block">
+                    {personBeAdded.length > 1 ? <span> and </span> : null}
+                    <Avatar
+                      img={{
+                        color: user.avatar.color,
+                        text: user.avatar.text,
+                        url: user.avatar.url,
+                      }}
+                      size="24"
+                    />
+                    <span className="px-1 font-medium">{user.name} </span>
+                  </span>
+                );
+              })}
+              to the trip.
+            </p>
+          </div>
+        ) : (
           <div
             className={clsx(
-              'ml-2 w-full drop-shadow-md',
-              leaveTheTrip ? null : ' sm:w-44',
+              'flex items-center',
+              leaveTheTrip ? 'w-full justify-around' : 'justify-center',
             )}
           >
-            {leaveTheTrip ? (
-              <>
-                <h2 className="text-lg font-medium text-gray-800">
-                  <span className="font-bold text-gray-800">{payerName}</span>{' '}
-                  has left the trip
-                </h2>
-                <h2 className="mt-1 text-lg font-medium text-gray-800">
-                  Total amount spent:{' '}
-                  <span className="font-bold text-gray-800">
-                    {totalMoney} VND
-                  </span>
-                </h2>
-              </>
-            ) : (
-              <>
-                <h2 className="text-lg font-medium">Payer: {payerName}</h2>
-                <h2 className="font-medium">payees:</h2>
-                {userPayees}
-              </>
-            )}
-          </div>
-          {!leaveTheTrip ? (
-            <div className="flex h-full flex-col items-end justify-center">
-              <h2 className="text-end text-lg font-bold text-gray-800">
-                {valueMoney}
-                {' VND'}
-              </h2>
+            <div
+              className={clsx(
+                'ml-2 w-full drop-shadow-md',
+                leaveTheTrip ? null : ' sm:w-44',
+              )}
+            >
+              {leaveTheTrip ? (
+                <>
+                  <h2 className="text-lg font-medium text-gray-800">
+                    <span className="font-bold text-gray-800">{payerName}</span>{' '}
+                    has left the trip
+                  </h2>
+                  <h2 className="mt-1 text-lg font-medium text-gray-800">
+                    Total amount spent:{' '}
+                    <span className="font-bold text-gray-800">
+                      {totalMoney} VND
+                    </span>
+                  </h2>
+                </>
+              ) : (
+                <>
+                  <h2 className="text-lg font-medium">Payer: {payerName}</h2>
+                  <h2 className="font-medium">payees:</h2>
+                  {userPayees}
+                </>
+              )}
             </div>
-          ) : null}
-        </div>
+            {!leaveTheTrip ? (
+              <div className="flex h-full flex-col items-end justify-center">
+                <h2 className="text-end text-lg font-bold text-gray-800">
+                  {valueMoney}
+                  {' VND'}
+                </h2>
+              </div>
+            ) : null}
+          </div>
+        )}
         <span className="mt-3.5 w-full text-end text-sm text-gray-800">
-          {time}
+          {time || addUser?.time}
         </span>
       </div>
     </div>

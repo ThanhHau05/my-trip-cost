@@ -1,3 +1,4 @@
+export * from './add-fellow-companions';
 export * from './avatar';
 export * from './button';
 export * from './confirm-operation';

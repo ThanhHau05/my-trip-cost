@@ -3,7 +3,7 @@ import type { Dispatch, SetStateAction } from 'react';
 import { Input } from '@/components/base';
 import type { UserInformation } from '@/constants/select-options';
 
-import { onChangeCompanions } from './handlers';
+import { onChangeCompanions } from './handle-create-the-trip';
 import { RenderSearchUser } from './render-search-user';
 import { RenderUserListAdded } from './RenderUserListAdded';
 

@@ -42,15 +42,37 @@ export interface SelectOptionsPayees {
   uid: string;
 }
 
-export interface SelectOptionsInvoice {
+interface OptionInvoice {
   id: string;
   payerName: string;
   payerImage: SelectOptionsAvatar;
   time: string;
   uid: string;
   totalMoney: number;
-  listPayees: SelectOptionsPayees[];
-  leaveTheTrip?: boolean;
+}
+
+export interface SelectOptionsInvoice {
+  invoice?: {
+    info: OptionInvoice;
+    listPayees: SelectOptionsPayees[];
+  };
+  leaveTheTrip?: {
+    info: OptionInvoice;
+  };
+  addUser?: {
+    id: string;
+    name: string;
+    time: string;
+    personAdded: {
+      avatar: SelectOptionsAvatar;
+      uid: string;
+    };
+    personBeAdded: {
+      uid: string;
+      avatar: SelectOptionsAvatar;
+      name: string;
+    }[];
+  };
 }
 
 export interface SelectOptionsTrip {

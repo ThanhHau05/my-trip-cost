@@ -88,10 +88,10 @@ export const onStartTrip = async (
       error: 'Minimum reserve amount 100.000 VND',
     });
   } else {
+    setLoading(true);
     const userlists: UserInformation[] = await DataFirebase.GetUserListInTrip(
       id,
     );
-    setLoading(true);
     const status = userlists.find((item) => item.status === false);
     if (status === undefined) {
       const trip = await DataFirebase.GetTrip(id);

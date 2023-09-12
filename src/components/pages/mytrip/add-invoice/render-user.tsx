@@ -7,7 +7,7 @@ import type { SelectOptionsRenderDropDown } from '@/constants/select-options';
 import { MyTripContext } from '@/context/mytrip-context';
 import { selector } from '@/redux';
 
-import { handleGetPayerList, onSubmitRenderUser } from '../handler';
+import { handleGetPayerList, onSubmitRenderUser } from '../handle-mytrip';
 
 export const RenderUserAddInvoice = () => {
   const { currentIdJoinTrip } = useSelector(selector.trip);

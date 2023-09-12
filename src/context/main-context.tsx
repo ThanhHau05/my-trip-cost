@@ -104,6 +104,10 @@ interface MainProps {
     SetStateAction<SelectOptionsTrip | undefined>
   >;
   showformtriphistory: SelectOptionsTrip | undefined;
+  showaddfellowcompanions: boolean;
+  setShowAddFellowCompanions: Dispatch<SetStateAction<boolean>>;
+  valueaddfellow: string;
+  setValueAddFellow: Dispatch<SetStateAction<string>>;
 }
 
 export const MainContext = createContext({} as MainProps);
@@ -137,6 +141,8 @@ export const MainProvider = ({ children }: { children: ReactNode }) => {
   const [recentfriends, setRecentFriends] = useState<UserInformation[]>([]);
   const [showformtriphistory, setShowFormTripHistory] =
     useState<SelectOptionsTrip>();
+  const [showaddfellowcompanions, setShowAddFellowCompanions] = useState(false);
+  const [valueaddfellow, setValueAddFellow] = useState('');
 
   const sliderRef = useRef<any>();
 
@@ -351,6 +357,10 @@ export const MainProvider = ({ children }: { children: ReactNode }) => {
     setRecentFriends,
     setShowFormTripHistory,
     showformtriphistory,
+    showaddfellowcompanions,
+    setShowAddFellowCompanions,
+    valueaddfellow,
+    setValueAddFellow,
   };
   return <MainContext.Provider value={value}>{children}</MainContext.Provider>;
 };

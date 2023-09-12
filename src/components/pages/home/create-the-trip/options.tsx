@@ -8,7 +8,7 @@ import { MainContext } from '@/context/main-context';
 import { auth } from '@/firebase';
 import { selector } from '@/redux';
 
-import { getUserListData, onSubmitCreateTrip } from './handlers';
+import { getUserListData, onSubmitCreateTrip } from './handle-create-the-trip';
 import { RenderOptionsInput } from './RenderOptionsInput';
 
 export const OptionsCreateTheTrip = () => {

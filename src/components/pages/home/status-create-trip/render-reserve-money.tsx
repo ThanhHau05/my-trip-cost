@@ -5,7 +5,7 @@ import { Input } from '@/components/base';
 import { selector } from '@/redux';
 
 import { handleFormatCurrentcy } from '../../handler';
-import { handleRemoveValue } from './handler';
+import { handleRemoveValue } from './handle-status-create-trip';
 
 export const RenderReserveMoney = ({
   masteruid,

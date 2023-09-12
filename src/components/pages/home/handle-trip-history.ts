@@ -9,7 +9,7 @@ import type {
   SelectOptionsUserInvitations,
   UserInformation,
 } from '@/constants/select-options';
-import { db, myFirebase } from '@/firebase';
+import { DataFirebase, db, myFirebase } from '@/firebase';
 import { TripActions } from '@/redux';
 
 export const useHome = ({
@@ -108,11 +108,13 @@ export const onSubmitTemporaryNotice = async ({
   onSubmitValue: (() => void) | undefined;
   uid: string;
   data: SelectOptionsTrip;
+  id: number;
 }) => {
   if (onSubmitValue) {
     onSubmitValue();
   } else {
     const docRef = doc(db, 'UserInvitations', uid);
+
     const isCheck = await getDoc(docRef);
     if (isCheck.exists()) {
       const { recentFriends } = isCheck.data() as SelectOptionsUserInvitations;
@@ -145,6 +147,19 @@ export const onSubmitTemporaryNotice = async ({
         recentFriends: valueRecentFriends,
         recentTrip: data,
       });
+    }
+    const docTripRef = doc(db, 'Trips', data.id.toString());
+    const isCheckTrip = await getDoc(docTripRef);
+    if (isCheckTrip.exists()) {
+      const valueTrip: SelectOptionsTrip = isCheckTrip.data().trip;
+      if (valueTrip) {
+        const valueFind = valueTrip.userlist.find(
+          (item) => !item.uid?.includes('name-') && item.status === true,
+        );
+        if (valueFind === undefined) {
+          await DataFirebase.DeleteTheTrip(data.id);
+        }
+      }
     }
   }
 };

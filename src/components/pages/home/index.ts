@@ -1,6 +1,6 @@
 export * from './ContainerHome';
 export * from './create-the-trip';
-export * from './handler';
+export * from './handle-trip-history';
 export * from './NavigationbarMenu/NavigationBarMenu';
 export * from './slider';
 export * from './status-create-trip';
