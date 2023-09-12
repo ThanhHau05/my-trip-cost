@@ -7,7 +7,7 @@ import { Avatar } from '@/components/base';
 import { MainContext } from '@/context/main-context';
 import { useClickOutSide } from '@/hooks/useClickOutSide';
 
-import { handleCopyInfo } from '../handler';
+import { handleCopyInfo } from '../handle-layout';
 
 export const ImageUser = ({
   image,

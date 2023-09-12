@@ -4,7 +4,7 @@ import { useContext } from 'react';
 import { NAVIGATION_BAR_MENU } from '@/constants/select-options';
 import { MainContext } from '@/context/main-context';
 
-import { handleOnSubmitNavagitionBar } from '../handler';
+import { handleOnSubmitNavagitionBar } from '../handle-trip-history';
 
 export const ContainerNavigation = ({
   widthHover,

@@ -3,7 +3,7 @@ import { useMemo, useState } from 'react';
 
 import { handleFormatCurrentcy } from '@/components/pages/handler';
 
-import { onClickMoney } from './handler';
+import { onClickMoney } from './handle-layout';
 import { MenuBarsBox } from './header';
 
 export const TripHeader = ({

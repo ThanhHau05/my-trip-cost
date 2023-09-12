@@ -12,7 +12,7 @@ import { ImagesTrip } from '@/public/images/trip';
 import { selector } from '@/redux';
 
 import { AddInvoice } from './add-invoice';
-import { useMyTrip } from './handler';
+import { useMyTrip } from './handle-mytrip';
 import { RenderInvoiceHistory } from './RenderInvoiceHistory';
 import { RenderVerticalMenu } from './RenderVerticalMenu';
 

@@ -8,7 +8,7 @@ import { useGetTimeAgo } from '@/hooks';
 import { selector } from '@/redux';
 
 import { handleFormatCurrentcy } from '../../handler';
-import { handleDeleteTripHistory } from '../handler';
+import { handleDeleteTripHistory } from '../handle-trip-history';
 import { RenderAvt } from '../trip-history';
 
 export const NearestTrip = ({

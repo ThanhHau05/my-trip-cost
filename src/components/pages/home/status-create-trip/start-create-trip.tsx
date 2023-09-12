@@ -5,7 +5,10 @@ import { Button } from '@/components/base';
 import { MainContext } from '@/context/main-context';
 import { selector } from '@/redux';
 
-import { handleCheckReserveMoney, onStartTrip } from './handler';
+import {
+  handleCheckReserveMoney,
+  onStartTrip,
+} from './handle-status-create-trip';
 import { RenderoptionStartCreateTrip } from './RenderOption';
 
 export const StatusCreateTrip = ({

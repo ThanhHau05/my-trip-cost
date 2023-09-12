@@ -7,7 +7,7 @@ import { MainContext } from '@/context/main-context';
 import { MyTripContext } from '@/context/mytrip-context';
 import { selector } from '@/redux';
 
-import { handleGetPayerList, onSubmitAddInvoice } from '../handler';
+import { handleGetPayerList, onSubmitAddInvoice } from '../handle-mytrip';
 import { OptionsUser } from './options-user';
 
 export const OptionsAddInvoice = () => {

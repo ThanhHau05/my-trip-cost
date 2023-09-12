@@ -1,13 +1,23 @@
-import { type Dispatch, type SetStateAction, useEffect, useState } from 'react';
+import {
+  type Dispatch,
+  type SetStateAction,
+  useContext,
+  useEffect,
+  useState,
+} from 'react';
 import { useSelector } from 'react-redux';
 
 import type {
   SelectOptionsTrip,
   UserInformation,
 } from '@/constants/select-options';
+import { MainContext } from '@/context/main-context';
 import { selector } from '@/redux';
 
-import { handleGetData, onChangeReserveMoney } from './handler';
+import {
+  handleGetData,
+  onChangeReserveMoney,
+} from './handle-status-create-trip';
 import { RenderReserveMoney } from './render-reserve-money';
 import { RenderUser } from './render-user';
 
@@ -31,6 +41,8 @@ export const RenderoptionStartCreateTrip = ({
   const { currentIdJoinTrip } = useSelector(selector.trip);
   const [data, setData] = useState<SelectOptionsTrip>();
   const [userlist, setUserList] = useState<UserInformation[]>([]);
+
+  const { setShowAddFellowCompanions } = useContext(MainContext);
 
   useEffect(() => {
     if (currentIdJoinTrip) {
@@ -71,7 +83,10 @@ export const RenderoptionStartCreateTrip = ({
                 userlist={userlist}
               />
             )}
-            <div className="flex h-12 w-12 cursor-pointer items-center justify-center rounded-full border bg-white drop-shadow-md">
+            <div
+              onClick={() => setShowAddFellowCompanions(true)}
+              className="flex h-12 w-12 cursor-pointer select-none items-center justify-center rounded-full border bg-white drop-shadow-md"
+            >
               +
             </div>
           </div>

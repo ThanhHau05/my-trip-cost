@@ -1,11 +1,11 @@
 import { useRouter } from 'next/router';
 import { useContext, useEffect, useState } from 'react';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 
 import { ContainerTripDetail, handleCheckStatusTrip } from '@/components/pages';
 import { MainContext } from '@/context/main-context';
 import { MyTripProvider } from '@/context/mytrip-context';
-import { selector } from '@/redux';
+import { selector, TripActions } from '@/redux';
 
 const MyTrip = () => {
   return (
@@ -18,10 +18,11 @@ const MyTrip = () => {
 const TripDetail = () => {
   const { currentIdJoinTrip } = useSelector(selector.trip);
   const router = useRouter();
+  const dispatch = useDispatch();
   const { id } = router.query;
   const { reload, setReload } = useContext(MainContext);
 
-  const [status, setStatus] = useState(false);
+  const [status, setStatus] = useState<boolean>();
 
   useEffect(() => {
     if (id) {
@@ -36,10 +37,11 @@ const TripDetail = () => {
   }, [reload, id, currentIdJoinTrip, status]);
 
   useEffect(() => {
-    if (id && currentIdJoinTrip !== +id && status === false) {
+    if (id && status === false) {
+      dispatch(TripActions.setCurrentIdJoinTrip(0));
       router.push('/');
     }
-  }, [id, currentIdJoinTrip, status]);
+  }, [id, status]);
 
   if (id && currentIdJoinTrip === +id && status) {
     return <ContainerTripDetail />;

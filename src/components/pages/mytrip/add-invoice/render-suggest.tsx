@@ -4,7 +4,7 @@ import { useContext } from 'react';
 import type { SelectOptionsObject } from '@/constants/select-options';
 import { MyTripContext } from '@/context/mytrip-context';
 
-import { handleOnChangeMoneySuggest } from '../handler';
+import { handleOnChangeMoneySuggest } from '../handle-mytrip';
 
 export const RenderSuggest = ({
   value,

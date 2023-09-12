@@ -137,43 +137,50 @@ export const MyTripProvider = ({ children }: { children: ReactNode }) => {
         other: others.value,
       };
       const valueUser = selectedpayerlist.find(
-        (item) => item.uid === useruidpayer,
+        (item) => item.invoice?.info.uid === useruidpayer,
       );
-      if (valueUser) {
+      if (valueUser?.invoice) {
         let listPayees;
-        if (valueUser.listPayees.find((item) => item.uid === useruidclick)) {
-          const newvalue: SelectOptionsPayees[] = valueUser.listPayees.map(
-            (item) => {
+        if (
+          valueUser.invoice?.listPayees.find(
+            (item) => item.uid === useruidclick,
+          )
+        ) {
+          const newvalue: SelectOptionsPayees[] =
+            valueUser.invoice.listPayees.map((item) => {
               if (item.uid === useruidclick) {
                 return newValueListPayees;
               }
               return item;
-            },
-          );
+            });
           listPayees = newvalue;
         } else {
-          listPayees = [...valueUser.listPayees, newValueListPayees];
+          listPayees = [...valueUser.invoice.listPayees, newValueListPayees];
         }
         const totalMoney = listPayees.reduce(
           (a, b) => a + (+b.money + b.moneySuggest) * b.qty,
           0,
         );
         const value: SelectOptionsInvoice = {
-          payerImage: {
-            color: '',
-            text: '',
-            url: '',
+          invoice: {
+            info: {
+              payerImage: {
+                color: '',
+                text: '',
+                url: '',
+              },
+              payerName: '',
+              time: '',
+              uid: useruidpayer,
+              id: '',
+              totalMoney,
+            },
+            listPayees,
           },
-          payerName: '',
-          time: '',
-          uid: useruidpayer,
-          id: '',
-          listPayees,
-          totalMoney,
         };
 
         const newvalue = selectedpayerlist.map((item) => {
-          if (item.uid === useruidpayer) {
+          if (item.invoice?.info.uid === useruidpayer) {
             return value;
           }
           return item;
@@ -184,19 +191,23 @@ export const MyTripProvider = ({ children }: { children: ReactNode }) => {
       }
 
       const value: SelectOptionsInvoice = {
-        payerImage: {
-          color: '',
-          text: '',
-          url: '',
+        invoice: {
+          info: {
+            payerImage: {
+              color: '',
+              text: '',
+              url: '',
+            },
+            payerName: '',
+            time: '',
+            uid: useruidpayer,
+            id: '',
+            totalMoney:
+              (newValueListPayees.money + newValueListPayees.moneySuggest) *
+              newValueListPayees.qty,
+          },
+          listPayees: [newValueListPayees],
         },
-        payerName: '',
-        time: '',
-        uid: useruidpayer,
-        id: '',
-        listPayees: [newValueListPayees],
-        totalMoney:
-          (newValueListPayees.money + newValueListPayees.moneySuggest) *
-          newValueListPayees.qty,
       };
 
       if (selectedpayerlist.length !== 0) {
@@ -219,8 +230,8 @@ export const MyTripProvider = ({ children }: { children: ReactNode }) => {
 
   useEffect(() => {
     const value = selectedpayerlist
-      .find((item) => item.uid === useruidpayer)
-      ?.listPayees.find((item) => item.uid === useruidclick);
+      .find((item) => item.invoice?.info.uid === useruidpayer)
+      ?.invoice?.listPayees.find((item) => item.uid === useruidclick);
     handleChangeInfoRenderUser(value);
   }, [selectedpayerlist, useruidclick, useruidpayer]);
 

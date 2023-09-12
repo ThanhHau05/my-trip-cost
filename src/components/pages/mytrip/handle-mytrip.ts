@@ -1,4 +1,5 @@
 import { doc, onSnapshot, setDoc } from 'firebase/firestore';
+import type { NextRouter } from 'next/router';
 import type { Dispatch, SetStateAction } from 'react';
 import type { AnyAction } from 'redux';
 
@@ -49,6 +50,7 @@ export const onSubmitNotiFinishTrip = async ({
   currentIdJoinTrip,
   dispatch,
   uid,
+  router,
 }: {
   finishthetrip: {
     value: string;
@@ -65,6 +67,7 @@ export const onSubmitNotiFinishTrip = async ({
   currentIdJoinTrip: number;
   dispatch: Dispatch<AnyAction>;
   uid: string;
+  router: NextRouter;
 }) => {
   setFinishTheTrip({ value: '', isCheckValue: '' });
   const docRef = doc(db, 'Trips', currentIdJoinTrip.toString());
@@ -89,7 +92,15 @@ export const onSubmitNotiFinishTrip = async ({
           }
         }
       });
-      await DataFirebase.DeleteTheTrip(currentIdJoinTrip);
+      const newUserList = valueTrip?.userlist.map(
+        (item) => item.status === false,
+      );
+      await setDoc(docRef, {
+        trip: {
+          ...trip,
+          userlist: newUserList,
+        },
+      });
       dispatch(TripActions.setCurrentIdJoinTrip(0));
       setLoadingStartNow(false);
     } else {
@@ -111,18 +122,20 @@ export const onSubmitNotiFinishTrip = async ({
       );
       const idInvoice = handleRandomIdInvoice();
       const data: SelectOptionsInvoice = {
-        payerImage: {
-          url: userinfo?.photoURL.url || '',
-          color: userinfo?.photoURL.color || '',
-          text: userinfo?.photoURL.text || '',
+        leaveTheTrip: {
+          info: {
+            payerImage: {
+              url: userinfo?.photoURL.url || '',
+              color: userinfo?.photoURL.color || '',
+              text: userinfo?.photoURL.text || '',
+            },
+            payerName: userinfo?.displayName || '',
+            time: handleGetTimeAndDate(),
+            uid,
+            id: idInvoice,
+            totalMoney,
+          },
         },
-        payerName: userinfo?.displayName || '',
-        time: handleGetTimeAndDate(),
-        uid,
-        id: idInvoice,
-        totalMoney,
-        leaveTheTrip: true,
-        listPayees: [],
       };
       dataInvoice.push(data);
       await setDoc(docRef, {
@@ -150,8 +163,8 @@ export const onSubmitNotiFinishTrip = async ({
             await DataFirebase.AddTempoaryNotice(uid, newValueTrip);
           }
         });
-      window.location.reload();
       dispatch(TripActions.setCurrentIdJoinTrip(0));
+      router.push('/');
       setLoadingStartNow(false);
     }
   }
@@ -268,13 +281,15 @@ export const onSubmitAddInvoice = async ({
     if (trip) {
       const { userlist } = trip;
       const newuserlist = userlist.map((item1) => {
-        const valueFind = value.find((item2) => item2.uid === item1.uid);
-        if (valueFind?.listPayees) {
+        const valueFind = value.find(
+          (item2) => item2.invoice?.info.uid === item1.uid,
+        );
+        if (valueFind?.invoice?.listPayees) {
           return {
             ...item1,
             totalmoney:
               (item1.totalmoney || 0) +
-              valueFind.listPayees.reduce(
+              valueFind.invoice.listPayees.reduce(
                 (a, b) => a + (b.money + b.moneySuggest) * b.qty,
                 0,
               ),
@@ -287,20 +302,27 @@ export const onSubmitAddInvoice = async ({
   }
   if (value && value.length !== 0) {
     const promises = value.map(async (item) => {
-      const userinfo = await DataFirebase.GetUserInfoInTrip(item.uid, id);
+      const userinfo = await DataFirebase.GetUserInfoInTrip(
+        item.invoice?.info.uid || '',
+        id,
+      );
       const idInvoice = handleRandomIdInvoice();
       const data: SelectOptionsInvoice = {
-        payerImage: {
-          url: userinfo?.photoURL.url || '',
-          color: userinfo?.photoURL.color || '',
-          text: userinfo?.photoURL.text || '',
+        invoice: {
+          info: {
+            payerImage: {
+              url: userinfo?.photoURL.url || '',
+              color: userinfo?.photoURL.color || '',
+              text: userinfo?.photoURL.text || '',
+            },
+            payerName: userinfo?.displayName || '',
+            time: handleGetTimeAndDate(),
+            uid: item.invoice?.info.uid || '',
+            id: idInvoice,
+            totalMoney: item.invoice?.info.totalMoney || 0,
+          },
+          listPayees: item.invoice?.listPayees || [],
         },
-        payerName: userinfo?.displayName || '',
-        time: handleGetTimeAndDate(),
-        uid: item.uid,
-        id: idInvoice,
-        listPayees: item.listPayees,
-        totalMoney: item.totalMoney,
       };
       dataInvoice.push(data);
     });
@@ -328,9 +350,9 @@ export const handleGetPayerList = async ({
           (item) => ({
             title: item.displayName,
             image: {
-              url: item.photoURL.url,
-              color: item.photoURL.color,
-              text: item.photoURL.text,
+              url: item.photoURL?.url,
+              color: item.photoURL?.color,
+              text: item.photoURL?.text,
             },
             value: item.uid,
             status: item.status,
@@ -391,9 +413,11 @@ export const onSubmitRenderUser = ({
   onSaveUserInfoToData();
   setUserUidClick(value);
 
-  const data = selectedpayerlist.find((item) => item.uid === useruidpayer);
-  if (data?.listPayees) {
-    const result = data.listPayees.find((item) => item.uid === value);
+  const data = selectedpayerlist.find(
+    (item) => item.invoice?.info.uid === useruidpayer,
+  );
+  if (data?.invoice?.listPayees) {
+    const result = data.invoice.listPayees.find((item) => item.uid === value);
     handleChangeInfoRenderUser(result);
   }
 };
