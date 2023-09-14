@@ -46,20 +46,22 @@ export const useHome = ({
     onSnapshot(docRef, (data) => {
       if (data.exists()) {
         const valueData: SelectOptionsUserInvitations = data.data();
-        if (valueData.temporaryNotice) {
-          setTemporaryNotice(valueData.temporaryNotice);
-        }
-        if (valueData.invitation) {
-          setInvitation(valueData.invitation);
-        }
-        if (valueData.tripHistory) {
-          setTripHistory(valueData.tripHistory);
-        }
-        if (valueData.recentTrip) {
-          setRecentTrip(valueData.recentTrip);
-        }
-        if (valueData.recentFriends) {
-          setRecentFriends(valueData.recentFriends);
+        if (valueData) {
+          if (valueData.temporaryNotice) {
+            setTemporaryNotice(valueData.temporaryNotice);
+          }
+          if (valueData.invitation) {
+            setInvitation(valueData.invitation);
+          }
+          if (valueData.tripHistory) {
+            setTripHistory(valueData.tripHistory);
+          }
+          if (valueData.recentTrip) {
+            setRecentTrip(valueData.recentTrip);
+          }
+          if (valueData.recentFriends) {
+            setRecentFriends(valueData.recentFriends);
+          }
         }
       }
       setLoading(false);

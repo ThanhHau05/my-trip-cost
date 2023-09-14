@@ -14,6 +14,7 @@ import {
   NotificationConfirmOperation,
 } from '@/components/base';
 import { Loading } from '@/components/base/loading';
+import { NotificationDeleteUser } from '@/components/NotificationDeleteUser';
 import { NotiFinishTheTrip } from '@/components/pages';
 import { MainContext, MainProvider } from '@/context/main-context';
 import Redux from '@/redux';
@@ -36,6 +37,7 @@ const ContainerMyApp = ({ Component, pageProps }: any) => {
     contentconfirm,
     finishthetrip,
     showaddfellowcompanions,
+    valeudeleteuser,
   } = useContext(MainContext);
   const router = useRouter();
   return (
@@ -58,6 +60,7 @@ const ContainerMyApp = ({ Component, pageProps }: any) => {
         <NotiFinishTheTrip value={finishthetrip.value} />
       ) : null}
       {showaddfellowcompanions ? <AddFellowCompanions /> : null}
+      {valeudeleteuser.name !== '' ? <NotificationDeleteUser /> : null}
       {contentconfirm.length !== 0 ? <NotificationConfirmOperation /> : null}
       <Component {...pageProps} />
     </>
