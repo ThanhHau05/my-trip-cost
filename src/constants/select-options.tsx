@@ -73,6 +73,20 @@ export interface SelectOptionsInvoice {
       name: string;
     }[];
   };
+  deleteUser?: {
+    id: string;
+    name: string;
+    time: string;
+    personDeleted: {
+      avatar: SelectOptionsAvatar;
+      uid: string;
+    };
+    personBeDeleted: {
+      uid: string;
+      avatar: SelectOptionsAvatar;
+      name: string;
+    };
+  };
 }
 
 export interface SelectOptionsTrip {

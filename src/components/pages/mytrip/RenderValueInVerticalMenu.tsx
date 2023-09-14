@@ -1,11 +1,27 @@
+import { useEffect, useState } from 'react';
+import { useSelector } from 'react-redux';
+
 import { AmountOfMoneyOfUser } from '@/components/base';
 import type { SelectOptionsPeopleInVerticalMenu } from '@/constants/select-options';
+import { DataFirebase } from '@/firebase';
+import { selector } from '@/redux';
 
 export const RenderValueInVerticalMenu = ({
   data,
 }: {
   data: SelectOptionsPeopleInVerticalMenu[];
 }) => {
+  const { currentIdJoinTrip } = useSelector(selector.trip);
+  const [uidmaster, setUidMaster] = useState('');
+  useEffect(() => {
+    const handle = async () => {
+      const trip = await DataFirebase.GetTrip(currentIdJoinTrip);
+      if (trip?.tripmaster) {
+        setUidMaster(trip.tripmaster);
+      }
+    };
+    handle();
+  }, [currentIdJoinTrip]);
   return (
     <div className="flex flex-col gap-2 overflow-auto pb-2">
       {data ? (
@@ -18,6 +34,8 @@ export const RenderValueInVerticalMenu = ({
             text={item.img.text}
             money={item.money}
             id={item.id}
+            uidMaster={uidmaster}
+            uid={item.uid}
           />
         ))
       ) : (

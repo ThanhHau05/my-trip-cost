@@ -319,7 +319,6 @@ export const DataFirebase = {
     newUserList: UserInformation[],
     user: UserInformation,
   ) => {
-    const docRef = doc(db, 'Trips', id.toString());
     const trip = await DataFirebase.GetTrip(id);
     if (trip) {
       const { displayName, photoURL, uid } = user;
@@ -343,45 +342,96 @@ export const DataFirebase = {
         },
       };
       newUserList.map(async (item) => {
-        if (item.uid) {
-          if (trip.status) {
-            data.addUser?.personBeAdded.push({
-              avatar: {
-                url: item.photoURL.url || '',
-                color: item.photoURL.color || '',
-                text: item.photoURL.text || '',
-              },
-              name: item.displayName,
-              uid: item.uid,
-            });
-          } else {
-            const dataInvatation: SelectOptionsInvitation = {
-              avtmaster: {
-                url: photoURL.url || '',
-                color: photoURL.color || '',
-                text: photoURL.text || '',
-              },
-              name: displayName,
-              tripid: id,
-              tripname: trip.tripname,
-              dateandtime: time,
-              status: false,
-              uid: item.uid,
-            };
-            await DataFirebase.AcceptTheInvitation(item.uid, dataInvatation);
-          }
+        if (trip.status) {
+          data.addUser?.personBeAdded.push({
+            avatar: {
+              url: item.photoURL.url || '',
+              color: item.photoURL.color || '',
+              text: item.photoURL.text || '',
+            },
+            name: item.displayName,
+            uid: item.uid,
+          });
+        } else if (!item.uid.includes('name-')) {
+          const dataInvatation: SelectOptionsInvitation = {
+            avtmaster: {
+              url: photoURL.url || '',
+              color: photoURL.color || '',
+              text: photoURL.text || '',
+            },
+            name: displayName,
+            tripid: id,
+            tripname: trip.tripname,
+            dateandtime: time,
+            status: false,
+            uid: item.uid,
+          };
+          await DataFirebase.AcceptTheInvitation(item.uid, dataInvatation);
         }
       });
-      dataInvoice.push(data);
+      if (data.addUser?.personBeAdded.length !== 0) {
+        dataInvoice.push(data);
+      }
       await DataFirebase.UpdateInvoiceIntoTripData(id, dataInvoice);
       const UserList = [...trip.userlist, ...newUserList];
       const newTrip = await DataFirebase.GetTrip(id);
+      const docRef = doc(db, 'Trips', id.toString());
       await updateDoc(docRef, {
         trip: {
           ...newTrip,
           userlist: UserList,
         },
       });
+    }
+  },
+  DeleteUserInTheTrip: async (
+    id: number,
+    userDelete: string,
+    user: UserInformation,
+  ) => {
+    const trip = await DataFirebase.GetTrip(id);
+    if (trip) {
+      const { userlist } = trip;
+      const userInfoDelete = userlist.find((item) => item.uid === userDelete);
+      const newUserList = userlist.filter((item) => item.uid !== userDelete);
+      const newTrip = await DataFirebase.GetTrip(id);
+      const docRef = doc(db, 'Trips', id.toString());
+      await updateDoc(docRef, {
+        trip: {
+          ...newTrip,
+          userlist: newUserList,
+        },
+      });
+      const { displayName, photoURL, uid } = user;
+      const time = handleGetTimeAndDate();
+      const idAddUser = handleRandomIdInvoice();
+      const data: SelectOptionsInvoice = {
+        deleteUser: {
+          id: idAddUser,
+          name: displayName,
+          time,
+          personDeleted: {
+            avatar: {
+              url: photoURL.url || '',
+              color: photoURL.color || '',
+              text: photoURL.text || '',
+            },
+            uid,
+          },
+          personBeDeleted: {
+            avatar: {
+              color: userInfoDelete?.photoURL?.color || '',
+              text: userInfoDelete?.photoURL?.text || '',
+              url: userInfoDelete?.photoURL?.url || '',
+            },
+            name: userInfoDelete?.displayName || '',
+            uid: userInfoDelete?.uid || '',
+          },
+        },
+      };
+      const dataInvoice: SelectOptionsInvoice[] = [];
+      dataInvoice.push(data);
+      await DataFirebase.UpdateInvoiceIntoTripData(id, dataInvoice);
     }
   },
 };

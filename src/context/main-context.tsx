@@ -108,6 +108,16 @@ interface MainProps {
   setShowAddFellowCompanions: Dispatch<SetStateAction<boolean>>;
   valueaddfellow: string;
   setValueAddFellow: Dispatch<SetStateAction<string>>;
+  valeudeleteuser: {
+    name: string;
+    uid: string;
+  };
+  setValueDeleteUser: Dispatch<
+    SetStateAction<{
+      name: string;
+      uid: string;
+    }>
+  >;
 }
 
 export const MainContext = createContext({} as MainProps);
@@ -143,6 +153,7 @@ export const MainProvider = ({ children }: { children: ReactNode }) => {
     useState<SelectOptionsTrip>();
   const [showaddfellowcompanions, setShowAddFellowCompanions] = useState(false);
   const [valueaddfellow, setValueAddFellow] = useState('');
+  const [valeudeleteuser, setValueDeleteUser] = useState({ name: '', uid: '' });
 
   const sliderRef = useRef<any>();
 
@@ -361,6 +372,8 @@ export const MainProvider = ({ children }: { children: ReactNode }) => {
     setShowAddFellowCompanions,
     valueaddfellow,
     setValueAddFellow,
+    valeudeleteuser,
+    setValueDeleteUser,
   };
   return <MainContext.Provider value={value}>{children}</MainContext.Provider>;
 };
