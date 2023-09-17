@@ -265,7 +265,7 @@ export const MainProvider = ({ children }: { children: ReactNode }) => {
     ) {
       toast.success('Account successfully created!');
       await DataFirebase.AddEmailCheck(email);
-      createUserWithEmailAndPassword(email, password);
+      const userCreate = await createUserWithEmailAndPassword(email, password);
       const newid = await DataFirebase.RandomID();
       AddUserInformationIntoRedux(
         newid,
@@ -274,7 +274,7 @@ export const MainProvider = ({ children }: { children: ReactNode }) => {
         text,
         namevalue,
         email,
-        user?.uid || '',
+        userCreate?.user.uid || '',
       );
       setId(newid);
     }

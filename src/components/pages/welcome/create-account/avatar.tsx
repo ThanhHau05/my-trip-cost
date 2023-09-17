@@ -32,7 +32,7 @@ export const AvatarCreateAccount = ({
           type="file"
           className="hidden"
           ref={uploadavtRef}
-          accept="image/*"
+          accept="image/png, image/jpeg, image/jpg"
           onChange={(e) => handleOpenFileChangeAvt(e, setImage, image)}
         />
         <AiFillCamera

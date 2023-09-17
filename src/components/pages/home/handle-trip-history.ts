@@ -42,6 +42,8 @@ export const useHome = ({
   setLoading: (value: boolean) => void;
 }) => {
   const handle = () => {
+    console.log(uid);
+
     const docRef = doc(db, 'UserInvitations', uid);
     onSnapshot(docRef, (data) => {
       if (data.exists()) {
