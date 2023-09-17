@@ -30,7 +30,7 @@ export const CreateAccount = ({
 
   useEffect(() => {
     setImage({
-      url: '',
+      ...image,
       color,
       text: name.value[0] ? name.value[0].toUpperCase() : 'A',
     });
